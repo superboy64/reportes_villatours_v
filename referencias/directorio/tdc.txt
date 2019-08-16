@@ -1,0 +1,27 @@
+                      HRGVT MTY                      604411
+ETKT     **AGENT COUPON**              86511574       **ITINERARY**
+AEROMEXICO                   1 OF 1   UNJRMI/AA    AM2680L MTYMCO 20APR
+RODRIGUEZ SALDANA/DAVID MARCE                         LNNF0NMS
+                               D4C2/ADB  01FEB19
+   
+   
+MTY AM ORL386.00NUC386.00END ROE1.00
+   
+   
+   
+   
+USD     386.00 MXN       7397
+         296XO AXXXXXXXXXXXX5001  C160524 XX/XX
+        1058XD FCI02
+         679XT
+MXN       9430
+         139 3181291288 3 PRI  FVVV
+0011/                         MXN           0      7397 0100       2033     
+   
+TAX BREAKDOWN
+TAX         357US TAX         111YC TAX         135XY TAX          76XA
+ 
+ENDORSEMENT/RESTRICTION
+RFC AME 880912 I89
+NONREF/PENALTY APPLIES
+                                                                   

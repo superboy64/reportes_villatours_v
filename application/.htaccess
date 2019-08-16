@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On 
+    RewriteCond %{REQUEST_FILENAME} !-f 
+    RewriteCond %{REQUEST_FILENAME} !-d 
+    RewriteRule ^(.*)$ /pruebacod/index.php/$1 [L] 
+</IfModule>
+<IfModule !mod_rewrite.c>
+    ErrorDocument 404 /pruebacod/index.php 
+</IfModule>
+
+<<FilesMatch "\.(ttf|ttc|otf|eot|woff)$"> <IfModule mod_headers> Header set Access-Control-Allow-Origin "*" </IfModule> </FilesMatch>

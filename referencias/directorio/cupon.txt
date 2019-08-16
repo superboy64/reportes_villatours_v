@@ -1,0 +1,25 @@
+                                             HRGVT MTY                      605197
+ETKT     **AGENT COUPON**              86511574       **ITINERARY**
+AEROMEXICO                   1 OF 1   ZLNOUO/AA    AM 905L MTYMEX 04FEB
+TERAN KNOELL/CARLOS                                   LLQN0ACM
+                               D4C2/A14  01FEB19  OAM2534L MEXSLP 04FEB
+                                                      LNNN0ACM
+                                                  OAM2979Y SLPMEX 04FEB
+MTY AM MEX Q775 2535AM SLP Q775 1930AM MEX Q775 2     QNNN0QFM
+030AM MTY Q775 4710MXN14305END                    OAM2940Y MEXMTY 04FEB
+                                                      YLON0AFM
+   
+   
+MXN      14305
+          45YR CASH
+        2289MX FCI00
+         951XV
+MXN      17590
+         139 3181291284 6 PRI  FFFF
+0011/                         MXN       14305         0 0100       3285
+ 
+ENDORSEMENT/RESTRICTION
+RFC AME 880912 I89
+REF/CHG/CXL FEE APPLIES/NO SHOW FEE APPLIES/NONEND
+REF/CHG/CXL/NOSHOW FREE/NONEND
+                               

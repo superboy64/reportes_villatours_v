@@ -1,0 +1,38 @@
+ #tr_size{
+
+  font-size: 11px;
+
+
+  } 
+
+ #thead_style{
+
+  font-size: 12px;background-color: #23527c;color: #fff;
+
+ }
+
+ #tr_style_dom{
+
+  font-size: 12px; font-weight:bold; border: outset;
+
+ }
+
+ #tr_style_int{
+
+  font-size: 12px; font-weight:bold; border: outset;
+
+  }
+
+ #tr_style_gen{
+
+  font-size: 12px; font-weight:bold;background-color: #0a0a0ab5;color: #FFF;
+
+  }
+
+  /*
+All common (screen) styles here, in the normal way.
+*/
+@media print {
+  * { display: none; }/* Hide everything ... */
+  #div_datagrid { display: block; }/* ... except the required div */
+}
