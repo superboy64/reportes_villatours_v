@@ -1364,7 +1364,7 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 38){
+                                                  if($value['id_submodulo'] == 38 && $id_us == 14 ){
                                                      $title = 'Hoteles limpieza';
                                                     ?>
                                                       <tr>
