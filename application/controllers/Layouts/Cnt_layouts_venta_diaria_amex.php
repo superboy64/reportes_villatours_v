@@ -41,8 +41,10 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 		$rest_clientes  = $this->Mod_clientes->get_clientes_dk_perfil($id_perfil);
 		$rest_catalogo_id_servicio = $this->Mod_catalogos_filtros->get_catalogo_id_servicio();
 		$rest_catalogo_metodo_pago = $this->Mod_catalogos_filtros->get_catalogo_metodo_pago();
+		$rest_catalogo_suc = $this->Mod_usuario->get_sucursales_actuales($id_perfil);
 
-		$param['sucursales'] = $this->Mod_usuario->get_catalogo_sucursales();
+
+		$param['sucursales'] = $rest_catalogo_suc;
 		$param["rest_catalogo_series"] = $rest_catalogo_series;
 	    $param["rest_clientes"] = $rest_clientes;
 	    $param["rest_catalogo_id_servicio"] = $rest_catalogo_id_servicio;
@@ -157,9 +159,9 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 
 			  $value["GVC_ID_SERIE"] = $this->sanear_string(utf8_encode($value["GVC_ID_SERIE"]));
 			  $value["GVC_DOC_NUMERO"] = $this->sanear_string(utf8_encode($value["GVC_DOC_NUMERO"]));
-		      $value["GVC_ID_SUCURSAL"] = $this->sanear_string(utf8_encode($value["GVC_ID_SUCURSAL"]));
+		      //$value["GVC_ID_SUCURSAL"] = $this->sanear_string(utf8_encode($value["GVC_ID_SUCURSAL"]));
 		      $value["FECHA"] = $this->sanear_string(utf8_encode($value["FECHA"]));
-		      $value["GVC_ID_CLIENTE"] = $this->sanear_string(utf8_encode($value["GVC_ID_CLIENTE"]));
+		      //$value["GVC_ID_CLIENTE"] = $this->sanear_string(utf8_encode($value["GVC_ID_CLIENTE"]));
 		      $value["GVC_NOM_CLI"] = $this->sanear_string(utf8_encode($value["GVC_NOM_CLI"]));
 		      $value["analisis27_cliente"] = $this->sanear_string(utf8_encode($value["analisis27_cliente"]));
 		      $value["GVC_ID_CORPORATIVO"] = $this->sanear_string(utf8_encode($value["GVC_ID_CORPORATIVO"]));
@@ -191,8 +193,8 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 		      $value["NUMERO_BOLETO"] = $this->sanear_string(utf8_encode($NUMERO_BOLETO));
 
 
-		      $value["CVE"] = $this->sanear_string(utf8_encode($value["CVE"]));
-		      $value["NOMBRE_COMERCIAL"] = $this->sanear_string(utf8_encode($value["NOM_COMERCIAL"]));
+		      //$value["CVE"] = $this->sanear_string(utf8_encode($value["CVE"]));
+		      //$value["NOMBRE_COMERCIAL"] = $this->sanear_string(utf8_encode($value["NOM_COMERCIAL"]));
 
 
     		$cast_utf8 = array_map("utf8_encode", $value );
@@ -266,34 +268,29 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 
 		}
 
-
 		$activeSheet->setCellValue('A1' ,'SERIE');
 		$activeSheet->setCellValue('B1' ,'FACTURA');
 		$activeSheet->setCellValue('C1' ,'BOLETO');
 		$activeSheet->setCellValue('D1' ,'CUPON');
-		$activeSheet->setCellValue('E1' ,'ID SUCURSAL');
-		$activeSheet->setCellValue('F1' ,'FECHA');
-		$activeSheet->setCellValue('G1' ,'ID CLIENTE');
-		$activeSheet->setCellValue('H1' ,'CLIENTE');
-		$activeSheet->setCellValue('I1' ,'CUENTA');
-		$activeSheet->setCellValue('J1' ,'ANALISIS 27 DE CLIENTE');
-		$activeSheet->setCellValue('K1' ,'ID CORPORATIVO');
-		$activeSheet->setCellValue('L1' ,'ID FORMA DE PAGO');
-		$activeSheet->setCellValue('M1' ,'FORMA DE PAGO');
-		$activeSheet->setCellValue('N1' ,'RUTA');
-		$activeSheet->setCellValue('O1' ,'ID PROVEEDOR');
-		$activeSheet->setCellValue('P1' ,'NOMBRE PROVEEDOR');
-		$activeSheet->setCellValue('Q1' ,'TARIFA');
-		$activeSheet->setCellValue('R1' ,'IVA');
-		$activeSheet->setCellValue('S1' ,'TUA');
-		$activeSheet->setCellValue('T1' ,'OTROS IMPUESTOS');
-		$activeSheet->setCellValue('U1' ,'VENDEDOR');
-		$activeSheet->setCellValue('V1' ,'CONCEPTO');
-		$activeSheet->setCellValue('W1' ,'IMPORTE');
-		$activeSheet->setCellValue('X1' ,'CVE');
-		$activeSheet->setCellValue('Y1' ,'NOMBRE COMERCIAL');
-		$activeSheet->setCellValue('Z1' ,'ID SERVICIO');
-		$activeSheet->setCellValue('AA1','GVC DESCRIPCION EXTENDIDA');
+		$activeSheet->setCellValue('E1' ,'FECHA');
+		$activeSheet->setCellValue('F1' ,'CLIENTE');
+		$activeSheet->setCellValue('G1' ,'CUENTA CONTABLE');
+		$activeSheet->setCellValue('H1' ,'FECHA VENCIMIENTO TDC');
+		$activeSheet->setCellValue('I1' ,'ID CORPORATIVO');
+		$activeSheet->setCellValue('J1' ,'ID FORMA DE PAGO');
+		$activeSheet->setCellValue('K1' ,'FORMA DE PAGO');
+		$activeSheet->setCellValue('L1' ,'RUTA');
+		$activeSheet->setCellValue('M1' ,'ID PROVEEDOR');
+		$activeSheet->setCellValue('N1' ,'NOMBRE PROVEEDOR');
+		$activeSheet->setCellValue('O1' ,'TARIFA');
+		$activeSheet->setCellValue('P1' ,'IVA');
+		$activeSheet->setCellValue('Q1' ,'TUA');
+		$activeSheet->setCellValue('R1' ,'OTROS IMPUESTOS');
+		$activeSheet->setCellValue('S1' ,'VENDEDOR');
+		$activeSheet->setCellValue('T1' ,'CONCEPTO');
+		$activeSheet->setCellValue('U1' ,'IMPORTE');
+		$activeSheet->setCellValue('V1' ,'ID SERVICIO');
+		$activeSheet->setCellValue('W1','GVC DESCRIPCION EXTENDIDA');
 		
 		
 		$rep = [];
@@ -304,6 +301,27 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 		
 		}
 
+		$spreadsheet->getActiveSheet()
+			    ->getStyle('O2:O'.((count($rep)) + 1))
+			    ->getNumberFormat()
+			    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+		$spreadsheet->getActiveSheet()
+			    ->getStyle('P2:P'.((count($rep)) + 1))
+			    ->getNumberFormat()
+			    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+	    $spreadsheet->getActiveSheet()
+			    ->getStyle('Q2:Q'.((count($rep)) + 1))
+			    ->getNumberFormat()
+			    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+	    $spreadsheet->getActiveSheet()
+			    ->getStyle('R2:R'.((count($rep)) + 1))
+			    ->getNumberFormat()
+			    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+	    $spreadsheet->getActiveSheet()
+			    ->getStyle('U2:U'.((count($rep)) + 1))
+			    ->getNumberFormat()
+			    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
 		$activeSheet->fromArray(
 	        $rep,  // The data to set
 	        NULL,        // Array values with this value will not be set
@@ -311,6 +329,7 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 	                     //    we want to set these values (default is A1)
 	    );
 
+	    																												
 		//$activeSheet->removeColumnByIndex(2);
 
     	ob_start();

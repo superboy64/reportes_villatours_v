@@ -207,7 +207,7 @@ class Cnt_reportes_detalle_pax extends CI_Controller {
 
 		foreach ($rest_pasajero as $key => $value) {
 
-		  $dat['GVC_NOM_PAX'] = ''; 
+		  $dat['GVC_NOM_PAX'] = utf8_encode($value->GVC_NOM_PAX); 
 	      $dat['GVC_ID_SERIE']  = ''; 
 	      $dat['GVC_DOC_NUMERO'] = ''; 
 	      $dat['GVC_ID_CORPORATIVO'] = ''; 
@@ -595,7 +595,7 @@ class Cnt_reportes_detalle_pax extends CI_Controller {
 
         	}else{
 
-        		$activeSheet->setCellValue('A'.$cont,'')->getStyle('A'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('A'.$cont,$valor->GVC_NOM_PAX)->getStyle('A'.$cont)->getFont()->setBold(true)->setSize(11);
         		$activeSheet->setCellValue('B'.$cont,$valor->GVC_ID_SERIE)->getStyle('B'.$cont)->getFont()->setBold(true)->setSize(11);
         		$activeSheet->setCellValue('C'.$cont,$valor->GVC_DOC_NUMERO)->getStyle('C'.$cont)->getFont()->setBold(true)->setSize(11);
         		$activeSheet->setCellValue('D'.$cont,$valor->GVC_ID_CORPORATIVO)->getStyle('D'.$cont)->getFont()->setBold(true)->setSize(11);

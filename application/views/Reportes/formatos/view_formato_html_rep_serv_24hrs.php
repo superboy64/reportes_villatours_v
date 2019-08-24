@@ -15,7 +15,7 @@
         <th colspan="4"><center><H3>TOP 10<br><?=$sub?></H3></center></th>
       </tr>
       <tr>
-        <th scope="col"><center>PASAJERO</center></th>
+        <th scope="col"><center>AGENTE</center></th>
         <th scope="col"><center>CVE SERVICIO</center></th>
         <th scope="col"><center># TRANSACCIONES</center></th>
         <th scope="col">TARIFA/Pesos</th>

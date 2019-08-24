@@ -89,6 +89,32 @@ class Mod_reportes_detalle_consumo_precompra extends CI_Model {
         return $ID_PRECOMPRA;
            
 
+      }else{
+
+        if($GVC_PRECOMPRA >=0 && $GVC_PRECOMPRA <= 3){
+          
+           $ID_PRECOMPRA = "0 A 3 DIAS";
+
+        }else if($GVC_PRECOMPRA >=4 && $GVC_PRECOMPRA <= 6){
+
+           $ID_PRECOMPRA = "4 A 6 DIAS";
+
+        }else if($GVC_PRECOMPRA >=7 && $GVC_PRECOMPRA <= 9){
+
+           $ID_PRECOMPRA = "7 A 9 DIAS";
+
+        }else if($GVC_PRECOMPRA >=10 && $GVC_PRECOMPRA <= 12){
+
+           $ID_PRECOMPRA = "10 A 12 DIAS";
+
+        }else if($GVC_PRECOMPRA > 13){
+
+           $ID_PRECOMPRA = "MAS DE 13 DIAS";
+
+        }
+
+        return $ID_PRECOMPRA;
+
       }
 
 

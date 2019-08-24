@@ -12,8 +12,6 @@ class Mod_reportes_serv_24hrs extends CI_Model {
    }
    
    public function get_grafica_pasajero($parametros){
-      
-      //print_r($parametros);
 
       $ids_suc = $parametros["ids_suc"];
       $ids_serie = $parametros["ids_serie"];

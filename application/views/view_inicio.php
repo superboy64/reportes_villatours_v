@@ -22,12 +22,6 @@
         color:#fff;
     }
 
-    .ui-jqgrid .ui-jqgrid-labels th.ui-th-column:hover {
-        background-color: #fff;
-        color:#3d7ab6;
-    }
-
-
 </style>
 
 <link rel="stylesheet" href="<?php echo base_url(); ?>referencias/css/style_inicio.css">
@@ -148,7 +142,7 @@
     <div class="row">
         <div class="col-md-2" style="color:#414a6c;">
           
-            <div class="panel-group" id="accordion">
+            <div class="panel-group">
 
               <?php
                 
@@ -1131,7 +1125,7 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 26){
+                                                  if($value['id_submodulo'] == 26 && $id_us == 14){
                                                      $title = 'Reporte - Total por pasajero y servicio';
                                                     ?>
                                                       <tr>
@@ -1302,7 +1296,7 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 38){
+                                                  if($value['id_submodulo'] == 38 && $id_us == 14){
                                                      $title = 'ventas corporativas';
                                                     ?>
                                                       <tr>
@@ -1336,7 +1330,7 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 38){
+                                                  if($value['id_submodulo'] == 38 && $id_us == 14){
                                                      $title = 'ventas corporativas clientes';
                                                     ?>
                                                       <tr>
@@ -1356,6 +1350,40 @@
       
                                                           carga();
                                                           $.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_ventas_corporativas_clientes/get_html_rep_pasajeros_servicio", {title: title}, function(data){
+                                                                
+                                                               carga_completa(data);
+                                                                
+                                                            });
+
+
+                                                        }
+
+                                                      </script>
+                                                    <?php
+
+
+                                                  }
+
+                                                  if($value['id_submodulo'] == 38){
+                                                     $title = 'Hoteles limpieza';
+                                                    ?>
+                                                      <tr>
+                                                          
+                                                          <td>
+                                                              <i class="glyphicon glyphicon-file" ></i>
+                                                          </td>
+                                                          <td colspan="4">
+                                                              <a id="link_rep_gra_ae" href="javascript:void(0);" onclick="li_btn_get_rep_ventas_corporativas_clientes('<?=$title?>');" >Hoteles limpieza&nbsp;</a>
+                                                          </td>
+                                                          
+
+                                                      </tr>
+                                                      <script type="text/javascript">
+
+                                                        function li_btn_get_rep_hoteles_limpieza(title){
+      
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_hoteles_limpieza/get_html_rep_pasajeros_servicio", {title: title}, function(data){
                                                                 
                                                                carga_completa(data);
                                                                 

@@ -206,7 +206,7 @@ class Cnt_reportes_detalle_cc extends CI_Controller {
 
 		foreach ($rest_pasajero as $key => $value) {
 
-		  $dat['GVC_ID_CENTRO_COSTO']  = ''; 
+		  $dat['GVC_ID_CENTRO_COSTO']  = utf8_encode($value->GVC_ID_CENTRO_COSTO); 
 	      $dat['GVC_DESC_CENTRO_COSTO']  = ''; 
 		  $dat['GVC_NOM_PAX'] = ''; 
 	      $dat['GVC_ID_SERIE']  = ''; 
@@ -556,6 +556,7 @@ class Cnt_reportes_detalle_cc extends CI_Controller {
         	if($valor->TIPO == 'DESCRIPCION' ){
 
         		$activeSheet->setCellValue('A'.$cont,$valor->GVC_ID_CENTRO_COSTO);
+        		$activeSheet->getStyle('A'.$cont)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
         		$activeSheet->setCellValue('B'.$cont,$valor->GVC_DESC_CENTRO_COSTO);
         		$activeSheet->setCellValue('C'.$cont,$valor->GVC_NOM_PAX);
         		$activeSheet->setCellValue('D'.$cont,$valor->GVC_ID_SERIE);
@@ -589,14 +590,15 @@ class Cnt_reportes_detalle_cc extends CI_Controller {
 
         	}else{
 
-        		$activeSheet->setCellValue('A'.$cont,'')->getStyle('A'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('B'.$cont,$valor->GVC_ID_SERIE)->getStyle('B'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('C'.$cont,$valor->GVC_DOC_NUMERO)->getStyle('C'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('D'.$cont,$valor->GVC_ID_CORPORATIVO)->getStyle('D'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('E'.$cont,$valor->GVC_ID_CLIENTE)->getStyle('E'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('F'.$cont,$valor->GVC_NOM_CLI)->getStyle('F'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('G'.$cont,$valor->GVC_ID_CENTRO_COSTO)->getStyle('G'.$cont)->getFont()->setBold(true)->setSize(11);
-        		$activeSheet->setCellValue('H'.$cont,$valor->GVC_DESC_CENTRO_COSTO)->getStyle('H'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('A'.$cont,$valor->GVC_ID_CENTRO_COSTO)->getStyle('A'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->getStyle('A'.$cont)->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+        		$activeSheet->setCellValue('B'.$cont,$valor->GVC_DESC_CENTRO_COSTO)->getStyle('B'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('C'.$cont,$valor->GVC_NOM_PAX)->getStyle('B'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('D'.$cont,$valor->GVC_ID_SERIE)->getStyle('B'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('E'.$cont,$valor->GVC_DOC_NUMERO)->getStyle('C'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('F'.$cont,$valor->GVC_ID_CORPORATIVO)->getStyle('D'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('G'.$cont,$valor->GVC_ID_CLIENTE)->getStyle('E'.$cont)->getFont()->setBold(true)->setSize(11);
+        		$activeSheet->setCellValue('H'.$cont,$valor->GVC_NOM_CLI)->getStyle('F'.$cont)->getFont()->setBold(true)->setSize(11);
         		$activeSheet->setCellValue('I'.$cont,$valor->GVC_FECHA)->getStyle('I'.$cont)->getFont()->setBold(true)->setSize(11);
         		$activeSheet->setCellValue('J'.$cont,$valor->GVC_SOLICITO)->getStyle('J'.$cont)->getFont()->setBold(true)->setSize(11);
         		$activeSheet->setCellValue('K'.$cont,$valor->GVC_CVE_RES_GLO)->getStyle('K'.$cont)->getFont()->setBold(true)->setSize(11);

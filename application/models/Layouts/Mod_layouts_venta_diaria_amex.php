@@ -43,7 +43,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
       $ids_metodo_pago=array_filter($ids_metodo_pago, "strlen");
 
       $cont_suc = count($ids_suc);
-      
+
       if( $cont_suc > 0){
         $str_suc = '';
         foreach ($ids_suc as $clave => $valor) {  //obtiene clientes asignados
@@ -116,7 +116,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
 
       }
 
-
+    $id_perfil = $this->session->userdata('session_id_perfil');
     $db_prueba = $this->load->database('conmysql', TRUE);
       
       $us = $db_prueba->query("SELECT * FROM rpv_usuarios where id = $id_usuario");
@@ -165,9 +165,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
     
     GVC_ID_SERIE varchar(500) null,
     GVC_DOC_NUMERO varchar(500) null,
-    GVC_CVE_SUCURSAL varchar(500) null,
     FECHA varchar(500) null,
-    GVC_ID_CLIENTE varchar(500) null,
     GVC_NOM_CLI varchar(500) null,
     analisis27_cliente varchar(500) null,
     GVC_ID_CORPORATIVO varchar(500) null,
@@ -188,8 +186,6 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
     NUMERO_CUPON varchar(500) null,
     NUMERO_BOLETO varchar(500) null,
     CVE varchar(500) null,
-    NOM_COMERCIAL varchar(500) null,
-    GVC_ID_SUCURSAL varchar(500) null,
     GVC_DESCRIPCION_EXTENDIDA varchar(500) null
 
     )");
@@ -208,9 +204,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
 
       DATOS_FACTURA.ID_SERIE as GVC_ID_SERIE,
       DATOS_FACTURA.FAC_NUMERO as GVC_DOC_NUMERO,
-      SUCURSALES.CVE as GVC_CVE_SUCURSAL,
-      DATOS_FACTURA.FECHA,
-      DATOS_FACTURA.ID_CLIENTE as GVC_ID_CLIENTE,
+      CAST(DATOS_FACTURA.FECHA AS DATE) AS FECHA,
       DATOS_FACTURA.CL_NOMBRE as GVC_NOM_CLI,
       DATOS_FACTURA.analisis27_cliente as analisis27_cliente,
       CORPORATIVO.ID_CORPORATIVO as GVC_ID_CORPORATIVO,
@@ -263,8 +257,6 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
        case when (DETALLE_FACTURA.NUMERO_BOL = '' or DETALLE_FACTURA.NUMERO_BOL is null and DETALLE_FACTURA.numero_bol_Cxs <> '' and DETALLE_FACTURA.numero_bol_Cxs is not null) then  DETALLE_FACTURA.numero_bol_Cxs else DETALLE_FACTURA.NUMERO_BOL  end as numero_bol,
 
        SUCURSALES.cve,
-       SUCURSALES.nom_comercial,
-       SUCURSALES.id_sucursal,
        DATOS_FACTURA.descr_exten as GVC_DESCRIPCION_EXTENDIDA
      
       from
@@ -336,9 +328,11 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
     and ".$condicion_fecha." between cast('".$fecha1."' as date) and cast('".$fecha2."' as date)
     ";
 
-    $res = $db_prueba->query("SELECT * FROM rpv_usuarios_cliente where id_usuario = $id_usuario and status = 1");
-             
+    $res = $db_prueba->query("SELECT * FROM rpv_usuarios_cliente where id_usuario = $id_usuario and status = 1");    
     $res = $res->result_array();
+
+    $res_suc = $db_prueba->query("SELECT * from rpv_perfil_sucursal WHERE id_perfil = $id_perfil and status = 1");
+    $res_suc = $res_suc->result_array();
 
       
     if($all_dks == 0){
@@ -359,6 +353,33 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
               $select1 = $select1 . "and DATOS_FACTURA.ID_CLIENTE in (".$id_cliente_arr.") "; //ya
 
          }
+         if($cont_cliente > 0){
+
+              $select1 = $select1 . "and CLIENTES.id_cliente in (".$str_cli.") "; 
+
+
+         }
+         if($cont_suc == 0){
+
+           $sucursales_actuales = $res_suc;
+           $array_suc = [];
+
+           foreach ($sucursales_actuales as $key => $value) {
+            
+              $id_sucursal = $value['id_sucursal'];
+              
+              $query = $this->db->query("SELECT id_sucursal FROM sucursales where id_sucursal = ".$id_sucursal);
+              $rest = $query->result_array();
+              array_push($array_suc, $rest[0]['id_sucursal']);
+
+           }
+
+       
+           $array_suc = implode(",", $array_suc);
+
+           $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$array_suc.") "; //ya
+
+         }
          if($cont_suc > 0){
 
               $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
@@ -369,12 +390,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
               $select1 = $select1 . " and DATOS_FACTURA.ID_SERIE in (".$str_ser.") "; //ya
 
          }
-         if($cont_cliente > 0){
-
-              $select1 = $select1 . "and CLIENTES.id_cliente in (".$str_cli.") "; 
-
-
-         }
+         
          if($cont_servicio > 0){
 
               $select1 = $select1 . " and PROV_TPO_SERV.ID_SERVICIO in (".$str_serv.") "; //ya
@@ -388,6 +404,27 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
 
     }else if($all_dks == 1){
 
+         if($cont_suc == 0){
+
+           $sucursales_actuales = $res_suc;
+           $array_suc = [];
+
+           foreach ($sucursales_actuales as $key => $value) {
+            
+              $id_sucursal = $value['id_sucursal'];
+              
+              $query = $this->db->query("SELECT id_sucursal FROM sucursales where id_sucursal = ".$id_sucursal);
+              $rest = $query->result_array();
+              array_push($array_suc, $rest[0]['id_sucursal']);
+
+           }
+
+       
+           $array_suc = implode(",", $array_suc);
+
+           $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$array_suc.") "; //ya
+
+         }
          if($cont_suc > 0){
 
               $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
@@ -473,8 +510,10 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
     ";
 
    $res = $db_prueba->query("SELECT * FROM rpv_usuarios_cliente where id_usuario = $id_usuario and status = 1");
-             
    $res = $res->result_array();
+
+   $res_suc = $db_prueba->query("SELECT * from rpv_perfil_sucursal WHERE id_perfil = $id_perfil and status = 1");
+   $res_suc = $res_suc->result_array();
 
    if($all_dks == 0){
 
@@ -493,6 +532,27 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
               $id_cliente_arr = implode(",", $id_cliente_arr);
 
               $select2 = $select2 . "and NOTAS_CREDITO.ID_CLIENTE in (".$id_cliente_arr.") "; //ya
+
+         }
+         if($cont_suc == 0){
+
+           $sucursales_actuales = $res_suc;
+           $array_suc = [];
+
+           foreach ($sucursales_actuales as $key => $value) {
+            
+              $id_sucursal = $value['id_sucursal'];
+              
+              $query = $this->db->query("SELECT id_sucursal FROM sucursales where id_sucursal = ".$id_sucursal);
+              $rest = $query->result_array();
+              array_push($array_suc, $rest[0]['id_sucursal']);
+
+           }
+
+       
+           $array_suc = implode(",", $array_suc);
+
+           $select2 = $select2 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$array_suc.") "; //ya
 
          }
          if($cont_suc > 0){
@@ -524,6 +584,27 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
 
     }else if($all_dks == 1){
 
+         if($cont_suc == 0){
+
+           $sucursales_actuales = $res_suc;
+           $array_suc = [];
+
+           foreach ($sucursales_actuales as $key => $value) {
+            
+              $id_sucursal = $value['id_sucursal'];
+              
+              $query = $this->db->query("SELECT id_sucursal FROM sucursales where id_sucursal = ".$id_sucursal);
+              $rest = $query->result_array();
+              array_push($array_suc, $rest[0]['id_sucursal']);
+
+           }
+
+       
+           $array_suc = implode(",", $array_suc);
+
+           $select2 = $select2 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$array_suc.") "; //ya
+
+         }
          if($cont_suc > 0){
 
               $select2 = $select2 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$str_suc.") ";
@@ -561,9 +642,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
 
       GVC_ID_SERIE,
       GVC_DOC_NUMERO,
-      GVC_ID_SUCURSAL,
       FECHA,
-      GVC_ID_CLIENTE,
       GVC_NOM_CLI,
       analisis27_cliente,
       GVC_ID_CORPORATIVO,
@@ -583,8 +662,6 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
       CONCEPTO,
       NUMERO_CUPON,
       NUMERO_BOLETO,
-      CVE,
-      NOM_COMERCIAL,
       GVC_DESCRIPCION_EXTENDIDA
 
     from #TEMPFAC as FAC where 

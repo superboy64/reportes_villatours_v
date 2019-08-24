@@ -10,6 +10,7 @@
   $data = json_decode($data);
   $data = $data->array_nuevo_formato;
 
+
 ?>
 
 <table class="header_fijo">
@@ -107,11 +108,11 @@
                             ."<td>".$valor->GVC_ID_PROVEEDOR."</td>"
                             ."<td>".$valor->GVC_NOMBRE_PROVEEDOR."</td>"
                             ."<td>".$valor->GVC_CONCEPTO."</td>"
-                            ."<td>".$valor->GVC_TARIFA_MON_BASE."</td>"
-                            ."<td>".$valor->GVC_IVA."</td>"
-                            ."<td>".$valor->GVC_TUA."</td>"
-                            ."<td>".$valor->GVC_OTROS_IMPUESTOS."</td>"
-                            ."<td>".$valor->GVC_TOTAL."</td>"
+                            ."<td>".number_format($valor->GVC_TARIFA_MON_BASE)."</td>"
+                            ."<td>".number_format($valor->GVC_IVA)."</td>"
+                            ."<td>".number_format($valor->GVC_TUA)."</td>"
+                            ."<td>".number_format($valor->GVC_OTROS_IMPUESTOS)."</td>"
+                            ."<td>".number_format($valor->GVC_TOTAL)."</td>"
                             ."<td>".$valor->GVC_CLASE_FACTURADA."</td>"
                             ."<td>".$valor->GVC_FECHA_SALIDA."</td>"
                             ."<td>".$valor->GVC_FECHA_REGRESO."</td>"

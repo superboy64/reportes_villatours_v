@@ -232,7 +232,34 @@ class Mod_usuario extends CI_Model {
 
      $query = $db_prueba->query("SELECT * from rpv_perfil_sucursal WHERE id_perfil = '$id_peril' and status = 1");
 
-     return $query->result_array();
+     $sucursales_actuales = $query->result_array();
+     $array_nuevo = [];
+     foreach ($sucursales_actuales as $key => $value) {
+      
+      
+        $id_sucursal = $value['id_sucursal'];
+        
+        $query = $this->db->query("SELECT id_sucursal,cve FROM sucursales where id_sucursal = ".$id_sucursal);
+        $rest = $query->result_array();
+
+        if(count($rest) > 0){
+
+          array_push($array_nuevo, $rest[0]);
+
+        }else{
+
+          array_push($array_nuevo, []);
+
+        }
+
+        
+
+     }
+
+    
+    return $array_nuevo;
+
+ 
 
    }
 

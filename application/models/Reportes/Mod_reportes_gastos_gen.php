@@ -41,7 +41,7 @@ class Mod_reportes_gastos_gen extends CI_Model {
 
      
 
-       return $query->result();
+      return $query->result();
 
 
    }
@@ -73,7 +73,7 @@ class Mod_reportes_gastos_gen extends CI_Model {
 
       $ids_servicio =  explode('_', $ids_servicio);
       $ids_servicio=array_filter($ids_servicio, "strlen");
-
+      
       $ids_provedor =  explode('_', $ids_provedor);
       $ids_provedor=array_filter($ids_provedor, "strlen");
 

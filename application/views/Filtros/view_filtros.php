@@ -27,11 +27,24 @@
       
       <select id="slc_mult_id_suc" multiple="multiple">
               <?php
-                  foreach ($sucursales as &$valor){
-                       
-                       print_r('<option value="'.$valor['id_sucursal'].'">'.$valor['cve'].'</option>');
 
-                  }
+                if(count($sucursales) > 0 ){
+
+                    foreach ($sucursales as &$valor){
+                         
+                         print_r('<option value="'.$valor['id_sucursal'].'">'.$valor['cve'].'</option>');
+
+                    }
+
+
+                }else{
+
+                        print_r('<option value="0">no existen sucursales</option>');
+
+                }
+
+
+                  
               ?>
       </select>
       
