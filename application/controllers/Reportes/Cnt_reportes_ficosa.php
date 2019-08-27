@@ -158,6 +158,8 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 					$dat['buy_in_advance'] = utf8_encode($valor->buy_in_advance);
 					$dat['record_localizador'] = utf8_encode($valor->record_localizador);
+					$dat['GVC_ID_CENTRO_COSTO'] = utf8_encode($valor->GVC_ID_CENTRO_COSTO);
+					$dat['analisis14_cliente'] = utf8_encode($valor->analisis14_cliente);
 
 					if( $valor->emd == 'S'){  //pone los itnerary vacios
 
@@ -1250,14 +1252,15 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		$spreadsheet->getActiveSheet()->getColumnDimension('BJ')->setAutoSize(true);
 		$spreadsheet->getActiveSheet()->getColumnDimension('BK')->setAutoSize(true);
 		$spreadsheet->getActiveSheet()->getColumnDimension('BL')->setAutoSize(true);
-		
+		$spreadsheet->getActiveSheet()->getColumnDimension('BM')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('BN')->setAutoSize(true);
 
 		
-		$activeSheet->getStyle('A5:BL5')->getFill()
+		$activeSheet->getStyle('A5:BN5')->getFill()
 	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
 	    ->getStartColor()->setARGB('1f497d');
 
-	    $spreadsheet->getActiveSheet()->getStyle('A5:BL5')
+	    $spreadsheet->getActiveSheet()->getStyle('A5:BN5')
         ->getFont()->getColor()->setARGB('ffffff');
 
 		 $styleArray = [
@@ -1413,8 +1416,11 @@ class Cnt_reportes_ficosa extends CI_Controller {
 				$activeSheet->setCellValue('BH5','Place_delivery' )->getStyle('BH5')->getFont()->setBold(true)->setSize(11);
 				$activeSheet->setCellValue('BI5','Place_delivery_back' )->getStyle('BI5')->getFont()->setBold(true)->setSize(11);
 				$activeSheet->setCellValue('BJ5','Departure_date' )->getStyle('BJ5')->getFont()->setBold(true)->setSize(11);
-				$activeSheet->setCellValue('BK5','buy in advance' )->getStyle('BJ5')->getFont()->setBold(true)->setSize(11);
+				$activeSheet->setCellValue('BK5','buy in advance' )->getStyle('BK5')->getFont()->setBold(true)->setSize(11);
 				$activeSheet->setCellValue('BL5','PNR' )->getStyle('BL5')->getFont()->setBold(true)->setSize(11);
+				$activeSheet->setCellValue('BM5','CC' )->getStyle('BM5')->getFont()->setBold(true)->setSize(11);
+				$activeSheet->setCellValue('BN5','AC14' )->getStyle('BN5')->getFont()->setBold(true)->setSize(11);
+
 
 			   $ticket = utf8_encode($valor->ticket_number);
 			   $segmentos = $this->Mod_reportes_ficosa->get_segmentos_ticket_number($ticket,$consecutivo);
@@ -1430,8 +1436,10 @@ class Cnt_reportes_ficosa extends CI_Controller {
 					$activeSheet->setCellValue('F'.$cont ,$valor->documento )->getStyle('F'.$cont)->getFont()->setBold(false);
 					$activeSheet->setCellValue('G'.$cont ,$valor->solicitor )->getStyle('G'.$cont)->getFont()->setBold(false);
 					$activeSheet->setCellValue('Bk'.$cont ,$valor->buy_in_advance )->getStyle('Bk'.$cont)->getFont()->setBold(false);
-					$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador )->getStyle('BL'.$cont)->getFont()->setBold(false); 
-
+					$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador )->getStyle('BL'.$cont)->getFont()->setBold(false);
+					$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO )->getStyle('BM'.$cont)->getFont()->setBold(false);  
+					$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente )->getStyle('BN'.$cont)->getFont()->setBold(false);  
+					
 					$activeSheet->setCellValue('H'.$cont ,$valor->type_of_service )->getStyle('H'.$cont)->getFont()->setBold(false);
 
 
@@ -1897,7 +1905,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 									$activeSheet->setCellValue('Q'.$cont ,'' )->getStyle('Q'.$cont)->getFont()->setBold(false);
 									//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
 									$activeSheet->setCellValue('BK'.$cont ,$valor_hot_ir['buy_in_advance'])->getStyle('BK'.$cont)->getFont()->setBold(false);
-									$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false); 
+									$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false);  
+									$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false); 
 
 									$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
 									$activeSheet->setCellValue('S'.$cont ,'' )->getStyle('S'.$cont)->getFont()->setBold(false);
@@ -2013,7 +2023,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 									//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
 
 									$activeSheet->setCellValue('BK'.$cont ,$valor_hot_ir['buy_in_advance'])->getStyle('BK'.$cont)->getFont()->setBold(false);
-									$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false); 
+									$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
+									$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
 
 									$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
 									$activeSheet->setCellValue('S'.$cont ,'' )->getStyle('S'.$cont)->getFont()->setBold(false);
@@ -2104,7 +2116,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 							$activeSheet->setCellValue('G'.$cont ,$valor->solicitor )->getStyle('G'.$cont)->getFont()->setBold(false);
 							
 							$activeSheet->setCellValue('BK'.$cont ,$valor_hot['buy_in_advance'])->getStyle('BK'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false); 
+							$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
+							$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
+							$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
 
 							if($valor->typo_of_ticket == 'N' ){
 
@@ -2220,7 +2234,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 							$activeSheet->setCellValue('Q'.$cont ,'' )->getStyle('Q'.$cont)->getFont()->setBold(false);
 
 							$activeSheet->setCellValue('BK'.$cont ,$valor->buy_in_advance)->getStyle('BK'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false); 
+							$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
+							$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
+							$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
 
 							//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
 
@@ -2267,7 +2283,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 			    
 
-			    $spreadsheet->getActiveSheet()->getStyle('A1:BL'.$cont)->applyFromArray($styleArray);
+			    $spreadsheet->getActiveSheet()->getStyle('A1:BN'.$cont)->applyFromArray($styleArray);
 			    
 			  }
 			    
@@ -2275,11 +2291,11 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		}			   
 
 
-		$activeSheet->getStyle('A5:BL5')->getFill()
+		$activeSheet->getStyle('A5:BN5')->getFill()
 	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
 	    ->getStartColor()->setARGB('1f497d');
 
-	    $spreadsheet->getActiveSheet()->getStyle('A5:BL5')
+	    $spreadsheet->getActiveSheet()->getStyle('A5:BN5')
         ->getFont()->getColor()->setARGB('ffffff');
 
 		 $styleArray = [

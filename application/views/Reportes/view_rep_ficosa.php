@@ -139,7 +139,7 @@
                           height: 500,
                           shrinkToFit:false,
                           forceFit:true,
-                          colNames:['consecutivo','name', 'Nº Exp', 'destination','Date Origin', 'Nr doc.', 'solicitor', 'type_of_service', 'supplier', 'Product', 'final_user', 'ticket_number', 'typo_of_ticket', 'date emission', 'city', 'country', 'total emissions co2', 'total_Itinerary1', 'origin1', 'destina1', 'total_Itinerary2', 'origin2', 'destina2', 'total_Itinerary3', 'origin3', 'destina3', 'total_Itinerary4', 'origin4', 'destina4', 'total_Itinerary5', 'origin5', 'destina5', 'total_Itinerary6', 'origin6', 'destina6', 'total_Itinerary7', 'origin7', 'destina7', 'total_Itinerary8', 'origin8', 'destina8', 'total_Itinerary9', 'origin9', 'destina9', 'total_Itinerary10', 'origin10', 'destina10', 'Name Hotel', 'Check In Date', 'Check Out Date', 'Room Nigth', 'Breakfast (BB /OB)', 'Nr of Rooms', 'Type of Room', 'City', 'country', 'Car_class', 'Delivery_Date', 'Nr_days', 'Place_delivery', 'Place_delivery_back', 'Departure_date', 'buy in advance', 'PNR'],
+                          colNames:['consecutivo','name', 'Nº Exp', 'destination','Date Origin', 'Nr doc.', 'solicitor', 'type_of_service', 'supplier', 'Product', 'final_user', 'ticket_number', 'typo_of_ticket', 'date emission', 'city', 'country', 'total emissions co2', 'total_Itinerary1', 'origin1', 'destina1', 'total_Itinerary2', 'origin2', 'destina2', 'total_Itinerary3', 'origin3', 'destina3', 'total_Itinerary4', 'origin4', 'destina4', 'total_Itinerary5', 'origin5', 'destina5', 'total_Itinerary6', 'origin6', 'destina6', 'total_Itinerary7', 'origin7', 'destina7', 'total_Itinerary8', 'origin8', 'destina8', 'total_Itinerary9', 'origin9', 'destina9', 'total_Itinerary10', 'origin10', 'destina10', 'Name Hotel', 'Check In Date', 'Check Out Date', 'Room Nigth', 'Breakfast (BB /OB)', 'Nr of Rooms', 'Type of Room', 'City', 'country', 'Car_class', 'Delivery_Date', 'Nr_days', 'Place_delivery', 'Place_delivery_back', 'Departure_date', 'buy in advance', 'PNR', 'CC', 'AC14'],
                           colModel:[
 
                                       {name:'consecutivo',index:'consecutivo',sorttype:"int",width: 250},
@@ -208,7 +208,9 @@
                                       {name:'Departure_date',index:'Departure_date',width: 250},
                                       
                                       {name:'buy_in_advance',index:'buy_in_advance',width: 250},  //NUEVO CAMPO
-                                      {name:'record_localizador',index:'record_localizador',width: 250}  //NUEVO CAMPO
+                                      {name:'record_localizador',index:'record_localizador',width: 250},  //NUEVO CAMPO
+                                      {name:'GVC_ID_CENTRO_COSTO',index:'GVC_ID_CENTRO_COSTO',width: 250},  //NUEVO CAMPO
+                                      {name:'analisis14_cliente',index:'analisis14_cliente',width: 250}  //NUEVO CAMPO
 
                           ],
                           multiselect: true,
