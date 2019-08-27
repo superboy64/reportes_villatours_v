@@ -6,15 +6,15 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'icaavcapa',
+	'hostname' => 'icaavcapa2',
 	'username' => 'dba',
 	'password' => 'sql',
-	'database' => 'icaavcapa',
+	'database' => 'icaavcapa2',
 	'dbdriver' => 'odbc',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
+	'cache_on' => TRUE,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
@@ -36,7 +36,7 @@ $db['coniris'] = array(
 	'dbprefix' => '',
 	'pconnect' => FALSE,
 	'db_debug' => (ENVIRONMENT !== 'production'),
-	'cache_on' => FALSE,
+	'cache_on' => TRUE,
 	'cachedir' => '',
 	'char_set' => 'utf8',
 	'dbcollat' => 'utf8_general_ci',
@@ -48,11 +48,55 @@ $db['coniris'] = array(
 	'save_queries' => TRUE
 );
 
+/*$db['default'] = array(
+	'dsn'	=> '',
+	'hostname' => 'icaavcapa214',
+	'username' => 'dba',
+	'password' => 'sql',
+	'database' => 'icaavcapa214',
+	'dbdriver' => 'odbc',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE  //TRUE
+);
+
+$db['coniris'] = array(
+	'dsn'	=> '',
+	'hostname' => 'iris214',
+	'username' => 'dba',
+	'password' => 'sql',
+	'database' => 'iris214',
+	'dbdriver' => 'odbc',
+	'dbprefix' => '',
+	'pconnect' => FALSE,
+	'db_debug' => (ENVIRONMENT !== 'production'),
+	'cache_on' => FALSE,
+	'cachedir' => '',
+	'char_set' => 'utf8',
+	'dbcollat' => 'utf8_general_ci',
+	'swap_pre' => '',
+	'encrypt' => FALSE,
+	'compress' => FALSE,
+	'stricton' => FALSE,
+	'failover' => array(),
+	'save_queries' => TRUE
+);*/
+
 $db['conmysql'] = array(
 	'dsn'	=> '',
 	'hostname' => 'localhost',
 	'username' => 'root',
-	'password' => 'secret@1',
+	'password' => '123456',
 	'database' => 'reportes_villa_tours',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
@@ -69,3 +113,5 @@ $db['conmysql'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
+
+
