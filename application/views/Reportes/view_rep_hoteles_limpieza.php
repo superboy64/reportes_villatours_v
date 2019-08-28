@@ -103,13 +103,7 @@
                         
             var parametros = string_ids_suc+','+string_ids_serie+','+string_ids_cliente+','+string_ids_servicio+','+string_ids_provedor+','+string_ids_corporativo+','+id_plantilla+','+fecha1+','+fecha2;
 
-          if(id_cliente.length == 0 && id_corporativo.length == 0){
-
-              
-            btn_exportar_excel_rep_hot_li();
-              
-
-          }else{
+       
 
                $.ajax({
                       url: "<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_hoteles_limpieza/get_rep_hoteles_limpieza",
@@ -182,7 +176,7 @@
                 }
             });
 
-          }
+        
 
          
 
