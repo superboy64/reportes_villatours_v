@@ -556,7 +556,8 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     GVC_AC28,
     GVC_ID_CORPORATIVO,
     GVC_NOM_CLI,
-    GVC_CVE_SERV
+    GVC_CVE_SERV,
+    GVC_DOC_NUMERO
 
     from #TEMPFAC as FAC where
          not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC)";

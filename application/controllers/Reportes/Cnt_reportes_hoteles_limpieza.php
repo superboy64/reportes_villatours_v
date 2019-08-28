@@ -183,6 +183,7 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		$activeSheet->setCellValue('M5','GVC_ID_CORPORATIVO');
 		$activeSheet->setCellValue('N5','GVC_NOM_CLI');
 		$activeSheet->setCellValue('O5','GVC_CVE_SERV');
+		$activeSheet->setCellValue('P5','GVC_DOC_NUMERO');
        
 		$activeSheet->fromArray(
 	        $rep,  // The data to set
@@ -191,11 +192,11 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 	                     //    we want to set these values (default is A1)
 	    );
 
-		$activeSheet->getStyle('A5:O5')->getFill()
+		$activeSheet->getStyle('A5:P5')->getFill()
 	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
 	    ->getStartColor()->setARGB('1f497d');
 
-	    $spreadsheet->getActiveSheet()->getStyle('A5:O5')
+	    $spreadsheet->getActiveSheet()->getStyle('A5:P5')
         ->getFont()->getColor()->setARGB('ffffff');
 
 		 $styleArray = [
@@ -208,13 +209,13 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		    ],
 		];
 
-		$spreadsheet->getActiveSheet()->getStyle('A1:O'.(count($rep) + 5))->applyFromArray($styleArray);
-		$spreadsheet->getActiveSheet()->getStyle('A1:O4')->applyFromArray($styleArray);
+		$spreadsheet->getActiveSheet()->getStyle('A1:P'.(count($rep) + 5))->applyFromArray($styleArray);
+		$spreadsheet->getActiveSheet()->getStyle('A1:P4')->applyFromArray($styleArray);
 
 		$spreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
 		$spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 
-		$spreadsheet->getActiveSheet()->getColumnDimension('AO')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('AP')->setAutoSize(true);
 
 
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
@@ -442,6 +443,7 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 			    $valor->GVC_ID_CORPORATIVO = utf8_encode($valor->GVC_ID_CORPORATIVO);
 				$valor->GVC_NOM_CLI = utf8_encode($valor->GVC_NOM_CLI);
 				$valor->GVC_CVE_SERV = utf8_encode($valor->GVC_CVE_SERV);
+				$valor->GVC_DOC_NUMERO = utf8_encode($valor->GVC_DOC_NUMERO);
 
 				array_push($array1, $valor);
 
