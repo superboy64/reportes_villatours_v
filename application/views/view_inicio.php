@@ -1373,7 +1373,7 @@
                                                               <i class="glyphicon glyphicon-file" ></i>
                                                           </td>
                                                           <td colspan="4">
-                                                              <a id="link_rep_gra_ae" href="javascript:void(0);" onclick="li_btn_get_rep_ventas_corporativas_clientes('<?=$title?>');" >Hoteles limpieza&nbsp;</a>
+                                                              <a id="link_rep_gra_ae" href="javascript:void(0);" onclick="li_btn_get_rep_hoteles_limpieza('<?=$title?>');" >Hoteles limpieza&nbsp;</a>
                                                           </td>
                                                           
 
@@ -1383,7 +1383,7 @@
                                                         function li_btn_get_rep_hoteles_limpieza(title){
       
                                                           carga();
-                                                          $.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_hoteles_limpieza/get_html_rep_pasajeros_servicio", {title: title}, function(data){
+                                                          $.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_hoteles_limpieza/get_html_rep_hoteles_limpieza", {title: title}, function(data){
                                                                 
                                                                carga_completa(data);
                                                                 
