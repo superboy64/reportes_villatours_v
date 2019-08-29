@@ -210,8 +210,10 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
 
       }
     
-      $this->db->query("create table #TEMPFAC(
+    $this->db->query("create table #TEMPFAC(
 
+    GVC_ID_SERVICIO varchar(500) null,
+    GVC_ID_SERIE varchar(500) null,
     GVC_DOC_NUMERO varchar(500) null,
     GVC_ID_CLIENTE varchar(500) null,
     GVC_RECORD_LOCALIZADOR varchar(500) null,
@@ -221,13 +223,12 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     GVC_FECHA_ENTRADA varchar(500) null,
     GVC_FECHA_SALIDA varchar(500) null,
     GVC_NOCHES varchar(500) null,
-    GVC_ID_SERIE varchar(500) null,
     GVC_FECHA_FACTURA varchar(500) null,
     GVC_FECHA_RESERVACION varchar(500) null,
     GVC_AC28 varchar(500) null,
     GVC_ID_CORPORATIVO varchar(500) null,
     GVC_NOM_CLI varchar(500) null,
-    GVC_CVE_SERV varchar(500) null
+    GVC_ID_STAT varchar(500) null
     
     )");
 
@@ -238,7 +239,10 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     )");
 
      $select1 = " insert into #TEMPFAC 
-     select 
+     select
+
+      PROV_TPO_SERV.ID_SERVICIO,
+      gds_general.id_serie,
       GVC_DOC_NUMERO=DATOS_FACTURA.FAC_NUMERO,
       gds_general.id_cliente,
       CASE WHEN (gds_general.record_localizador = 'IRIS' OR gds_general.record_localizador = '' OR gds_general.record_localizador IS NULL) THEN  gds_general.analisis28_cliente ELSE gds_general.record_localizador END AS record_localizador,
@@ -248,60 +252,30 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
       gds_hoteles.fecha_entrada,
       gds_hoteles.fecha_salida,
       gds_hoteles.noches,
-      gds_general.id_serie,
       datos_factura.fecha,
       gds_general.fecha_reservacion,
       gds_general.analisis28_cliente,
       GVC_ID_CORPORATIVO=CORPORATIVO.ID_CORPORATIVO,
       GVC_NOM_CLI=DATOS_FACTURA.CL_NOMBRE,
-      PROV_TPO_SERV.ID_SERVICIO
-    
-      from
-      DBA.DATOS_FACTURA,
-      DBA.DETALLE_FACTURA,
-      DBA.CLIENTES,
-      DBA.VENDEDOR as TITULAR,
-      DBA.PROV_TPO_SERV,
-      DBA.SUCURSALES,
-      DBA.PROVEEDORES,
-      DBA.TIPO_SERVICIO left outer join
-      DBA.CORPORATIVO on
-      CLIENTES.ID_CORPORATIVO = CORPORATIVO.ID_CORPORATIVO left outer join
-      DBA.CENTRO_COSTO on
-      DATOS_FACTURA.ID_CENTRO_COSTO = CENTRO_COSTO.ID_CENTRO_COSTO and
-      DATOS_FACTURA.ID_CLIENTE = CENTRO_COSTO.ID_CLIENTE left outer join
-      DBA.DEPARTAMENTO on
-      DATOS_FACTURA.ID_DEPTO = DEPARTAMENTO.ID_DEPTO and
-      DATOS_FACTURA.ID_CENTRO_COSTO = DEPARTAMENTO.ID_CENTRO_COSTO and
-      DATOS_FACTURA.ID_CLIENTE = DEPARTAMENTO.ID_CLIENTE left outer join
-      DBA.VENDEDOR as AUXILIAR on
-      DATOS_FACTURA.ID_VENDEDOR_AUX = AUXILIAR.ID_VENDEDOR left outer join
-      DBA.CONCECUTIVO_BOLETOS on
-      DETALLE_FACTURA.ID_BOLETO = CONCECUTIVO_BOLETOS.ID_BOLETO left outer join
-      DBA.GDS_VUELOS on GDS_VUELOS.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO and
-      GDS_VUELOS.NUMERO_BOLETO = DETALLE_FACTURA.NUMERO_BOL left outer join
-      DBA.GDS_GENERAL on GDS_GENERAL.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO left outer join
-      DBA.GDS_JUSTIFICACION_TARIFAS on GDS_VUELOS.CODIGO_RAZON = ID_JUSTIFICACION 
-      left outer join DBA.gds_hoteles on gds_hoteles.consecutivo = gds_general.consecutivo
-    where
-      DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
-      DETALLE_FACTURA.FAC_NUMERO = DATOS_FACTURA.FAC_NUMERO and
-      DETALLE_FACTURA.ID_SUCURSAL = DATOS_FACTURA.ID_SUCURSAL and
-      DATOS_FACTURA.ID_STAT = 1 and
-      DATOS_FACTURA.ID_CLIENTE = CLIENTES.ID_CLIENTE and
-      DATOS_FACTURA.ID_VENDEDOR_TIT = TITULAR.ID_VENDEDOR and
-      DETALLE_FACTURA.PROV_TPO_SERV = PROV_TPO_SERV.PROV_TPO_SERV and
-      DATOS_FACTURA.ID_SUCURSAL = SUCURSALES.ID_SUCURSAL and
-      PROV_TPO_SERV.ID_PROVEEDOR = PROVEEDORES.ID_PROVEEDOR and
-      PROV_TPO_SERV.ID_SERVICIO = TIPO_SERVICIO.ID_TIPO_SERVICIO and
-      not DBA.DATOS_FACTURA.ID_SERIE = any(select ID_SERIE from DBA.GDS_CXS where EN_OTRA_SERIE = 'A') 
+      datos_factura.id_stat
+      
+
+      from DBA.gds_general
+       
+      left outer join gds_hoteles on gds_hoteles.consecutivo = gds_general.consecutivo
+      left outer join datos_factura on datos_factura.fac_numero = gds_hoteles.fac_numero and GDS_GENERAL.consecutivo = datos_factura.consecutivo
+      left outer join detalle_factura on  DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
+            DETALLE_FACTURA.FAC_NUMERO = DATOS_FACTURA.FAC_NUMERO and
+            DETALLE_FACTURA.ID_SUCURSAL = DATOS_FACTURA.ID_SUCURSAL
+      left outer join CLIENTES on CLIENTES.ID_CLIENTE = DATOS_FACTURA.ID_CLIENTE
+      left outer join CORPORATIVO on CLIENTES.ID_CORPORATIVO = CORPORATIVO.ID_CORPORATIVO
+      left outer join PROV_TPO_SERV on DBA.PROV_TPO_SERV.PROV_TPO_SERV = DETALLE_FACTURA.PROV_TPO_SERV
     
      ";
 
     $select1 = $select1." 
-    and datos_factura.fecha between '".$fecha1."' and '".$fecha2."'
+    where datos_factura.fecha between '".$fecha1."' and '".$fecha2."'
     ";
-
 
     if($all_dks == 0){
 
@@ -542,6 +516,9 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
 
     $select3 = " select
 
+    GVC_ID_SERVICIO,
+    GVC_ID_SERIE,
+    GVC_DOC_NUMERO,
     GVC_ID_CLIENTE,
     GVC_RECORD_LOCALIZADOR,
     GVC_CVE_PAX,
@@ -550,14 +527,12 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     GVC_FECHA_ENTRADA,
     GVC_FECHA_SALIDA,
     GVC_NOCHES,
-    GVC_ID_SERIE,
     GVC_FECHA_FACTURA,
     GVC_FECHA_RESERVACION,
     GVC_AC28,
     GVC_ID_CORPORATIVO,
     GVC_NOM_CLI,
-    GVC_CVE_SERV,
-    GVC_DOC_NUMERO
+    GVC_ID_STAT
 
     from #TEMPFAC as FAC where
          not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC)";

@@ -165,25 +165,25 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		$spreadsheet->getActiveSheet()->getStyle('M5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 		$spreadsheet->getActiveSheet()->getStyle('N5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 		$spreadsheet->getActiveSheet()->getStyle('O5')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		
-	
 
-		$activeSheet->setCellValue('A5','GVC_ID_CLIENTE');
-		$activeSheet->setCellValue('B5','GVC_RECORD_LOCALIZADOR');
-		$activeSheet->setCellValue('C5','GVC_CVE_PAX');
-		$activeSheet->setCellValue('D5','GVC_NOMBRE_PAX');
-		$activeSheet->setCellValue('E5','GVC_NOMBRE_HOTEL');
-		$activeSheet->setCellValue('F5','GVC_FECHA_ENTRADA');
-		$activeSheet->setCellValue('G5','GVC_FECHA_SALIDA');
-		$activeSheet->setCellValue('H5','GVC_NOCHES');
-		$activeSheet->setCellValue('I5','GVC_ID_SERIE');
-		$activeSheet->setCellValue('J5','GVC_FECHA_FACTURA');
-		$activeSheet->setCellValue('K5','GVC_FECHA_RESERVACION');
-		$activeSheet->setCellValue('L5','GVC_AC28');
-		$activeSheet->setCellValue('M5','GVC_ID_CORPORATIVO');
-		$activeSheet->setCellValue('N5','GVC_NOM_CLI');
-		$activeSheet->setCellValue('O5','GVC_CVE_SERV');
-		$activeSheet->setCellValue('P5','GVC_DOC_NUMERO');
+
+		$activeSheet->setCellValue('A5','GVC_ID_SERVICIO');
+		$activeSheet->setCellValue('B5','GVC_ID_SERIE');
+		$activeSheet->setCellValue('C5','GVC_DOC_NUMERO');
+		$activeSheet->setCellValue('D5','GVC_ID_CLIENTE');
+		$activeSheet->setCellValue('E5','GVC_RECORD_LOCALIZADOR');
+		$activeSheet->setCellValue('F5','GVC_CVE_PAX');
+		$activeSheet->setCellValue('G5','GVC_NOMBRE_PAX');
+		$activeSheet->setCellValue('H5','GVC_NOMBRE_HOTEL');
+		$activeSheet->setCellValue('I5','GVC_FECHA_ENTRADA');
+		$activeSheet->setCellValue('J5','GVC_FECHA_SALIDA');
+		$activeSheet->setCellValue('K5','GVC_NOCHES');
+		$activeSheet->setCellValue('L5','GVC_FECHA_FACTURA');
+		$activeSheet->setCellValue('M5','GVC_FECHA_RESERVACION');
+		$activeSheet->setCellValue('N5','GVC_AC28');
+		$activeSheet->setCellValue('O5','GVC_ID_CORPORATIVO');
+		$activeSheet->setCellValue('P5','GVC_NOM_CLI');
+		$activeSheet->setCellValue('Q5','GVC_ID_STAT');
        
 		$activeSheet->fromArray(
 	        $rep,  // The data to set
@@ -192,11 +192,11 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 	                     //    we want to set these values (default is A1)
 	    );
 
-		$activeSheet->getStyle('A5:P5')->getFill()
+		$activeSheet->getStyle('A5:Q5')->getFill()
 	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
 	    ->getStartColor()->setARGB('1f497d');
 
-	    $spreadsheet->getActiveSheet()->getStyle('A5:P5')
+	    $spreadsheet->getActiveSheet()->getStyle('A5:Q5')
         ->getFont()->getColor()->setARGB('ffffff');
 
 		 $styleArray = [
@@ -209,13 +209,13 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		    ],
 		];
 
-		$spreadsheet->getActiveSheet()->getStyle('A1:P'.(count($rep) + 5))->applyFromArray($styleArray);
-		$spreadsheet->getActiveSheet()->getStyle('A1:P4')->applyFromArray($styleArray);
+		$spreadsheet->getActiveSheet()->getStyle('A1:Q'.(count($rep) + 5))->applyFromArray($styleArray);
+		$spreadsheet->getActiveSheet()->getStyle('A1:Q4')->applyFromArray($styleArray);
 
 		$spreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
 		$spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 
-		$spreadsheet->getActiveSheet()->getColumnDimension('AP')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('AQ')->setAutoSize(true);
 
 
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
@@ -427,23 +427,25 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		    $array1 = array();
 
 		    foreach ($rest as $clave => $valor) {
+   
+			 	$valor->GVC_ID_SERVICIO = utf8_encode($valor->GVC_ID_SERVICIO);
+			 	$valor->GVC_ID_SERIE = utf8_encode($valor->GVC_ID_SERIE);
+			 	$valor->GVC_DOC_NUMERO = utf8_encode($valor->GVC_DOC_NUMERO);
+			 	$valor->GVC_ID_CLIENTE = utf8_encode($valor->GVC_ID_CLIENTE);
+			 	$valor->GVC_RECORD_LOCALIZADOR = utf8_encode($valor->GVC_RECORD_LOCALIZADOR);
+			 	$valor->GVC_CVE_PAX = utf8_encode($valor->GVC_CVE_PAX);
+			 	$valor->GVC_NOMBRE_PAX = utf8_encode($valor->GVC_NOMBRE_PAX);
+			 	$valor->GVC_NOMBRE_HOTEL = utf8_encode($valor->GVC_NOMBRE_HOTEL);
+			 	$valor->GVC_FECHA_ENTRADA = utf8_encode($valor->GVC_FECHA_ENTRADA);
+			 	$valor->GVC_FECHA_SALIDA = utf8_encode($valor->GVC_FECHA_SALIDA);
+			 	$valor->GVC_NOCHES = utf8_encode($valor->GVC_NOCHES);
+			 	$valor->GVC_FECHA_FACTURA = utf8_encode($valor->GVC_FECHA_FACTURA);
+			 	$valor->GVC_FECHA_RESERVACION = utf8_encode($valor->GVC_FECHA_RESERVACION);
+			 	$valor->GVC_AC28 = utf8_encode($valor->GVC_AC28);
+			 	$valor->GVC_ID_CORPORATIVO = utf8_encode($valor->GVC_ID_CORPORATIVO);
+			 	$valor->GVC_NOM_CLI = utf8_encode($valor->GVC_NOM_CLI);
+			 	$valor->GVC_ID_STAT = utf8_encode($valor->GVC_ID_STAT);
 			 	
-			    $valor->GVC_ID_CLIENTE = utf8_encode($valor->GVC_ID_CLIENTE); 
-			    $valor->GVC_RECORD_LOCALIZADOR = utf8_encode($valor->GVC_RECORD_LOCALIZADOR); 
-			    $valor->GVC_CVE_PAX = utf8_encode($valor->GVC_CVE_PAX); 
-			    $valor->GVC_NOMBRE_PAX = utf8_encode($valor->GVC_NOMBRE_PAX); 
-			    $valor->GVC_NOMBRE_HOTEL = utf8_encode($valor->GVC_NOMBRE_HOTEL); 
-			    $valor->GVC_FECHA_ENTRADA = utf8_encode($valor->GVC_FECHA_ENTRADA); 
-			    $valor->GVC_FECHA_SALIDA = utf8_encode($valor->GVC_FECHA_SALIDA); 
-			    $valor->GVC_NOCHES = utf8_encode($valor->GVC_NOCHES); 
-			    $valor->GVC_ID_SERIE = utf8_encode($valor->GVC_ID_SERIE); 
-			    $valor->GVC_FECHA_FACTURA = utf8_encode($valor->GVC_FECHA_FACTURA);
-			    $valor->GVC_FECHA_RESERVACION = utf8_encode($valor->GVC_FECHA_RESERVACION);
-			    $valor->GVC_AC28 = utf8_encode($valor->GVC_AC28); 
-			    $valor->GVC_ID_CORPORATIVO = utf8_encode($valor->GVC_ID_CORPORATIVO);
-				$valor->GVC_NOM_CLI = utf8_encode($valor->GVC_NOM_CLI);
-				$valor->GVC_CVE_SERV = utf8_encode($valor->GVC_CVE_SERV);
-				$valor->GVC_DOC_NUMERO = utf8_encode($valor->GVC_DOC_NUMERO);
 
 				array_push($array1, $valor);
 

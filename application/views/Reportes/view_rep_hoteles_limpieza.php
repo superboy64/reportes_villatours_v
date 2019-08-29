@@ -136,10 +136,13 @@
                             height: 500,
                             shrinkToFit:false,
                             forceFit:true,
-                            colNames:['GVC_ID_CLIENTE','GVC_RECORD_LOCALIZADOR','GVC_CVE_PAX','GVC_NOMBRE_PAX','GVC_NOMBRE_HOTEL','GVC_FECHA_ENTRADA','GVC_FECHA_SALIDA','GVC_NOCHES','GVC_ID_SERIE','GVC_FECHA_FACTURA','GVC_FECHA_RESERVACION','GVC_AC28'],
+                            colNames:['GVC_ID_SERVICIO','GVC_ID_SERIE','GVC_DOC_NUMERO','GVC_ID_CLIENTE','GVC_RECORD_LOCALIZADOR','GVC_CVE_PAX','GVC_NOMBRE_PAX','GVC_NOMBRE_HOTEL','GVC_FECHA_ENTRADA','GVC_FECHA_SALIDA','GVC_NOCHES','GVC_FECHA_FACTURA','GVC_FECHA_RESERVACION','GVC_AC28','GVC_ID_CORPORATIVO','GVC_NOM_CLI','GVC_ID_STAT'],
                             colModel:[
 
-                                    {name:'GVC_ID_CLIENTE',index:'GVC_ID_CLIENTE',sorttype:"int",width: 250},
+                                    {name:'GVC_ID_SERVICIO',index:'GVC_ID_SERVICIO',width: 250},
+                                    {name:'GVC_ID_SERIE',index:'GVC_ID_SERIE',width: 250},
+                                    {name:'GVC_DOC_NUMERO',index:'GVC_DOC_NUMERO',width: 250},
+                                    {name:'GVC_ID_CLIENTE',index:'GVC_ID_CLIENTE',width: 250},
                                     {name:'GVC_RECORD_LOCALIZADOR',index:'GVC_RECORD_LOCALIZADOR',width: 250},
                                     {name:'GVC_CVE_PAX',index:'GVC_CVE_PAX',width: 250},
                                     {name:'GVC_NOMBRE_PAX',index:'GVC_NOMBRE_PAX',width: 250},
@@ -147,10 +150,13 @@
                                     {name:'GVC_FECHA_ENTRADA',index:'GVC_FECHA_ENTRADA',width: 250},
                                     {name:'GVC_FECHA_SALIDA',index:'GVC_FECHA_SALIDA',width: 250},
                                     {name:'GVC_NOCHES',index:'GVC_NOCHES',width: 250},
-                                    {name:'GVC_ID_SERIE',index:'GVC_ID_SERIE',width: 250},
                                     {name:'GVC_FECHA_FACTURA',index:'GVC_FECHA_FACTURA',width: 250},
                                     {name:'GVC_FECHA_RESERVACION',index:'GVC_FECHA_RESERVACION',width: 250},
-                                    {name:'GVC_AC28',index:'GVC_AC28',width: 250}
+                                    {name:'GVC_AC28',index:'GVC_AC28',width: 250},
+                                    {name:'GVC_ID_CORPORATIVO',index:'GVC_ID_CORPORATIVO',width: 250},
+                                    {name:'GVC_NOM_CLI',index:'GVC_NOM_CLI',width: 250},
+                                    {name:'GVC_ID_STAT',index:'GVC_ID_STAT',width: 250},
+                                   
                                         
                             ],
                             multiselect: true,
