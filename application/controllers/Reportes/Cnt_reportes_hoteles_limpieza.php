@@ -181,9 +181,10 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		$activeSheet->setCellValue('L5','GVC_FECHA_FACTURA');
 		$activeSheet->setCellValue('M5','GVC_FECHA_RESERVACION');
 		$activeSheet->setCellValue('N5','GVC_AC28');
-		$activeSheet->setCellValue('O5','GVC_ID_CORPORATIVO');
-		$activeSheet->setCellValue('P5','GVC_NOM_CLI');
-		$activeSheet->setCellValue('Q5','GVC_ID_STAT');
+		$activeSheet->setCellValue('O5','GVC_AC01');
+		$activeSheet->setCellValue('P5','GVC_ID_CORPORATIVO');
+		$activeSheet->setCellValue('Q5','GVC_NOM_CLI');
+		$activeSheet->setCellValue('R5','GVC_ID_STAT');
        
 		$activeSheet->fromArray(
 	        $rep,  // The data to set
@@ -192,11 +193,11 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 	                     //    we want to set these values (default is A1)
 	    );
 
-		$activeSheet->getStyle('A5:Q5')->getFill()
+		$activeSheet->getStyle('A5:R5')->getFill()
 	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
 	    ->getStartColor()->setARGB('1f497d');
 
-	    $spreadsheet->getActiveSheet()->getStyle('A5:Q5')
+	    $spreadsheet->getActiveSheet()->getStyle('A5:R5')
         ->getFont()->getColor()->setARGB('ffffff');
 
 		 $styleArray = [
@@ -209,13 +210,13 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 		    ],
 		];
 
-		$spreadsheet->getActiveSheet()->getStyle('A1:Q'.(count($rep) + 5))->applyFromArray($styleArray);
-		$spreadsheet->getActiveSheet()->getStyle('A1:Q4')->applyFromArray($styleArray);
+		$spreadsheet->getActiveSheet()->getStyle('A1:R'.(count($rep) + 5))->applyFromArray($styleArray);
+		$spreadsheet->getActiveSheet()->getStyle('A1:R4')->applyFromArray($styleArray);
 
 		$spreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
 		$spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 
-		$spreadsheet->getActiveSheet()->getColumnDimension('AQ')->setAutoSize(true);
+		$spreadsheet->getActiveSheet()->getColumnDimension('AR')->setAutoSize(true);
 
 
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
@@ -442,6 +443,7 @@ class Cnt_reportes_hoteles_limpieza extends CI_Controller {
 			 	$valor->GVC_FECHA_FACTURA = utf8_encode($valor->GVC_FECHA_FACTURA);
 			 	$valor->GVC_FECHA_RESERVACION = utf8_encode($valor->GVC_FECHA_RESERVACION);
 			 	$valor->GVC_AC28 = utf8_encode($valor->GVC_AC28);
+			 	$valor->GVC_AC01 = utf8_encode($valor->GVC_AC01);
 			 	$valor->GVC_ID_CORPORATIVO = utf8_encode($valor->GVC_ID_CORPORATIVO);
 			 	$valor->GVC_NOM_CLI = utf8_encode($valor->GVC_NOM_CLI);
 			 	$valor->GVC_ID_STAT = utf8_encode($valor->GVC_ID_STAT);

@@ -226,6 +226,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     GVC_FECHA_FACTURA varchar(500) null,
     GVC_FECHA_RESERVACION varchar(500) null,
     GVC_AC28 varchar(500) null,
+    GVC_AC01 varchar(500) null,
     GVC_ID_CORPORATIVO varchar(500) null,
     GVC_NOM_CLI varchar(500) null,
     GVC_ID_STAT varchar(500) null
@@ -245,7 +246,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
       gds_general.id_serie,
       GVC_DOC_NUMERO=DATOS_FACTURA.FAC_NUMERO,
       gds_general.id_cliente,
-      CASE WHEN (gds_general.record_localizador = 'IRIS' OR gds_general.record_localizador = '' OR gds_general.record_localizador IS NULL) THEN  gds_general.analisis28_cliente ELSE gds_general.record_localizador END AS record_localizador,
+      CASE WHEN (gds_general.record_localizador = 'IRIS' OR gds_general.record_localizador = '' OR gds_general.record_localizador IS NULL) THEN  datos_factura.analisis1_cliente ELSE gds_general.record_localizador END AS record_localizador,
       gds_general.cla_pax,
       gds_general.nombre_pax,
       gds_hoteles.nombre_hotel,
@@ -255,6 +256,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
       datos_factura.fecha,
       gds_general.fecha_reservacion,
       gds_general.analisis28_cliente,
+      datos_factura.analisis1_cliente,
       GVC_ID_CORPORATIVO=CORPORATIVO.ID_CORPORATIVO,
       GVC_NOM_CLI=DATOS_FACTURA.CL_NOMBRE,
       datos_factura.id_stat
@@ -530,6 +532,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     GVC_FECHA_FACTURA,
     GVC_FECHA_RESERVACION,
     GVC_AC28,
+    GVC_AC01,
     GVC_ID_CORPORATIVO,
     GVC_NOM_CLI,
     GVC_ID_STAT
