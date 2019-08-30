@@ -754,7 +754,10 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                             
                       }
 
+
                   }else{
+
+                      
 
                       $plantilla = $db_prueba->query("SELECT nombre_columna_vista FROM rpv_reporte_plantilla_columnas
                       inner join rpv_reporte_columnas on rpv_reporte_plantilla_columnas.id_col = rpv_reporte_columnas.id where rpv_reporte_plantilla_columnas.status = 1 and rpv_reporte_plantilla_columnas.id_plantilla = ".$id_plantilla);
@@ -770,6 +773,7 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                         $nombre_campo1 =  ltrim(rtrim($valor1["nombre_columna_vista"]));
 
                         //*****************************
+                            
 
                                   foreach ($array_campos_query_fc as $clave2 => $valor2) {  
 
@@ -812,7 +816,7 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                   }
                   
                   $this->db->query("create table #TEMPFAC(
-                  GVC_DOC_NUMERO_VALIDACION varchar(500) null,
+                  GVC_DOC_NUMERO_VALIDACION varchar(100) null,
                   ".$str_campos_query_fc_create."
                   )");  
                   
@@ -826,6 +830,45 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
 
                   }
                   
+                  $valida_cantidad = "select count(*) as contador
+                  from
+                  DBA.DATOS_FACTURA,
+                  DBA.DETALLE_FACTURA,
+                  DBA.CLIENTES,
+                  DBA.VENDEDOR as TITULAR,
+                  DBA.PROV_TPO_SERV,
+                  DBA.SUCURSALES,
+                  DBA.PROVEEDORES,
+                  DBA.TIPO_SERVICIO left outer join
+                  DBA.CORPORATIVO on
+                  CLIENTES.ID_CORPORATIVO = CORPORATIVO.ID_CORPORATIVO left outer join
+                  DBA.CENTRO_COSTO on
+                  DATOS_FACTURA.ID_CENTRO_COSTO = CENTRO_COSTO.ID_CENTRO_COSTO and
+                  DATOS_FACTURA.ID_CLIENTE = CENTRO_COSTO.ID_CLIENTE left outer join
+                  DBA.DEPARTAMENTO on
+                  DATOS_FACTURA.ID_DEPTO = DEPARTAMENTO.ID_DEPTO and
+                  DATOS_FACTURA.ID_CENTRO_COSTO = DEPARTAMENTO.ID_CENTRO_COSTO and
+                  DATOS_FACTURA.ID_CLIENTE = DEPARTAMENTO.ID_CLIENTE left outer join
+                  DBA.VENDEDOR as AUXILIAR on
+                  DATOS_FACTURA.ID_VENDEDOR_AUX = AUXILIAR.ID_VENDEDOR left outer join
+                  DBA.CONCECUTIVO_BOLETOS on
+                  DETALLE_FACTURA.ID_BOLETO = CONCECUTIVO_BOLETOS.ID_BOLETO left outer join
+                  DBA.GDS_VUELOS on GDS_VUELOS.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO and
+                  GDS_VUELOS.NUMERO_BOLETO = DETALLE_FACTURA.NUMERO_BOL left outer join
+                  DBA.GDS_GENERAL on GDS_GENERAL.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO left outer join
+                  DBA.GDS_JUSTIFICACION_TARIFAS on GDS_VUELOS.CODIGO_RAZON = ID_JUSTIFICACION where
+                  DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
+                  DETALLE_FACTURA.FAC_NUMERO = DATOS_FACTURA.FAC_NUMERO and
+                  DETALLE_FACTURA.ID_SUCURSAL = DATOS_FACTURA.ID_SUCURSAL and
+                  DATOS_FACTURA.ID_STAT = 1 and
+                  DATOS_FACTURA.ID_CLIENTE = CLIENTES.ID_CLIENTE and
+                  DATOS_FACTURA.ID_VENDEDOR_TIT = TITULAR.ID_VENDEDOR and
+                  DETALLE_FACTURA.PROV_TPO_SERV = PROV_TPO_SERV.PROV_TPO_SERV and
+                  DATOS_FACTURA.ID_SUCURSAL = SUCURSALES.ID_SUCURSAL and
+                  PROV_TPO_SERV.ID_PROVEEDOR = PROVEEDORES.ID_PROVEEDOR and
+                  PROV_TPO_SERV.ID_SERVICIO = TIPO_SERVICIO.ID_TIPO_SERVICIO and
+                  not DBA.DATOS_FACTURA.ID_SERIE = any(select ID_SERIE from DBA.GDS_CXS where EN_OTRA_SERIE = 'A')
+                  ";
                   
                   $select1 = "insert into #TEMPFAC select DATOS_FACTURA.FAC_NUMERO as GVC_DOC_NUMERO_VALIDACION,".$str_campos_query_fc."
                   from
@@ -879,6 +922,9 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                   $select1 = $select1." 
                   and ".$condicion_fecha." between cast('".$fecha1."' as date) and cast('".$fecha2."' as date)
                   ";
+                  $valida_cantidad = $valida_cantidad." 
+                  and ".$condicion_fecha." between cast('".$fecha1."' as date) and cast('".$fecha2."' as date)
+                  ";
 
                   if($all_dks == 0){
 
@@ -900,37 +946,45 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                             $id_cliente_arr = implode(",", $id_cliente_arr);
 
                             $select1 = $select1 . "and DATOS_FACTURA.ID_CLIENTE in (".$id_cliente_arr.") "; //ya
+                            $valida_cantidad = $valida_cantidad . "and DATOS_FACTURA.ID_CLIENTE in (".$id_cliente_arr.") "; //ya
 
                        }
                        if($cont_suc > 0){
 
                             $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
+                            $valida_cantidad = $valida_cantidad . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
 
                        }
                        if($cont_cliente > 0){
 
                             $select1 = $select1 . "and CLIENTES.id_cliente in (".$str_cli.") "; 
+                            $valida_cantidad = $valida_cantidad . "and CLIENTES.id_cliente in (".$str_cli.") "; 
 
 
                        }
                        if($cont_corporativo > 0){  //ya
 
                             $select1 = $select1 . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
 
                        }
                        if($cont_serie > 0){  //ya
 
                             $select1 = $select1 . " and DATOS_FACTURA.ID_SERIE in (".$str_ser.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and DATOS_FACTURA.ID_SERIE in (".$str_ser.") "; //ya
+
 
                        }
                        if($cont_servicio > 0){
 
                             $select1 = $select1 . " and PROV_TPO_SERV.ID_SERVICIO in (".$str_serv.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and PROV_TPO_SERV.ID_SERVICIO in (".$str_serv.") "; //ya
 
                        }
                        if($cont_provedor > 0){
 
                             $select1 = $select1 . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
 
                        }
                        
@@ -940,32 +994,38 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                       if($cont_suc > 0){
 
                             $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
+                            $valida_cantidad = $valida_cantidad . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
 
                       }
                       if($cont_cliente > 0){
 
                             $select1 = $select1 . "and DATOS_FACTURA.ID_CLIENTE in (".$str_cli.") "; 
+                            $valida_cantidad = $valida_cantidad . "and DATOS_FACTURA.ID_CLIENTE in (".$str_cli.") "; 
 
 
                        }
                        if($cont_corporativo > 0){  //ya
 
                             $select1 = $select1 . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
 
                        }
                        if($cont_serie > 0){  //ya
 
                             $select1 = $select1 . " and DATOS_FACTURA.ID_SERIE in (".$str_ser.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and DATOS_FACTURA.ID_SERIE in (".$str_ser.") "; //ya
 
                        }
                        if($cont_servicio > 0){
 
                             $select1 = $select1 . " and PROV_TPO_SERV.ID_SERVICIO in (".$str_serv.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and PROV_TPO_SERV.ID_SERVICIO in (".$str_serv.") "; //ya
 
                        }
                        if($cont_provedor > 0){
 
                             $select1 = $select1 . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
+                            $valida_cantidad = $valida_cantidad . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
 
                        }
 
@@ -1144,9 +1204,8 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
                   $array_campos_query_nc['GVC_CLASES'] = 'null';
 
                  
-                  
                   $this->db->query("create table #TEMPNC(
-                    GVC_FAC_NUMERO varchar(500) null
+                    GVC_FAC_NUMERO varchar(100) null
                   )");
                 
 
@@ -1299,50 +1358,53 @@ class Mod_reportes_gvc_reporteador_net extends CI_Model {
 
                   }
                   
-             
                   //********************************************
 
-                      $this->db->query($select1);
+                      $query_valida_cantidad = $this->db->query($valida_cantidad);
+                      $result_valida_cantidad = $query_valida_cantidad->result_array();
+                      
+                      $cantidad_registros = $result_valida_cantidad[0]['contador'];
+
+                      if($cantidad_registros < 1500 || $proceso == 2){
 
 
-                      $this->db->query($select2);
+                            $this->db->query($select1);
 
-                      $ultimaletra = substr($str_campos_query_fc_nombre_col, -1);
+                            $this->db->query($select2);
 
-                      if($ultimaletra == ','){
+                            $ultimaletra = substr($str_campos_query_fc_nombre_col, -1);
 
-                        $str_campos_query_fc_nombre_col = substr($str_campos_query_fc_nombre_col, 0, -1);
+                            if($ultimaletra == ','){
 
+                              $str_campos_query_fc_nombre_col = substr($str_campos_query_fc_nombre_col, 0, -1);
+
+                            }
+
+                            $select3 = " select
+                              
+                              ".$str_campos_query_fc_nombre_col." 
+
+                            from #TEMPFAC as FAC where 
+                             not FAC.GVC_DOC_NUMERO_VALIDACION = any(select distinct GVC_FAC_NUMERO from #TEMPNC)";
+                            
+                            $query_rows = $this->db->query($select3);
+
+                            $result = $query_rows->result_array();
+
+
+                      }else{
+
+                            $result = 'mayor';
 
                       }
 
-
-                      $select3 = " select
-                        
-                        ".$str_campos_query_fc_nombre_col." 
-
-                      from #TEMPFAC as FAC where 
-                       not FAC.GVC_DOC_NUMERO_VALIDACION = any(select distinct GVC_FAC_NUMERO from #TEMPNC)";
-                      
-                      $query_rows = $this->db->query($select3);
-
-                      $result = $query_rows->result_array();
-
+     
                       $this->db->query("drop table #TEMPFAC");
                       $this->db->query("drop table #TEMPNC");
 
 
                   //********************************************
-
-
-                  if($proceso == '1'){
-                    
-                    $result = $query_rows->result();
-
-                  }else if($proceso == '2'){
-
-                    $result = $query_rows->result_array();
-                  }
+               
                   
   
     return $result;

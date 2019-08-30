@@ -131,7 +131,13 @@
                     },
                     success: function (data) {
                           
-                            data = JSON.parse(data);
+                          data = JSON.parse(data);
+
+                          if(data['rep'] == 'mayor'){
+
+                            window.open('<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador_net/exportar_excel_usuario?parametros='+parametros+'&tipo_funcion=rep');
+
+                          }else{
 
                             $("#dg").jqGrid({
 
@@ -265,15 +271,15 @@
                                           {name:'GVC_FOR_PAG5',index:'GVC_FOR_PAG5',width: 250},
                                           {name:'GVC_FAC_NUMERO',index:'GVC_FAC_NUMERO',width: 250},
                                           {name:'GVC_ID_SERIE_FAC',index:'GVC_ID_SERIE_FAC',width: 250},
-                                          {name:'GVC_FAC_CVE_SUCURSAL',index:'GVC_FAC_CVE_SUCURSAL'}
+                                          {name:'GVC_FAC_CVE_SUCURSAL',index:'GVC_FAC_CVE_SUCURSAL',width: 250}
                                 ],
-                                multiselect: true,
+                                multiselect: false,
                                 caption: "GVC_reporteador_net",
                                 width: 1200,
                                 pager: "#pg_ptoolbar",
                                 viewrecords: true
                             });
-
+                            
                             for(var i=0;i<=data['rep'].length;i++){
                               $("#dg").jqGrid('addRowData',i+1,data['rep'][i]);
                             }
@@ -283,6 +289,9 @@
                               $("#dg").showCol(value['nombre_columna_vista']);
                                     
                             });*/
+
+
+                           }//fin else valida mayor
 
                       },
                       error: function () {
@@ -363,9 +372,9 @@
             var id_plantilla = $("#slc_plantilla").val();
             var fecha1 = $("#datapicker_fecha1").val();
             var fecha2 = $("#datapicker_fecha2").val();
-            
+                                      
             var page = $(".pagination-num").val();
-                        
+                                                  
             var parametros = string_ids_suc+','+string_ids_serie+','+string_ids_cliente+','+string_ids_servicio+','+string_ids_provedor+','+string_ids_corporativo+','+id_plantilla+','+fecha1+','+fecha2;
             var tipo_funcion = 'rep';
             

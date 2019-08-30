@@ -262,10 +262,10 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
       datos_factura.id_stat
       
 
-      from DBA.gds_general
-       
-      left outer join gds_hoteles on gds_hoteles.consecutivo = gds_general.consecutivo
-      left outer join datos_factura on datos_factura.fac_numero = gds_hoteles.fac_numero and GDS_GENERAL.consecutivo = datos_factura.consecutivo
+      from DBA.gds_hoteles gds_hoteles
+      
+      left outer join DBA.GDS_GENERAL on GDS_GENERAL.CONSECUTIVO = gds_hoteles.CONSECUTIVO
+      left outer join datos_factura ON gds_hoteles.consecutivo = datos_factura.consecutivo
       left outer join detalle_factura on  DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
             DETALLE_FACTURA.FAC_NUMERO = DATOS_FACTURA.FAC_NUMERO and
             DETALLE_FACTURA.ID_SUCURSAL = DATOS_FACTURA.ID_SUCURSAL

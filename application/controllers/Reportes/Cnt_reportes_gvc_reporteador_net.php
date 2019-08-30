@@ -91,126 +91,137 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
         $parametros["fecha2"] = $fecha2;
 
         $parametros["id_usuario"] = $this->session->userdata('session_id');
-        $parametros["proceso"] = 2;
+        $parametros["proceso"] = 1;
         $parametros["id_intervalo"] = '0';
         $parametros["fecha_ini_proceso"] = '';
         $parametros["id_plantilla"] = $id_plantilla;
 
 		$rep = $this->reportes_gvc_reporteador_net($parametros);
 
-		//$col = $this->Mod_reportes_gvc_reporteador_net->get_columnas($id_plantilla,4);
 
 		$param_final['rep'] = $rep;
-		//$param_final['col'] = $col;
+		
 		
 		echo json_encode($param_final);
+		
 
 	}
 
 	public function reportes_gvc_reporteador_net($parametros){
 
 	    $rest = $this->Mod_reportes_gvc_reporteador_net->get_reportes_gvc_reporteador_net($parametros);
-	  
-	    $array1 = array();
+	  	
+	  	if($rest != 'mayor'){
 
-	    $rep = [];
-		foreach($rest as $value) {
-    		if(isset($value['GVC_TARIFA_MON_BASE'])){
+	  			$array1 = array();
 
-				$value['GVC_TARIFA_MON_BASE'] = $value['GVC_TARIFA_MON_BASE'];
-			}
-    		
-			if(isset($value['GVC_TARIFA_MON_EXT'])){
+			    $rep = [];
+				foreach($rest as $value) {
+		    		if(isset($value['GVC_TARIFA_MON_BASE'])){
 
-				$value['GVC_TARIFA_MON_EXT'] = $value['GVC_TARIFA_MON_EXT'];
-			}
+						$value['GVC_TARIFA_MON_BASE'] = $value['GVC_TARIFA_MON_BASE'];
+					}
+		    		
+					if(isset($value['GVC_TARIFA_MON_EXT'])){
 
-			if(isset($value['GVC_DESCUENTO'])){
+						$value['GVC_TARIFA_MON_EXT'] = $value['GVC_TARIFA_MON_EXT'];
+					}
 
-				$value['GVC_DESCUENTO'] = $value['GVC_DESCUENTO'];
-			}
-			
-			if(isset($value['GVC_IVA_DESCUENTO'])){
+					if(isset($value['GVC_DESCUENTO'])){
 
-				$value['GVC_IVA_DESCUENTO'] = $value['GVC_IVA_DESCUENTO'];
-			}
-			
-			if(isset($value['GVC_COM_AGE'])){
+						$value['GVC_DESCUENTO'] = $value['GVC_DESCUENTO'];
+					}
+					
+					if(isset($value['GVC_IVA_DESCUENTO'])){
 
-				$value['GVC_COM_AGE'] = $value['GVC_COM_AGE'];
-			}
-			
-			if(isset($value['GVC_COM_TIT'])){
+						$value['GVC_IVA_DESCUENTO'] = $value['GVC_IVA_DESCUENTO'];
+					}
+					
+					if(isset($value['GVC_COM_AGE'])){
 
-				$value['GVC_COM_TIT'] = $value['GVC_COM_TIT'];
-			}
-			
-			if(isset($value['GVC_COM_AUX'])){
+						$value['GVC_COM_AGE'] = $value['GVC_COM_AGE'];
+					}
+					
+					if(isset($value['GVC_COM_TIT'])){
 
-				$value['GVC_COM_AUX'] = $value['GVC_COM_AUX'];
-			}
-			
-			if(isset($value['GVC_POR_IVA_COM'])){
+						$value['GVC_COM_TIT'] = $value['GVC_COM_TIT'];
+					}
+					
+					if(isset($value['GVC_COM_AUX'])){
 
-				$value['GVC_POR_IVA_COM'] = $value['GVC_POR_IVA_COM'];
-			}
-			
-			if(isset($value['GVC_IVA'])){
+						$value['GVC_COM_AUX'] = $value['GVC_COM_AUX'];
+					}
+					
+					if(isset($value['GVC_POR_IVA_COM'])){
 
-				$value['GVC_IVA'] = $value['GVC_IVA'];
-			}
-			
-			if(isset($value['GVC_TUA'])){
+						$value['GVC_POR_IVA_COM'] = $value['GVC_POR_IVA_COM'];
+					}
+					
+					if(isset($value['GVC_IVA'])){
 
-				$value['GVC_TUA'] = $value['GVC_TUA'];
-			}
-			
-			if(isset($value['GVC_OTROS_IMPUESTOS'])){
+						$value['GVC_IVA'] = $value['GVC_IVA'];
+					}
+					
+					if(isset($value['GVC_TUA'])){
 
-				$value['GVC_OTROS_IMPUESTOS'] = $value['GVC_OTROS_IMPUESTOS'];
-			}
-			
-			if(isset($value['GVC_TOTAL'])){
+						$value['GVC_TUA'] = $value['GVC_TUA'];
+					}
+					
+					if(isset($value['GVC_OTROS_IMPUESTOS'])){
 
-				$value['GVC_TOTAL'] = $value['GVC_TOTAL'];
-			}
-			
-			if(isset($value['GVC_SUMA_IMPUESTOS'])){
+						$value['GVC_OTROS_IMPUESTOS'] = $value['GVC_OTROS_IMPUESTOS'];
+					}
+					
+					if(isset($value['GVC_TOTAL'])){
 
-				$value['GVC_SUMA_IMPUESTOS'] = $value['GVC_SUMA_IMPUESTOS'];
-			}
-			
-			if(isset($value['GVC_IVA_EXT'])){
+						$value['GVC_TOTAL'] = $value['GVC_TOTAL'];
+					}
+					
+					if(isset($value['GVC_SUMA_IMPUESTOS'])){
 
-				$value['GVC_IVA_EXT'] = $value['GVC_IVA_EXT'];
-			}
-			
-			if(isset($value['GVC_TUA_EXT'])){
+						$value['GVC_SUMA_IMPUESTOS'] = $value['GVC_SUMA_IMPUESTOS'];
+					}
+					
+					if(isset($value['GVC_IVA_EXT'])){
 
-				$value['GVC_TUA_EXT'] = $value['GVC_TUA_EXT'];
-			}
-			
-			if(isset($value['GVC_OTR_EXT'])){
+						$value['GVC_IVA_EXT'] = $value['GVC_IVA_EXT'];
+					}
+					
+					if(isset($value['GVC_TUA_EXT'])){
 
-				$value['GVC_OTR_EXT'] = $value['GVC_OTR_EXT'];
-			}
-			
-			if(isset($value['GVC_TARIFA_COMPARATIVA_BOLETO'])){
+						$value['GVC_TUA_EXT'] = $value['GVC_TUA_EXT'];
+					}
+					
+					if(isset($value['GVC_OTR_EXT'])){
 
-				$value['GVC_TARIFA_COMPARATIVA_BOLETO'] = $value['GVC_TARIFA_COMPARATIVA_BOLETO'];
-			}
-			
-			if(isset($value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'])){
+						$value['GVC_OTR_EXT'] = $value['GVC_OTR_EXT'];
+					}
+					
+					if(isset($value['GVC_TARIFA_COMPARATIVA_BOLETO'])){
 
-				$value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'] = $value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'];
-			}
+						$value['GVC_TARIFA_COMPARATIVA_BOLETO'] = $value['GVC_TARIFA_COMPARATIVA_BOLETO'];
+					}
+					
+					if(isset($value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'])){
 
-    		$cast_utf8 = array_map("utf8_encode", $value );
-    		array_push($array1, $cast_utf8);
-		    
-		}
+						$value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'] = $value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'];
+					}
 
-	    return $array1;
+		    		$cast_utf8 = array_map("utf8_encode", $value );
+		    		array_push($array1, $cast_utf8);
+				    
+				}
+
+			    return $array1;
+
+
+	  	}else{
+
+	  		return $rest;
+
+	  	}
+
+
 
 	}
 
