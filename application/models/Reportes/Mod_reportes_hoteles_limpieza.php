@@ -240,9 +240,10 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
     )");
 
      $select1 = " insert into #TEMPFAC 
-     select
 
-      PROV_TPO_SERV.ID_SERVICIO,
+      select 
+
+    PROV_TPO_SERV.ID_SERVICIO,
       gds_general.id_serie,
       GVC_DOC_NUMERO=DATOS_FACTURA.FAC_NUMERO,
       gds_general.id_cliente,
@@ -257,30 +258,61 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
       gds_general.fecha_reservacion,
       gds_general.analisis28_cliente,
       datos_factura.analisis1_cliente,
-      GVC_ID_CORPORATIVO=CORPORATIVO.ID_CORPORATIVO,
+      GVC_ID_CORPORATIVO=CLIENTES.ID_CORPORATIVO,
       GVC_NOM_CLI=DATOS_FACTURA.CL_NOMBRE,
       datos_factura.id_stat
-      
 
-      from DBA.gds_hoteles gds_hoteles
-      
-      left outer join DBA.GDS_GENERAL on GDS_GENERAL.CONSECUTIVO = gds_hoteles.CONSECUTIVO
-      left outer join datos_factura ON gds_hoteles.consecutivo = datos_factura.consecutivo
-      left outer join detalle_factura on  DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
-            DETALLE_FACTURA.FAC_NUMERO = DATOS_FACTURA.FAC_NUMERO and
-            DETALLE_FACTURA.ID_SUCURSAL = DATOS_FACTURA.ID_SUCURSAL
-      left outer join CLIENTES on CLIENTES.ID_CLIENTE = DATOS_FACTURA.ID_CLIENTE
-      left outer join CORPORATIVO on CLIENTES.ID_CORPORATIVO = CORPORATIVO.ID_CORPORATIVO
-      left outer join PROV_TPO_SERV on DBA.PROV_TPO_SERV.PROV_TPO_SERV = DETALLE_FACTURA.PROV_TPO_SERV
+
+      from
+      DBA.DATOS_FACTURA,
+      DBA.DETALLE_FACTURA,
+      DBA.CLIENTES,
+      DBA.VENDEDOR as TITULAR,
+      DBA.PROV_TPO_SERV,
+      DBA.SUCURSALES,
+      DBA.PROVEEDORES,
+      DBA.TIPO_SERVICIO left outer join
+      DBA.CORPORATIVO on
+      CLIENTES.ID_CORPORATIVO = CORPORATIVO.ID_CORPORATIVO left outer join
+      DBA.CENTRO_COSTO on
+      DATOS_FACTURA.ID_CENTRO_COSTO = CENTRO_COSTO.ID_CENTRO_COSTO and
+      DATOS_FACTURA.ID_CLIENTE = CENTRO_COSTO.ID_CLIENTE left outer join
+      DBA.DEPARTAMENTO on
+      DATOS_FACTURA.ID_DEPTO = DEPARTAMENTO.ID_DEPTO and
+      DATOS_FACTURA.ID_CENTRO_COSTO = DEPARTAMENTO.ID_CENTRO_COSTO and
+      DATOS_FACTURA.ID_CLIENTE = DEPARTAMENTO.ID_CLIENTE left outer join
+      DBA.VENDEDOR as AUXILIAR on
+      DATOS_FACTURA.ID_VENDEDOR_AUX = AUXILIAR.ID_VENDEDOR left outer join
+      DBA.CONCECUTIVO_BOLETOS on
+      DETALLE_FACTURA.ID_BOLETO = CONCECUTIVO_BOLETOS.ID_BOLETO left outer join
+      DBA.GDS_VUELOS on GDS_VUELOS.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO and
+      GDS_VUELOS.NUMERO_BOLETO = DETALLE_FACTURA.NUMERO_BOL left outer join
+      DBA.GDS_GENERAL on GDS_GENERAL.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO 
+      left outer join
+      DBA.GDS_JUSTIFICACION_TARIFAS on GDS_VUELOS.CODIGO_RAZON = ID_JUSTIFICACION 
+    left outer join
+      DBA.GDS_HOTELES on GDS_HOTELES.CONSECUTIVO = GDS_GENERAL.CONSECUTIVO 
+      where
+      DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
+      DETALLE_FACTURA.FAC_NUMERO = DATOS_FACTURA.FAC_NUMERO and
+      DETALLE_FACTURA.ID_SUCURSAL = DATOS_FACTURA.ID_SUCURSAL and
+      DATOS_FACTURA.ID_STAT = 1 and
+      DATOS_FACTURA.ID_CLIENTE = CLIENTES.ID_CLIENTE and
+      DATOS_FACTURA.ID_VENDEDOR_TIT = TITULAR.ID_VENDEDOR and
+      DETALLE_FACTURA.PROV_TPO_SERV = PROV_TPO_SERV.PROV_TPO_SERV and
+      DATOS_FACTURA.ID_SUCURSAL = SUCURSALES.ID_SUCURSAL and
+      PROV_TPO_SERV.ID_PROVEEDOR = PROVEEDORES.ID_PROVEEDOR and
+      PROV_TPO_SERV.ID_SERVICIO = TIPO_SERVICIO.ID_TIPO_SERVICIO and
+      not DBA.DATOS_FACTURA.ID_SERIE = any(select ID_SERIE from DBA.GDS_CXS where EN_OTRA_SERIE = 'A')
     
      ";
 
-    $select1 = $select1." 
-    where datos_factura.fecha between '".$fecha1."' and '".$fecha2."'
+    $select1 = $select1."
+        AND datos_factura.fecha between '".$fecha1."' and '".$fecha2."'
     ";
 
     if($all_dks == 0){
-
+       
         if($cont_cliente == 0){  
 
            $res = $db_prueba->query("SELECT * FROM reportes_villa_tours.rpv_usuarios_cliente where id_usuario = $id_usuario and status = 1");
@@ -334,7 +366,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
          }
 
     }else if($all_dks == 1){
-
+      
          if($cont_suc > 0){
 
               $select1 = $select1 . "and DATOS_FACTURA.ID_SUCURSAL in (".$str_suc.") ";
@@ -368,6 +400,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
          }
 
     }
+
 
      $select2 = " insert into #TEMPNC
      select
@@ -418,7 +451,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
 
     $select2 = $select2."
 
-      and NOTAS_CREDITO.NC_FEC between '".$fecha1."' and '".$fecha2."'
+      and NOTAS_CREDITO.NC_FEC between '".$fecha1."' and '".$fecha2."' AND 0 = 1
     
     ";
 
