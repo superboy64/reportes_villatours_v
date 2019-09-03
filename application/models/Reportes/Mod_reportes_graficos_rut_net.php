@@ -450,38 +450,38 @@ class Mod_reportes_graficos_rut_net extends CI_Model {
 
               $id_cliente_arr = implode(",", $id_cliente_arr);
 
-              $select1 = $select1 . "and CLIENTES.ID_CLIENTE in (".$id_cliente_arr.") "; //ya
+              $select2 = $select2 . "and CLIENTES.ID_CLIENTE in (".$id_cliente_arr.") "; //ya
 
          }
          if($cont_suc > 0){
 
-              $select1 = $select1 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$str_suc.") ";
+              $select2 = $select2 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$str_suc.") ";
 
          }
          if($cont_serie > 0){  //ya
 
-              $select1 = $select1 . " and NOTAS_CREDITO.ID_SERIE in (".$str_ser.") "; //ya
+              $select2 = $select2 . " and NOTAS_CREDITO.ID_SERIE in (".$str_ser.") "; //ya
 
          }
          if($cont_cliente > 0){
 
-              $select1 = $select1 . "and CLIENTES.ID_CLIENTE in (".$str_cli.") "; 
+              $select2 = $select2 . "and CLIENTES.ID_CLIENTE in (".$str_cli.") "; 
 
 
          }
          if($cont_corporativo > 0){  //ya
 
-              $select1 = $select1 . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
+              $select2 = $select2 . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
 
          }
          if($id_servicio != 0){
 
-              $select1 = $select1 . " and PROV_TPO_SERV.ID_SERVICIO = '".$id_servicio."' "; //ya
+              $select2 = $select2 . " and PROV_TPO_SERV.ID_SERVICIO = '".$id_servicio."' "; //ya
 
          }
          if($cont_provedor > 0){
 
-              $select1 = $select1 . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
+              $select2 = $select2 . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
 
          }
 
@@ -490,45 +490,45 @@ class Mod_reportes_graficos_rut_net extends CI_Model {
 
         if($cont_suc > 0){
 
-              $select1 = $select1 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$str_suc.") ";
+              $select2 = $select2 . "and NOTAS_CREDITO.ID_SUCURSAL in (".$str_suc.") ";
 
         }
 
         if($cont_serie > 0){  //ya
 
-              $select1 = $select1 . " and NOTAS_CREDITO.ID_SERIE in (".$str_ser.") "; //ya
+              $select2 = $select2 . " and NOTAS_CREDITO.ID_SERIE in (".$str_ser.") "; //ya
 
          }
          
         if($cont_cliente > 1){
 
-              $select1 = $select1 . "and CLIENTES.ID_CLIENTE in (".$str_cli.") "; 
+              $select2 = $select2 . "and CLIENTES.ID_CLIENTE in (".$str_cli.") "; 
 
 
          }
 
         if($cont_cliente == 1){
 
-              $select1 = $select1 . "and CLIENTES.ID_CLIENTE = ".$str_cli." "; 
+              $select2 = $select2 . "and CLIENTES.ID_CLIENTE = ".$str_cli." "; 
 
 
          }
 
          if($cont_corporativo > 0){  //ya
 
-              $select1 = $select1 . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
+              $select2 = $select2 . " and CLIENTES.ID_CORPORATIVO in (".$str_corp.") "; //ya
 
          }
 
          if($id_servicio != 0){
 
-              $select1 = $select1 . " and PROV_TPO_SERV.ID_SERVICIO = '".$id_servicio."' "; //ya
+              $select2 = $select2 . " and PROV_TPO_SERV.ID_SERVICIO = '".$id_servicio."' "; //ya
 
          }
 
          if($cont_provedor > 0){
 
-              $select1 = $select1 . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
+              $select2 = $select2 . " and PROV_TPO_SERV.ID_PROVEEDOR in (".$str_prov.") "; //ya
 
          }
 

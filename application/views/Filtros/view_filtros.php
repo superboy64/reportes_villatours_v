@@ -543,11 +543,14 @@
     <button class="btn btn-default" style="margin-left: 15px; margin-top: 22px;" id="btn_buscar" onclick="clear_options_select();"><i class="fa fa-retweet">&nbsp;Limpiar</i></button>
    
   </div>
+
  
   <div class="form-group" id="div_btn_guardar_filtro">
      
 
   </div>
+
+
 </div>
 
 <br>

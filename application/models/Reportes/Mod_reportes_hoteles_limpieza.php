@@ -243,7 +243,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
 
       select 
 
-    PROV_TPO_SERV.ID_SERVICIO,
+      PROV_TPO_SERV.ID_SERVICIO,
       gds_general.id_serie,
       GVC_DOC_NUMERO=DATOS_FACTURA.FAC_NUMERO,
       gds_general.id_cliente,
@@ -290,7 +290,7 @@ class Mod_reportes_hoteles_limpieza extends CI_Model {
       DBA.GDS_GENERAL on GDS_GENERAL.CONSECUTIVO = DATOS_FACTURA.CONSECUTIVO 
       left outer join
       DBA.GDS_JUSTIFICACION_TARIFAS on GDS_VUELOS.CODIGO_RAZON = ID_JUSTIFICACION 
-    left outer join
+      left outer join
       DBA.GDS_HOTELES on GDS_HOTELES.CONSECUTIVO = GDS_GENERAL.CONSECUTIVO 
       where
       DETALLE_FACTURA.ID_SERIE = DATOS_FACTURA.ID_SERIE and
