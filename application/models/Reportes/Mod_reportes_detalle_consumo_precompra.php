@@ -58,6 +58,8 @@ class Mod_reportes_detalle_consumo_precompra extends CI_Model {
 
       $rest_rangos = $query->result();
 
+      $ID_PRECOMPRA = "";
+
       if(count($rest_rangos) > 0){
 
         $ID_PRECOMPRA = "no existe rango";

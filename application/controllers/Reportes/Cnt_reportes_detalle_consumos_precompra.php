@@ -639,11 +639,11 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 		        $ano2 = $fecha2[2];
 		        $fecha2 = $ano2.'_'.$mes2.'_'.$dia2;
 
-			    header('Content-Type: application/vnd.ms-excel');
+			   /* header('Content-Type: application/vnd.ms-excel');
 				header('Content-Disposition: attachment;filename="Reporte_Detalle_consumos_precompra_'.$fecha1.'_A_'.$fecha2.'.xlsx"'); 
 				header('Cache-Control: max-age=0');
 				
-				$Excel_writer->save('php://output', 'xlsx');
+				$Excel_writer->save('php://output', 'xlsx');*/
 			
 	       }
 
