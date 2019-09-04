@@ -800,6 +800,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		
 		   foreach ($rest as $clave => $valor) {
 			    $consecutivo = utf8_encode($valor->consecutivo);
+			    $record_localizador = utf8_encode($valor->record_localizador);
 
 			   
 			  	    if($valor->type_of_service == 'BD' || $valor->type_of_service == 'BI' || $valor->type_of_service == 'HOTNAC' || $valor->type_of_service == 'HOTINT' || $valor->type_of_service == 'HOTNAC_RES' /*|| $valor->type_of_service == 'HOTNAC_VARIOS'*/){
@@ -903,7 +904,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 										         
 										      }
 
-					    		$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+					    		$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
 
 								$cont=0;
 							    foreach ($hoteles_arr as $clave_hot => $valor_hot) { //agrega hoteles
@@ -977,7 +978,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 									         
 									      }
 
-						    		    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+						    		    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
 
 
 							    		foreach ($hoteles_arr as $clave_hot => $valor_hot) { //agrega hoteles
@@ -1052,7 +1053,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 											         
 											      }
 
-						             $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+						             $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
 
 									
 									$cont=0;
@@ -1343,6 +1344,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 			$str_razon_social = $str_razon_social . $valor->GVC_NOM_CLI . '/';
 			$str_corporativo = $str_corporativo . $valor->GVC_ID_CORPORATIVO . '/';
 			$consecutivo = utf8_encode($valor->consecutivo);
+			$record_localizador = utf8_encode($valor->record_localizador);
 
 			
 		if(utf8_encode($valor->type_of_service) == 'BD' || utf8_encode($valor->type_of_service) == 'BI' || utf8_encode($valor->type_of_service) == 'HOTNAC' || utf8_encode($valor->type_of_service) == 'HOTINT'){
@@ -2095,7 +2097,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 								         
 								      }
 
-			    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+			    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
 
 			    if (!in_array($consecutivo, $array_consecutivo)) {
 			    			    	

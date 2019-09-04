@@ -564,10 +564,14 @@ class Mod_reportes_ficosa extends CI_Model {
 
    }
 
-   public function get_hoteles_num_bol($consecutivo,$fecha1,$fecha2){
+   public function get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2){
+      /*$query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
+                                 INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
+                                 where gds_hoteles.consecutivo = '$consecutivo' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");*/
+
       $query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
                                  INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
-                                 where gds_hoteles.consecutivo = '$consecutivo' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");
+                                 where GDS_GENERAL.record_localizador = '$record_localizador' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");
       $res = $query->result_array(); 
       return $res;
 
