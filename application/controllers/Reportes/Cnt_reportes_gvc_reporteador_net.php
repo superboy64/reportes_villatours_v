@@ -734,13 +734,32 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
        if($tipo_funcion == "aut"){
 
        	$str_fecha = $fecha1.'_A_'.$fecha2;
-       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Detalle_consumos_p_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+
+       	if($id_plantilla != 0 ){
+
+       		$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Detalle_consumos_p_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+
+       	}else{
+
+       		$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Detalle_consumos_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+
+       	}
+
+       	
        	echo json_encode(1); //cuando es uno si tiene informacion
 
        }else{
 
 		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment;filename="Detalle_consumos_p_'.$fecha1.'_A_'.$fecha2.'.xlsx"'); 
+		if($id_plantilla != 0 ){
+		
+			header('Content-Disposition: attachment;filename="Detalle_consumos_p_'.$fecha1.'_A_'.$fecha2.'.xlsx"');
+		
+		}else{
+
+			header('Content-Disposition: attachment;filename="Detalle_consumos_'.$fecha1.'_A_'.$fecha2.'.xlsx"');
+
+		} 
 		header('Cache-Control: max-age=0');
 		
 		$Excel_writer->save('php://output', 'xlsx');
