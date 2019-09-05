@@ -977,7 +977,7 @@ class Mod_reportes_layout_seg extends CI_Model {
 
    public function get_segmentos_ticket_number($ticket,$consecutivo){
       
-      $query = $this->db->query("SELECT * FROM gds_vuelos_segmento where boleto = '$ticket' and consecutivo = '$consecutivo' ");
+      $query = $this->db->query("SELECT * FROM gds_vuelos_segmento where boleto = '$ticket' and consecutivo = '$consecutivo' order by numero_segmento asc");
       $res = $query->result_array();
       return $res;
 

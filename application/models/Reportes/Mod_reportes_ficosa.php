@@ -572,6 +572,7 @@ class Mod_reportes_ficosa extends CI_Model {
       $query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
                                  INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
                                  where GDS_GENERAL.record_localizador = '$record_localizador' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");
+      
       $res = $query->result_array(); 
       return $res;
 

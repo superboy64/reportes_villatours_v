@@ -290,7 +290,6 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 					$valor->clase_reservada10 = '';
 
 					}else{
-
 					//***********total_Itinerary1
 					if(array_key_exists(0, $segmentos) && $valor->typo_of_ticket == 'I') {
 
