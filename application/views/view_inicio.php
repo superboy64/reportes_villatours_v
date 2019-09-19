@@ -1330,40 +1330,6 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 38 && $id_us == 14){
-                                                     $title = 'ventas corporativas clientes';
-                                                    ?>
-                                                      <tr>
-                                                          
-                                                          <td>
-                                                              <i class="glyphicon glyphicon-file" ></i>
-                                                          </td>
-                                                          <td colspan="4">
-                                                              <a id="link_rep_gra_ae" href="javascript:void(0);" onclick="li_btn_get_rep_ventas_corporativas_clientes('<?=$title?>');" >ventas corporativas clientes&nbsp;</a>
-                                                          </td>
-                                                          
-
-                                                      </tr>
-                                                      <script type="text/javascript">
-
-                                                        function li_btn_get_rep_ventas_corporativas_clientes(title){
-      
-                                                          carga();
-                                                          $.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_ventas_corporativas_clientes/get_html_rep_pasajeros_servicio", {title: title}, function(data){
-                                                                
-                                                               carga_completa(data);
-                                                                
-                                                            });
-
-
-                                                        }
-
-                                                      </script>
-                                                    <?php
-
-
-                                                  }
-
                                                   if($value['id_submodulo'] == 38 && $id_us == 14 ){
                                                      $title = 'Hoteles limpieza';
                                                     ?>

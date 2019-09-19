@@ -5,16 +5,16 @@ class Lib_intervalos_fechas {
    function rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2)
    {
 
-		    $date1 = new DateTime(date('Y-m-d'));
+        $date1 = new DateTime(date('Y-m-d'));
         $date2 = new DateTime($fecha_ini_proceso);
           
         $interval = $date1->diff($date2);
            
-			   if($id_intervalo == '1'){  //ya quedo
-			   	
-			   	         $diff_dias = $interval->days;
+         if($id_intervalo == '1'){  //ya quedo
+          
+                   $diff_dias = $interval->days;
 
-	        	       $array_fecha1 = explode('/', $fecha1);
+                   $array_fecha1 = explode('/', $fecha1);
                    $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0]; //week
 
                    $fecha1 = strtotime ( '+'.$diff_dias.' day' , strtotime ( $fecha1 ) ) ;
@@ -27,29 +27,34 @@ class Lib_intervalos_fechas {
                    $fecha2 = date('Y-m-d',  $fecha2);
 
 
-		        }else if($id_intervalo == '2'){  //ya quedo
+            }else if($id_intervalo == '2'){  //ya quedo
 
-		               $diff_dias = $interval->days;
-				           $semanas = floor(($interval->format('%a') / 7));
+                   $diff_dias = $interval->days;
+                   $semanas = floor(($interval->format('%a') / 7));
 
-	        	       $array_fecha1 = explode('/', $fecha1);
+                   $array_fecha1 = explode('/', $fecha1);
                    $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0]; //week
 
                    $fecha1 = strtotime ( '+'.$diff_dias.' day' , strtotime ( $fecha1 ) ) ;
                  
                    $fecha1 = date('Y-m-d',  $fecha1);
 
+                   //$fecha1 = '2019-09-09';
+
                    $array_fecha2 = explode('/', $fecha2);
                    $fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0];
 
                    $fecha2 = strtotime ( '+'.$semanas.' week' , strtotime ( $fecha2 ) ) ;
+                   
                    $fecha2 = date('Y-m-d',  $fecha2);
+                   
+                   //$fecha2 = '2019-09-15';
 
 
-		        }else if($id_intervalo == '3'){  //month
+            }else if($id_intervalo == '3'){  //month
 
-		             $diff_meses = $interval->m; //3
-    	  		     $diff_dias = $interval->days;
+                 $diff_meses = $interval->m; //3
+                 $diff_dias = $interval->days;
                  
                  $array_fecha1 = explode('/', $fecha1);
                  $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0]; //week
@@ -112,19 +117,19 @@ class Lib_intervalos_fechas {
                  }  //fin if dif meses
 
 
-		        }else if($id_intervalo == '4'){
+            }else if($id_intervalo == '4'){
 
-        				   $diff_dias = $interval->days;
-        				   
-        				   $array_fecha1 = explode('/', $fecha1);
+                   $diff_dias = $interval->days;
+                   
+                   $array_fecha1 = explode('/', $fecha1);
                    $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0]; //week
 
                    $fecha1 = strtotime ( '+'.$diff_dias.' month' , strtotime ( $fecha1 ) ) ;
                    if((int)$diff_dias > 15){
 
-             	   		$fecha1 = strtotime ( '+ 1 day' , $fecha1) ;
+                    $fecha1 = strtotime ( '+ 1 day' , $fecha1) ;
 
-             	   }
+                 }
                    $fecha1 = date('Y-m-d',  $fecha1);
 
                    $array_fecha2 = explode('/', $fecha2);
@@ -133,23 +138,23 @@ class Lib_intervalos_fechas {
                    $fecha2 = strtotime ( '+'.$diff_dias.' month' , strtotime ( $fecha2 ) ) ;
                    $fecha2 = date('Y-m-d',  $fecha2);
 
-	        	  
+              
 
-		        }else if($id_intervalo == '5'){
+            }else if($id_intervalo == '5'){
 
-				           $fecha2 = date('Y-m-d H:i:s');
+                   $fecha2 = date('Y-m-d H:i:s');
                    $fecha1 = strtotime ( '-23 hour' , strtotime ( $fecha2 ) ) ;
                    $fecha1 = date('Y-m-d H:i:s',  $fecha1);
                    $fecha2 = strtotime ( '+1 hour' , strtotime ( $fecha2 ) ) ;
                    $fecha2 = date('Y-m-d H:i:s',  $fecha2);
                   
-		        }
+            }
 
 
-	        	$rango_fechas = $fecha1.'_'.$fecha2;
+            $rango_fechas = $fecha1.'_'.$fecha2;
 
 
-	        	return $rango_fechas;
+            return $rango_fechas;
 
 
       

@@ -11,6 +11,25 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
       $this->load->library('lib_intervalos_fechas');
    }
    
+   public function get_SPID(){
+
+      $rest_SPID = $this->db->query("SELECT @@SPID SPID");
+
+      $result_spid = $rest_SPID->result();
+
+
+      $SPID = $result_spid[0]->SPID;
+
+      $db_prueba = $this->load->database('conmysql', TRUE);
+    
+      $db_prueba->query("INSERT INTO rpv_spid(SPID)
+                        VALUES($SPID)");
+
+
+      //return $result_spid;
+
+   }
+
    public function get_grafica_pasajero($parametros){
 
       $ids_suc = $parametros["ids_suc"];
@@ -140,48 +159,33 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
 
       }
 
-      $db_prueba = $this->load->database('conmysql', TRUE);
-      
-      $us = $db_prueba->query("SELECT * FROM reportes_villa_tours.rpv_usuarios where id = $id_usuario");
-      $us = $us->result_array();
+    $db_prueba = $this->load->database('conmysql', TRUE);
+    
+    $us = $db_prueba->query("SELECT * FROM reportes_villa_tours.rpv_usuarios where id = $id_usuario");
+    $us = $us->result_array();
 
-      $all_dks = $us[0]['all_dks'];
-      
-      if($id_intervalo != 0){  //si es diferente es un proceso automatico
+    $all_dks = $us[0]['all_dks'];
+    
+    
+    $mes1 = $fecha1;
+    $mes2 = $fecha2;
 
-                 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+    $hoy = getdate();
+    $dia_actual = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
+    $mes_actual = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
 
-                 $rango_fechas = explode("_", $rango_fechas);
+    $year_actual = $hoy['year'];
+    
 
-                 $fecha1 = $rango_fechas[0];
-                 $fecha2 = $rango_fechas[1];
+    $fecha_actual = $year_actual.'-'.$mes1.'-'.$dia_actual;   //fecha actual con mes seleccionado
+    $fecha_actual2 = $year_actual.'-'.$mes2.'-'.$dia_actual;   //fecha actual con mes seleccionado
 
+    $fecha1 = strtotime ( '-1 year' , strtotime ( $fecha_actual ) ) ;
+    $fecha1 = date("Y-m-d", $fecha1);
 
-      }else{
+    $fecha_actual2 = strtotime ( $fecha_actual2 );
+    $fecha2 = date("Y-m-d", $fecha_actual2);
 
-
-        if($fecha1 == ""){
-
-          $hoy = getdate();
-          $dia = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
-          $mes = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
-          $year = $hoy['year'];
-          $fecha1 = $year.'-'.$mes.'-'.$dia;
-          $fecha2 = $year.'-'.$mes.'-'.$dia;
-         
-          }else{
-               
-                $array_fecha1 = explode('/', $fecha1);
-                
-                $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0];
-
-                $array_fecha2 = explode('/', $fecha2);
-                
-                $fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0];
-               
-          }
-
-      }
     
     $this->db->query("create table #TEMPFAC(
      GVC_DOC_NUMERO varchar(500) null, 
@@ -524,43 +528,79 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
     }
 
 
-    $this->db->query($select1);
+/***************************************************************/
+     $this->db->query($select1);
+     $this->db->query($select2);
 
-    $this->db->query($select2);
+     if($cont_corporativo > 0){
 
-    $select3 = "select top 10 GVC_ID_CORPORATIVO = FAC.GVC_ID_CORPORATIVO,";
+          $select3 = "select 
 
-    $select3 = $select3 . "TOTAL=(SELECT 
+          GVC_ID_CORPORATIVO = FAC.GVC_ID_CORPORATIVO,
+          GVC_ID_CLIENTE = '',
+          TOTAL=(SELECT 
 
-    SUM(
+                SUM(
 
-    case when(FAC1.GVC_TARIFA_MON_BASE = '0.00') then 0 else convert(numeric,FAC1.GVC_TARIFA_MON_BASE) END
+                case when(FAC1.GVC_TARIFA_MON_BASE = '0.00') then 0 else convert(numeric,FAC1.GVC_TARIFA_MON_BASE) END
 
-    ) 
+                ) 
 
-    from #TEMPFAC AS FAC1 WHERE not FAC1.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) AND FAC1.GVC_ID_CORPORATIVO = FAC.GVC_ID_CORPORATIVO),";
+                from #TEMPFAC AS FAC1 WHERE not FAC1.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) AND FAC1.GVC_ID_CORPORATIVO = FAC.GVC_ID_CORPORATIVO),
 
-    $select3 = $select3 . "TOTAL_BOL=SUM(case when(FAC.total >= 0) then 1 else-1 end) from #TEMPFAC as FAC where not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) and TOTAL is not null";
+          TOTAL_BOL=SUM(case when(FAC.total >= 0) then 1 else-1 end) 
 
-    $select3 = $select3 . " group by FAC.GVC_ID_CORPORATIVO order by TOTAL_BOL desc";
+          from #TEMPFAC as FAC where not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) and TOTAL is not null
 
-    $query_rows = $this->db->query($select3);
+          group by FAC.GVC_ID_CORPORATIVO order by TOTAL_BOL desc";
+
+          
+        
+
+     }else{
+
+          $select3 = "select 
+
+          GVC_ID_CORPORATIVO = '',
+          GVC_ID_CLIENTE = FAC.gvc_id_cliente,
+
+          TOTAL=(SELECT 
+
+                SUM(
+
+                case when(FAC1.GVC_TARIFA_MON_BASE = '0.00') then 0 else convert(numeric,FAC1.GVC_TARIFA_MON_BASE) END
+
+                ) 
+
+                from #TEMPFAC AS FAC1 WHERE not FAC1.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) AND FAC1.gvc_id_cliente = FAC.gvc_id_cliente),
+
+          TOTAL_BOL=SUM(case when(FAC.total >= 0) then 1 else-1 end) 
+
+          from #TEMPFAC as FAC where not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) and TOTAL is not null
+
+          group by FAC.gvc_id_cliente order by TOTAL_BOL desc";
+
+         
+
+     }
+
+     $query_rows = $this->db->query($select3);
+
+      if($proceso == '1'){
+        
+        $result = $query_rows->result();
+
+      }else if($proceso == '2'){
+
+        $result = $query_rows->result_array();
+        
+      }
+
+     $this->db->query("drop table #TEMPFAC");
+     $this->db->query("drop table #TEMPNC");
 
 
-    if($proceso == '1'){
-      
-      $result = $query_rows->result();
-
-    }else if($proceso == '2'){
-
-      $result = $query_rows->result_array();
-      
-    }
-
-    $this->db->query("drop table #TEMPFAC");
-    $this->db->query("drop table #TEMPNC");
-   
-    return $result;
+     return $result;
 
    }
 
@@ -701,41 +741,24 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
 
       $all_dks = $us[0]['all_dks'];
       
-      if($id_intervalo != 0){  //si es diferente es un proceso automatico
+      $mes1 = $fecha1;
+      $mes2 = $fecha2;
 
-                 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+      $hoy = getdate();
+      $dia_actual = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
+      $mes_actual = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
 
-                 $rango_fechas = explode("_", $rango_fechas);
+      $year_actual = $hoy['year'];
+      
 
-                 $fecha1 = $rango_fechas[0];
-                 $fecha2 = $rango_fechas[1];
+      $fecha_actual = $year_actual.'-'.$mes1.'-'.$dia_actual;   //fecha actual con mes seleccionado
+      $fecha_actual2 = $year_actual.'-'.$mes2.'-'.$dia_actual;   //fecha actual con mes seleccionado
 
+      $fecha1 = strtotime ( '-1 year' , strtotime ( $fecha_actual ) ) ;
+      $fecha1 = date("Y-m-d", $fecha1);
 
-      }else{
-
-
-        if($fecha1 == ""){
-
-          $hoy = getdate();
-          $dia = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
-          $mes = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
-          $year = $hoy['year'];
-          $fecha1 = $year.'-'.$mes.'-'.$dia;
-          $fecha2 = $year.'-'.$mes.'-'.$dia;
-         
-          }else{
-               
-                $array_fecha1 = explode('/', $fecha1);
-                
-                $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0];
-
-                $array_fecha2 = explode('/', $fecha2);
-                
-                $fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0];
-               
-          }
-
-      }
+      $fecha_actual2 = strtotime ( $fecha_actual2 );
+      $fecha2 = date("Y-m-d", $fecha_actual2);
     
     $this->db->query("create table #TEMPFAC(
      GVC_DOC_NUMERO varchar(500) null, 
@@ -751,6 +774,7 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
      GVC_TIPO varchar(500) null,
      GVC_NOM_VEN_TIT varchar(500) null,
      GVC_ID_CORPORATIVO varchar(500) null,
+     GVC_FECHA varchar(500) null,
     )");
     
     $this->db->query("create table #TEMPNC(
@@ -788,7 +812,8 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
       IMPUESTOS_FACTURA.ID_DET_FAC = DETALLE_FACTURA))),
     TIPO = 'F',
     TITULAR.NOMBRE as GVC_NOM_VEN_TIT,
-    GVC_ID_CORPORATIVO=CORPORATIVO.ID_CORPORATIVO
+    GVC_ID_CORPORATIVO=CORPORATIVO.ID_CORPORATIVO,
+    datos_factura.fecha AS GVC_FECHA
     
     from
     DBA.DATOS_FACTURA,
@@ -1082,23 +1107,56 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
 
     $this->db->query($select2);
 
-    $select3 = "select GVC_NOM_CLI = FAC.GVC_NOM_CLI,GVC_ID_CORPORATIVO,GVC_ID_CLIENTE,";
+    if($cont_corporativo > 0){
 
-         
-    $select3 = $select3 . "TOTAL=(SELECT 
+      $select3 =   "select 
+                    /*substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7 )  as MES,*/
+                    GVC_ID_CLIENTE = FAC.gvc_id_cliente, 
+                    GVC_NOM_CLI = FAC.GVC_NOM_CLI,
+                    GVC_ID_CORPORATIVO,
+                    TOTAL_MES1='',
+                    TOTAL_MES2='',
+                    TOTAL_MES3='',
+                    TOTAL_MES4='',
+                    TOTAL_MES5='',
+                    TOTAL_MES6='',
+                    TOTAL_MES7='',
+                    TOTAL_MES8='',
+                    TOTAL_MES9='',
+                    TOTAL_MES10='',
+                    TOTAL_MES11='',
+                    TOTAL_MES12=''
+                    from #TEMPFAC as FAC where not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) and TOTAL is not null
+                    group by FAC.GVC_NOM_CLI,FAC.GVC_ID_CORPORATIVO,GVC_ID_CLIENTE ";
 
-    SUM(
 
-    case when(FAC1.GVC_TARIFA_MON_BASE = '0.00') then 0 else convert(numeric,FAC1.GVC_TARIFA_MON_BASE) END
+    }else{
 
-    ) 
 
-    from #TEMPFAC AS FAC1 WHERE not FAC1.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) AND FAC1.GVC_NOM_CLI = FAC.GVC_NOM_CLI AND FAC1.GVC_ID_CORPORATIVO = FAC.GVC_ID_CORPORATIVO),";
-          
-    
-    $select3 = $select3 . "TOTAL_BOL=SUM(case when(FAC.total >= 0) then 1 else-1 end) from #TEMPFAC as FAC where not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) and TOTAL is not null";
+      $select3 =   "select DISTINCT
+                    GVC_ID_CLIENTE = FAC.gvc_id_cliente, 
+                    GVC_NOM_CLI = FAC.GVC_NOM_CLI,
+                    GVC_ID_CORPORATIVO = 'XCLIENTE',
+                    TOTAL_MES1='',
+                    TOTAL_MES2='',
+                    TOTAL_MES3='',
+                    TOTAL_MES4='',
+                    TOTAL_MES5='',
+                    TOTAL_MES6='',
+                    TOTAL_MES7='',
+                    TOTAL_MES8='',
+                    TOTAL_MES9='',
+                    TOTAL_MES10='',
+                    TOTAL_MES11='',
+                    TOTAL_MES12=''
+                    FROM   #tempfac AS FAC WHERE not FAC.GVC_DOC_NUMERO = ANY (SELECT DISTINCT gvc_fac_numero FROM   #tempnc) AND TOTAL IS NOT NULL 
+                    GROUP BY FAC.GVC_NOM_CLI,GVC_ID_CLIENTE";
 
-    $select3 = $select3 . " group by FAC.GVC_NOM_CLI,FAC.GVC_ID_CORPORATIVO,GVC_ID_CLIENTE order by TOTAL_BOL desc";
+
+
+    }
+
+   
 
     $query_rows = $this->db->query($select3);
 
@@ -1112,10 +1170,102 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
       
     }
 
+    //obtiene meses por cliente
+
+     $query_cont_meses_cliente = $this->db->query("   
+
+            select DISTINCT 
+            substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7 )  as MES
+
+            FROM   #tempfac AS FAC 
+            WHERE  NOT FAC.gvc_doc_numero = ANY (SELECT DISTINCT gvc_fac_numero 
+                                                 FROM   #tempnc) 
+            AND TOTAL IS NOT NULL 
+
+            GROUP BY FAC.GVC_FECHA 
+            ORDER BY MES ASC" 
+
+        );
+
+
+     $query_rows_meses_cliente = $this->db->query("   
+
+            select DISTINCT 
+            substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7 )  as MES,
+            GVC_ID_CORPORATIVO,
+            GVC_ID_CLIENTE = FAC.gvc_id_cliente, 
+            TOTAL_MES=(SELECT Sum(CASE 
+                                WHEN( FAC1.gvc_tarifa_mon_base = '0.00' ) THEN 
+                                0 
+                                ELSE 
+                          CONVERT(NUMERIC, FAC1.gvc_tarifa_mon_base) 
+                              END) 
+                   FROM   #tempfac AS FAC1 
+                   WHERE  NOT FAC1.gvc_doc_numero = ANY 
+                              (SELECT DISTINCT gvc_fac_numero 
+                               FROM   #tempnc) 
+                          AND FAC1.gvc_id_cliente = 
+                  FAC.gvc_id_cliente AND  substring( CAST(FAC1.GVC_FECHA AS DATE) , 1, 7) = substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7)   )
+
+            FROM   #tempfac AS FAC 
+            WHERE  NOT FAC.gvc_doc_numero = ANY (SELECT DISTINCT gvc_fac_numero 
+                                                 FROM   #tempnc) 
+            AND TOTAL IS NOT NULL 
+
+            GROUP BY gvc_id_cliente,FAC.GVC_FECHA,GVC_ID_CORPORATIVO
+            ORDER BY MES ASC" 
+
+
+        );
+
+    $result_count_meses_cliente = $query_cont_meses_cliente->result_array();
+    $result_meses_cliente = $query_rows_meses_cliente->result_array();
+
+    foreach ($result as $key => $value) {
+        
+        $GVC_ID_CLIENTE = $value->GVC_ID_CLIENTE;
+
+        $array_meses_clientes = [];
+        foreach ($result_meses_cliente as $key2 => $value2) {
+
+         
+          $GVC_ID_CLIENTE2 = $value2['GVC_ID_CLIENTE'];
+          $TOTAL_MES2 = $value2['TOTAL_MES'];
+
+          if($GVC_ID_CLIENTE == $GVC_ID_CLIENTE2){
+
+            array_push($array_meses_clientes, $TOTAL_MES2);
+
+          }
+
+
+        }
+
+        $cont_meses = count($array_meses_clientes);
+
+        for($x=0;$x<$cont_meses;$x++){  //recorre meses
+
+            $cont = $x + 1;
+            $TOTAL_MES = 'TOTAL_MES'.$cont;
+
+            $value->$TOTAL_MES = $array_meses_clientes[$x];
+
+
+
+        }
+
+
+    }
+
+    
     $this->db->query("drop table #TEMPFAC");
     $this->db->query("drop table #TEMPNC");
-   
-    return $result;
+    
+    $array_res = [];
+    $array_res['rows'] = $result;
+    $array_res['meses_cliente'] = $result_count_meses_cliente;
+
+    return $array_res;
 
    }
 

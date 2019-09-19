@@ -17,6 +17,7 @@
 
 </div>
 
+ 
 <script type="text/javascript">
   
   $("#title").html('<?=$title?>');

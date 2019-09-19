@@ -56,6 +56,7 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 
 		$rows_grafica = $this->input->post("rows_grafica");
 		$rows_provedores_servicio = $this->input->post("rows_provedores_servicio");
+		$meses_cliente = $this->input->post("meses_cliente");
 
 		
 		$para = $this->input->post("parametros");
@@ -79,60 +80,61 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
   	    $ids_cliente =  explode('_', $ids_cliente);
   	    $ids_cliente = array_filter($ids_cliente, "strlen");
   
-            if(count($ids_corporativo) > 0 ){
+        if(count($ids_corporativo) > 0 ){
 
-	              $sub = "";
+              $sub = "";
 
-	              if(count($ids_corporativo) > 1){
+              if(count($ids_corporativo) > 1){
 
-	              	    $sub = $sub . $fecha1 . ' - ' . $fecha2;
+              	    $sub = $sub . $fecha1 . ' - ' . $fecha2;
 
-	              }else{
+              }else{
 
-	              	foreach ($ids_corporativo as $clave => $valor) {  //obtiene clientes asignados
+              	foreach ($ids_corporativo as $clave => $valor) {  //obtiene clientes asignados
 
-	                 	$sub = $sub . $valor .'<br>'. $fecha1 . ' - ' . $fecha2;
+                 	$sub = $sub . $valor .'<br>'. $fecha1 . ' - ' . $fecha2;
 
-	              	}
+              	}
 
-	              }
+              }
 
-            }else if(count($ids_cliente) > 0){
+        }else if(count($ids_cliente) > 0){
 
-            	$sub = "";
-                
-                $rz = $this->Mod_reportes_ventas_corporativas->get_razon_social_id_in($ids_cliente);  //optiene razon social
-                
-                if(count($rz) > 1){
+        	$sub = "";
+            
+            $rz = $this->Mod_reportes_ventas_corporativas->get_razon_social_id_in($ids_cliente);  //optiene razon social
+            
+            if(count($rz) > 1){
 
-                	  $sub = $sub . $fecha1 . ' - ' . $fecha2 .' ';
-
-                }else{
-
-                	foreach ($rz as $clave => $valor) {  //obtiene clientes asignados
-
-	                   $sub = $sub . $valor->nombre_cliente .'<br>'. $fecha1 . ' - ' . $fecha2 .' ';
-
-	            	}
-                }
-                
-               
+            	  $sub = $sub . $fecha1 . ' - ' . $fecha2 .' ';
 
             }else{
-            	
-            	$sub = "Clientes Villatours" .'<br>'. $fecha1 . ' - ' . $fecha2;
 
+            	foreach ($rz as $clave => $valor) {  //obtiene clientes asignados
+
+                   $sub = $sub . $valor->nombre_cliente .'<br>'. $fecha1 . ' - ' . $fecha2 .' ';
+
+            	}
             }
+            
+           
+
+        }else{
+        	
+        	$sub = "Clientes Villatours" .'<br>'. $fecha1 . ' - ' . $fecha2;
+
+        }
 
 		$array2["rows_grafica"] =  $rows_grafica;
 		$array2["rows_provedores_servicio"] = $rows_provedores_servicio;
+		$array2["cont_corporativo"] = count($ids_corporativo);
+		$array2["meses_cliente"] = $meses_cliente;
 		$array2["id_servicio"] =  $id_servicio;
 		$array2["fecha1"] =  $fecha1;
 		$array2["fecha2"] =  $fecha2;
 		$array2["sub"] =  $sub;
 
 
-	
 		$this->load->view('Reportes/formatos/view_formato_html_ventas_corporativas',$array2);
 
 		
@@ -206,8 +208,9 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 		}
 
 		$parametros["proceso"] = 1;
-      	
-      
+
+		$rest_SPID = $this->Mod_reportes_ventas_corporativas->get_SPID();
+		
 		$rest_grafica = $this->Mod_reportes_ventas_corporativas->get_grafica_pasajero($parametros);
 		$rest_provedores_servicio = $this->Mod_reportes_ventas_corporativas->get_provedores_servicio($parametros);
 		
@@ -215,116 +218,94 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 		foreach ($rest_grafica as $key => $value) {
 		
 			$value->GVC_ID_CORPORATIVO =  utf8_encode($value->GVC_ID_CORPORATIVO);
+			$value->GVC_ID_CLIENTE =  utf8_encode($value->GVC_ID_CLIENTE);
 
 		}
 
 		$array2["grafica"] = $rest_grafica;
 
+		foreach ($rest_provedores_servicio['rows'] as $key => $value) {
+			
+			if(isset($value->GVC_NOM_CLI)){
+				
+				$value->GVC_NOM_CLI =  utf8_encode($value->GVC_NOM_CLI);
 
-		foreach ($rest_provedores_servicio as $key => $value) {
-		
-			$value->GVC_NOM_CLI =  utf8_encode($value->GVC_NOM_CLI);
-			$value->GVC_ID_CORPORATIVO =  utf8_encode($value->GVC_ID_CORPORATIVO);
+			}
+
+			if(isset($value->GVC_ID_CORPORATIVO)){
+					
+				$value->GVC_ID_CORPORATIVO =  utf8_encode($value->GVC_ID_CORPORATIVO);
+
+			}
 
 		}
 
 		$array2["provedores_servicio"] = $rest_provedores_servicio;
-		
+		$array2["meses_cliente"] = $rest_provedores_servicio['meses_cliente'];
 
+		
 	    echo json_encode( $array2, JSON_NUMERIC_CHECK );
 
 	}
 
+
 	public function exportar_excel_ae(){
 
-		$parametros = $_REQUEST['parametros'];
-		$id_servicio = $this->input->post("id_servicio");
+	    $para = $this->input->post("parametros");
+	    $parametros = explode(",", $para);
 
-		$tipo_funcion = $_REQUEST['tipo_funcion'];  //falta
+		$ids_suc = $parametros[0];
+		$ids_serie = $parametros[1];
+		$ids_cliente = $parametros[2];
+		$ids_servicio = $parametros[3];  //esta vacio --no se ocupa en este reporte 
+        $ids_provedor = $parametros[4];
+        $ids_corporativo = $parametros[5];
+        $fecha1 = $parametros[6];
+        $fecha2 = $parametros[7];
 
-		$id_us = $this->session->userdata('session_id');
+        $ids_corporativo =  explode('_', $ids_corporativo);
+		$ids_corporativo = array_filter($ids_corporativo, "strlen");
+		$cont_corporativo = count($ids_corporativo);
 		
-		$parametros = explode(",", $parametros);
+		$rows_grafica = $this->input->post("rows_grafica");
+		$rows_provedores_servicio = $this->input->post("rows_provedores_servicio");
+		$rows_provedores_servicio = json_decode($rows_provedores_servicio);
+		$meses_cliente = $this->input->post("meses_cliente");
 
-        
-       	if($tipo_funcion == "aut"){
 
-       		$ids_suc = $parametros[0];
-        	$ids_serie = $parametros[1];
-	        $ids_cliente = $parametros[2];
-	        $ids_servicio = $parametros[3];  //esta vacio --no se ocupa en este reporte 
-	        $ids_provedor = $parametros[4];
-	        $ids_corporativo = $parametros[5];
-	        $id_plantilla = $parametros[6];
-	        $fecha1 = $parametros[7];
-	        $fecha2 = $parametros[8];
-        	$id_correo_automatico = $parametros[9];
-            $id_reporte = $parametros[10];
-            $id_usuario = $parametros[11];
-            $id_intervalo = $parametros[12];
-            $fecha_ini_proceso = $parametros[13];
-			
-		}else{
-
-			$ids_suc = $parametros[0];
-			$ids_serie = $parametros[1];
-			$ids_cliente = $parametros[2];
-			$ids_servicio = $parametros[3];
-	        $ids_provedor = $parametros[4];
-	        $ids_corporativo = $parametros[5];
-	        $fecha1 = $parametros[6];
-	        $fecha2 = $parametros[7];
-
-		}
-
-        $parametros = [];
-        
-        $parametros["ids_suc"] = $ids_suc;
-        $parametros["ids_serie"] = $ids_serie;
-        $parametros["ids_cliente"] = $ids_cliente;
-        $parametros["ids_servicio"] = $ids_servicio;
-        $parametros["ids_provedor"] = $ids_provedor;
-        $parametros["ids_corporativo"] = $ids_corporativo;
-        $parametros["fecha1"] = $fecha1;
-        $parametros["fecha2"] = $fecha2;
-
-        if($tipo_funcion == "aut"){
-        	
-        	$parametros["id_usuario"] = $id_usuario;
-        	$parametros["id_intervalo"] = $id_intervalo;
-        	$parametros["fecha_ini_proceso"] = $fecha_ini_proceso;
-			
-		}else{
-
-			$parametros["id_usuario"] = $this->session->userdata('session_id');
-	        $parametros["id_intervalo"] = '0';
-	        $parametros["fecha_ini_proceso"] = '';
-
-		}
-
-		$parametros["proceso"] = 2;
-
-		$rest_grafica = $this->Mod_reportes_ventas_corporativas->get_grafica_pasajero($parametros);
-        $rest_provedores_servicio = $this->Mod_reportes_ventas_corporativas->get_provedores_servicio($parametros);
-
-        foreach ($rest_grafica as $key => $value) {
+        foreach ($rows_grafica as $key => $value) {
 		
-			$value['GVC_ID_CORPORATIVO'] =  utf8_encode($value['GVC_ID_CORPORATIVO']);
-
-		}
-
-		$array2["grafica"] = $rest_grafica;
-
-
-		foreach ($rest_provedores_servicio as $key => $value) {
-		
-			$value['GVC_NOM_CLI'] =  utf8_encode($value['GVC_NOM_CLI']);
 			$value['GVC_ID_CORPORATIVO'] =  utf8_encode($value['GVC_ID_CORPORATIVO']);
 			$value['GVC_ID_CLIENTE'] =  utf8_encode($value['GVC_ID_CLIENTE']);
 
 		}
+		
+		$array2["grafica"] = $rows_grafica;
 
-        if(count($rest_grafica) > 0){
+		foreach ($rows_provedores_servicio as $key => $value) {
+			
+			if(isset($value->GVC_NOM_CLI)){
+				
+				$value->GVC_NOM_CLI =  utf8_encode($value->GVC_NOM_CLI);
+
+			}
+
+			if(isset($value->GVC_ID_CORPORATIVO)){
+					
+				$value->GVC_ID_CORPORATIVO =  utf8_encode($value->GVC_ID_CORPORATIVO);
+
+			}
+
+			if(isset($value->GVC_ID_CLIENTE)){
+					
+				$value->GVC_ID_CLIENTE =  utf8_encode($value->GVC_ID_CLIENTE);
+
+			}
+
+
+		}
+
+        if(count($rows_grafica) > 0){
 
 		
         $spreadsheet = new Spreadsheet();  
@@ -344,11 +325,8 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 		   
 		];
 
-		
-
 		$spreadsheet->getDefaultStyle()->getFont()->setName('Calibri');
 		$spreadsheet->getDefaultStyle()->getFont()->setSize(10);
-
 
 		$styleArray1 = [
 		    'borders' => [
@@ -368,125 +346,452 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 		];
 
 	
-		$spreadsheet->getActiveSheet()->mergeCells('B6:E6');
-		$spreadsheet->getActiveSheet()->mergeCells('B7:E7');
-		$spreadsheet->getActiveSheet()->mergeCells('B8:E8');
-		$spreadsheet->getActiveSheet()->mergeCells('B9:E9');
 
-		$spreadsheet->getActiveSheet()->getStyle('B6:E6')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		$spreadsheet->getActiveSheet()->getStyle('B7:E7')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		$spreadsheet->getActiveSheet()->getStyle('B8:E8')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		$spreadsheet->getActiveSheet()->getStyle('B9:E9')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-
-		$spreadsheet->getActiveSheet()->getStyle('C8:C3000')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		$spreadsheet->getActiveSheet()->getStyle('D8:D3000')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
-		$spreadsheet->getActiveSheet()->getStyle('E8:E3000')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-		
-     
-        $spreadsheet->getActiveSheet()->getColumnDimension('B')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('C')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('D')->setAutoSize(true);
-        $spreadsheet->getActiveSheet()->getColumnDimension('E')->setAutoSize(true);
-
-
-        $activeSheet->setCellValue('B10','AGENTE');
-        $activeSheet->setCellValue('C10','CLAVE DE SERVICIO');
-		$activeSheet->setCellValue('D10','# TRANSACCIONES');
-		$activeSheet->setCellValue('E10','TARIFA/Pesos');
+        $activeSheet->setCellValue('B10','CORPORATIVO');
+        $activeSheet->setCellValue('C10','CLIENTE');
+		$activeSheet->setCellValue('D10','NOMBRE CLIENTE');
 
 		
 		//******************************************************************************
 		$cont = 0;
 		$TOTAL_GEN = 0;
     	$TOTAL_BOL_GEN = 0;
-		  foreach ($rest_grafica as $clave => $valor) {  
 
-		      if($valor['TOTAL'] != 0 && $valor['TOTAL'] != ""){
+    	if(isset($rows_grafica) && count($rows_grafica) > 0 && $cont_corporativo > 0){ 
 
-		        $AGENT = $valor['AGENT'];
-		        $TOTAL = $valor['TOTAL'];
-		        $TOTAL_BOL = $valor['TOTAL_BOL'];
+		    foreach ($rows_grafica as $clave => $valor) {  
 
-		        $TOTAL_GEN = $TOTAL_GEN + $TOTAL;
-        		$TOTAL_BOL_GEN = $TOTAL_BOL_GEN + $TOTAL_BOL;
+		    	//$cont++;
+		        $GVC_ID_CORPORATIVO = $valor['GVC_ID_CORPORATIVO'];
 
-		      $count=0;
-		      foreach ($rest_provedores_servicio as $clave2 => $valor2) {  
+		         $count=0;
+		         foreach ($rows_provedores_servicio as $clave2 => $valor2) {  
 
-		       $AGENT2 = $valor2['AGENT'];
-		       $TOTAL2 = $valor2['TOTAL'];
-		       $TOTAL_BOL2 = $valor2['TOTAL_BOL'];
-		       $GVC_ID_SERVICIO2 = $valor2['GVC_ID_SERVICIO'];
+		          $GVC_ID_CORPORATIVO2 = $valor2->GVC_ID_CORPORATIVO;
+		          //$TOTAL2 = $valor2->TOTAL;
+		          $GVC_NOM_CLI2 = $valor2->GVC_NOM_CLI;
+		          $GVC_ID_CLIENTE2 = $valor2->GVC_ID_CLIENTE;    
 
-		        if($AGENT2 == $AGENT){
-		          $cont++;
-		          $count++;
+		          if($GVC_ID_CORPORATIVO2 == $GVC_ID_CORPORATIVO){
+		           $cont++;
+		           $count++;
 
-		          if($count==1){
+		              if($count==1){
+
+		              	  	$activeSheet->setCellValue('B'.($cont+10),$GVC_ID_CORPORATIVO)->getStyle('B'.($cont+10))->getFont()->setBold(true);
+		              	  	$activeSheet->setCellValue('C'.($cont+10),$GVC_ID_CLIENTE2);
+		              	  	$activeSheet->setCellValue('D'.($cont+10),$GVC_NOM_CLI2);
+
+		              	    if(isset($valor2->TOTAL_MES1) && $valor2->TOTAL_MES1 != ''){
+
+		              	      $activeSheet->setCellValue('E'.($cont+10),$valor2->TOTAL_MES1);
+
+			                }
+			                if(isset($valor2->TOTAL_MES2) && $valor2->TOTAL_MES2 != ''){
+
+			                  $activeSheet->setCellValue('F'.($cont+10),$valor2->TOTAL_MES2);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES3) && $valor2->TOTAL_MES3 != ''){
+
+			                  $activeSheet->setCellValue('G'.($cont+10),$valor2->TOTAL_MES3);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES4) && $valor2->TOTAL_MES4 != ''){
+
+			                  $activeSheet->setCellValue('H'.($cont+10),$valor2->TOTAL_MES4);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES5) && $valor2->TOTAL_MES5 != ''){
+
+			                  $activeSheet->setCellValue('I'.($cont+10),$valor2->TOTAL_MES5);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES6) && $valor2->TOTAL_MES6 != ''){
+			                  
+			                  $activeSheet->setCellValue('J'.($cont+10),$valor2->TOTAL_MES6);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES7) && $valor2->TOTAL_MES7 != ''){
+			                  
+			                  $activeSheet->setCellValue('K'.($cont+10),$valor2->TOTAL_MES7);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES8) && $valor2->TOTAL_MES8 != ''){
+
+			                  $activeSheet->setCellValue('L'.($cont+10),$valor2->TOTAL_MES8);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES9) && $valor2->TOTAL_MES9 != ''){
+
+			                  $activeSheet->setCellValue('M'.($cont+10),$valor2->TOTAL_MES9);
+			                  
+			                }
+			                if(isset($valor2->TOTAL_MES10) && $valor2->TOTAL_MES10 != ''){
+
+			                  $activeSheet->setCellValue('N'.($cont+10),$valor2->TOTAL_MES10);
+			                  
+			                }  
+			                if(isset($valor2->TOTAL_MES11) && $valor2->TOTAL_MES11 != ''){
+			                  
+			                  $activeSheet->setCellValue('O'.($cont+10),$valor2->TOTAL_MES11);
+			                  
+			                }  
+			                if(isset($valor2->TOTAL_MES12) && $valor2->TOTAL_MES12 != ''){
+			                  
+			                  $activeSheet->setCellValue('P'.($cont+10),$valor2->TOTAL_MES12);
+			                  
+			                }    
 
 
-		            $activeSheet->setCellValue('B'.($cont+10),$AGENT );
-		            $activeSheet->setCellValue('C'.($cont+10),$GVC_ID_SERVICIO2 );
-			        $activeSheet->setCellValue('D'.($cont+10),$TOTAL_BOL2);
-				    $activeSheet->setCellValue('E'.($cont+10),$TOTAL2);
+		              }else{
 
+		              	  $activeSheet->setCellValue('B'.($cont+10),'')->getStyle('B'.($cont+10))->getFont()->setBold(true);
+		              	  $activeSheet->setCellValue('C'.($cont+10),$GVC_ID_CLIENTE2);
+		              	  $activeSheet->setCellValue('D'.($cont+10),$GVC_NOM_CLI2);
 
-		          }else{
+		              	  if(isset($valor2->TOTAL_MES1) && $valor2->TOTAL_MES1 != ''){
 
-		            $activeSheet->setCellValue('B'.($cont+10),'' );
-		            $activeSheet->setCellValue('C'.($cont+10),$GVC_ID_SERVICIO2 );
-			        $activeSheet->setCellValue('D'.($cont+10),$TOTAL_BOL2);
-				    $activeSheet->setCellValue('E'.($cont+10),$TOTAL2);
+		              	      $activeSheet->setCellValue('E'.($cont+10),$valor2->TOTAL_MES1);
+
+			                }
+			                if(isset($valor2->TOTAL_MES2) && $valor2->TOTAL_MES2 != ''){
+
+			                  $activeSheet->setCellValue('F'.($cont+10),$valor2->TOTAL_MES2);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES3) && $valor2->TOTAL_MES3 != ''){
+
+			                  $activeSheet->setCellValue('G'.($cont+10),$valor2->TOTAL_MES3);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES4) && $valor2->TOTAL_MES4 != ''){
+
+			                  $activeSheet->setCellValue('H'.($cont+10),$valor2->TOTAL_MES4);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES5) && $valor2->TOTAL_MES5 != ''){
+
+			                  $activeSheet->setCellValue('I'.($cont+10),$valor2->TOTAL_MES5);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES6) && $valor2->TOTAL_MES6 != ''){
+			                  
+			                  $activeSheet->setCellValue('J'.($cont+10),$valor2->TOTAL_MES6);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES7) && $valor2->TOTAL_MES7 != ''){
+			                  
+			                  $activeSheet->setCellValue('K'.($cont+10),$valor2->TOTAL_MES7);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES8) && $valor2->TOTAL_MES8 != ''){
+
+			                  $activeSheet->setCellValue('L'.($cont+10),$valor2->TOTAL_MES8);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES9) && $valor2->TOTAL_MES9 != ''){
+
+			                  $activeSheet->setCellValue('M'.($cont+10),$valor2->TOTAL_MES9);
+			                  
+			                }
+			                if(isset($valor2->TOTAL_MES10) && $valor2->TOTAL_MES10 != ''){
+
+			                  $activeSheet->setCellValue('N'.($cont+10),$valor2->TOTAL_MES10);
+			                  
+			                }  
+			                if(isset($valor2->TOTAL_MES11) && $valor2->TOTAL_MES11 != ''){
+			                  
+			                  $activeSheet->setCellValue('O'.($cont+10),$valor2->TOTAL_MES11);
+			                  
+			                }  
+			                if(isset($valor2->TOTAL_MES12) && $valor2->TOTAL_MES12 != ''){
+			                  
+			                  $activeSheet->setCellValue('P'.($cont+10),$valor2->TOTAL_MES12);
+			                  
+			                }    
+
+		              }
 
 
 		          }
 
-		        }//fin validacion pax
+		        }
 
-		      }//fin for rows_provedores_servicio
+		      
+		    } //fin for
 
-		      $cont++;
+		}  // fin validacion isset
+		else{   //cuando es solamente filtro por cliente
 
-		      $activeSheet->setCellValue('B'.($cont+10),'Total '.$AGENT)->getStyle('B'.($cont+10))->getFont()->setBold(true);
-	          $activeSheet->setCellValue('C'.($cont+10),'')->getStyle('C'.($cont+10))->getFont()->setBold(true);
-		      $activeSheet->setCellValue('D'.($cont+10),$TOTAL_BOL)->getStyle('D'.($cont+10))->getFont()->setBold(true);
-			  $activeSheet->setCellValue('E'.($cont+10),$TOTAL)->getStyle('E'.($cont+10))->getFont()->setBold(true);
+			$count=0;
+			 foreach ($rows_provedores_servicio as $clave2 => $valor2) {  
+			 	$cont++;
+			 	$count++;
+
+			 	$GVC_ID_CLIENTE2 = $valor2->GVC_ID_CLIENTE;
+              	$GVC_NOM_CLI2 = $valor2->GVC_NOM_CLI;
+
+					      $activeSheet->setCellValue('B'.($cont+10),'')->getStyle('B'.($cont+10))->getFont()->setBold(true);
+		              	  $activeSheet->setCellValue('C'.($cont+10),$GVC_ID_CLIENTE2);
+		              	  $activeSheet->setCellValue('D'.($cont+10),$GVC_NOM_CLI2);
+
+		              	  if(isset($valor2->TOTAL_MES1) && $valor2->TOTAL_MES1 != ''){
 
 
-		    }// fin validacion vacios
+		              	      $activeSheet->setCellValue('E'.($cont+10),$valor2->TOTAL_MES1);
 
 
-		  } //fin for
+			                }
+			                if(isset($valor2->TOTAL_MES2) && $valor2->TOTAL_MES2 != ''){
+
+			                  $activeSheet->setCellValue('F'.($cont+10),$valor2->TOTAL_MES2);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES3) && $valor2->TOTAL_MES3 != ''){
+
+			                  $activeSheet->setCellValue('G'.($cont+10),$valor2->TOTAL_MES3);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES4) && $valor2->TOTAL_MES4 != ''){
+
+			                  $activeSheet->setCellValue('H'.($cont+10),$valor2->TOTAL_MES4);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES5) && $valor2->TOTAL_MES5 != ''){
+
+			                  $activeSheet->setCellValue('I'.($cont+10),$valor2->TOTAL_MES5);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES6) && $valor2->TOTAL_MES6 != ''){
+			                  
+			                  $activeSheet->setCellValue('J'.($cont+10),$valor2->TOTAL_MES6);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES7) && $valor2->TOTAL_MES7 != ''){
+			                  
+			                  $activeSheet->setCellValue('K'.($cont+10),$valor2->TOTAL_MES7);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES8) && $valor2->TOTAL_MES8 != ''){
+
+			                  $activeSheet->setCellValue('L'.($cont+10),$valor2->TOTAL_MES8);
+			                  
+			                } 
+			                if(isset($valor2->TOTAL_MES9) && $valor2->TOTAL_MES9 != ''){
+
+			                  $activeSheet->setCellValue('M'.($cont+10),$valor2->TOTAL_MES9);
+			                  
+			                }
+			                if(isset($valor2->TOTAL_MES10) && $valor2->TOTAL_MES10 != ''){
+
+			                  $activeSheet->setCellValue('N'.($cont+10),$valor2->TOTAL_MES10);
+			                  
+			                }  
+			                if(isset($valor2->TOTAL_MES11) && $valor2->TOTAL_MES11 != ''){
+			                  
+			                  $activeSheet->setCellValue('O'.($cont+10),$valor2->TOTAL_MES11);
+			                  
+			                }  
+			                if(isset($valor2->TOTAL_MES12) && $valor2->TOTAL_MES12 != ''){
+			                  
+			                  $activeSheet->setCellValue('P'.($cont+10),$valor2->TOTAL_MES12);
+			                  
+			                } 
+
+			} // fin for proveedores servicio
+
+
+
+		}
+
 		  
-		  $cont++; 
-		  $spreadsheet->getActiveSheet()->getStyle('A1:F'.($cont+10))->applyFromArray($styleArray);
+	  $cont++; 
 
-		  $activeSheet->setCellValue('B'.($cont+10),'Total general')->getStyle('B'.($cont+10))->getFont()->setBold(true);
-          $activeSheet->setCellValue('C'.($cont+10),'')->getStyle('C'.($cont+10))->getFont()->setBold(true);
-	      $activeSheet->setCellValue('D'.($cont+10),$TOTAL_BOL_GEN)->getStyle('D'.($cont+10))->getFont()->setBold(true);
-		  $activeSheet->setCellValue('E'.($cont+10),$TOTAL_GEN)->getStyle('E'.($cont+10))->getFont()->setBold(true);
+	  $count_meses = count($meses_cliente);
+	  $letra_Excel = 'E';
 
-		$activeSheet->getStyle('B'.($cont+10).':E'.($cont+10).'')->getFill()
-	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-	    ->getStartColor()->setARGB('010101');
 
-	    $spreadsheet->getActiveSheet()->getStyle('B'.($cont+10).':E'.($cont+10).'')
-        ->getFont()->getColor()->setARGB('ffffff');
+	  foreach ($meses_cliente as $key => $value) {
+    
+            $fecha_explode = explode('-', $value['MES']);
 
-         $spreadsheet->getActiveSheet()
-			    ->getStyle('E11:E'.($cont+10))
-			    ->getNumberFormat()
-			    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+            $ano = $fecha_explode[0];
+            $mes = $fecha_explode[1];
+            $mes_palabra = '';
+
+            switch ($mes) {
+                case 1:
+                    $mes_palabra = 'Enero';
+                    break;
+                case 2:
+                    $mes_palabra = 'Febrero';
+                    break;
+                case 3:
+                    $mes_palabra = 'Marzo';
+                    break;
+                case 4:
+                    $mes_palabra = 'Abril';
+                    break;
+                case 5:
+                    $mes_palabra = 'Mayo';
+                    break;
+                case 6:
+                    $mes_palabra = 'Junio';
+                    break;
+                case 7:
+                    $mes_palabra = 'Julio';
+                    break;
+                case 8:
+                    $mes_palabra = 'Agosto';
+                    break;
+                case 9:
+                    $mes_palabra = 'Septiembre';
+                    break;
+                case 10:
+                    $mes_palabra = 'Octubre';
+                    break;
+                case 11:
+                    $mes_palabra = 'Noviembre';
+                    break;
+                case 12:
+                    $mes_palabra = 'Diciembre';
+                    break;
+
+            } 
+
+            switch ($key) {
+                case 0:
+                    $letra_Excel_encabezado = 'E';
+                    break;
+                case 1:
+                    $letra_Excel_encabezado = 'F';
+                    break;
+                case 2:
+                    $letra_Excel_encabezado = 'G';
+                    break;
+                case 3:
+                    $letra_Excel_encabezado = 'H';
+                    break;
+                case 4:
+                    $letra_Excel_encabezado = 'I';
+                    break;
+                case 5:
+                    $letra_Excel_encabezado = 'J';
+                    break;
+                case 6:
+                    $letra_Excel_encabezado = 'K';
+                    break;
+                case 7:
+                    $letra_Excel_encabezado = 'L';
+                    break;
+                case 8:
+                    $letra_Excel_encabezado = 'M';
+                    break;
+                case 9:
+                    $letra_Excel_encabezado = 'N';
+                    break;
+                case 10:
+                     $letra_Excel_encabezado = 'O';
+                    break;
+                case 11:
+                     $letra_Excel_encabezado = 'P';
+                    break;
+
+            } 
+
+
+            $fecha = $mes_palabra.' '.$ano;
+            $activeSheet->setCellValue($letra_Excel_encabezado.'10',$fecha);
+
+
+     }
+
+
+  	  switch ($count_meses) {
+
+	    case 1:
+	        $letra_Excel = 'E';
+	        break;
+	    case 2:
+	        $letra_Excel = 'F';
+	        break;
+	    case 3:
+	        $letra_Excel = 'G';
+	        break;
+	    case 4:
+	        $letra_Excel = 'H';
+	        break;
+	    case 5:
+	        $letra_Excel = 'I';
+	        break;
+	    case 6:
+	        $letra_Excel = 'J';
+	        break;
+	    case 7:
+	        $letra_Excel = 'K';
+	        break;
+	    case 8:
+	        $letra_Excel = 'L';
+	        break;
+	    case 9:
+	        $letra_Excel = 'M';
+	        break;
+	    case 10:
+	        $letra_Excel = 'N';
+	        break;
+	    case 11:
+	        $letra_Excel = 'O';
+	        break;
+	    case 12:
+	        $letra_Excel = 'P';
+	        break;
+
+	  }
+
+     $spreadsheet->getActiveSheet()->mergeCells('B6:'.$letra_Excel.'6');
+	 $spreadsheet->getActiveSheet()->mergeCells('B7:'.$letra_Excel.'7');
+	 $spreadsheet->getActiveSheet()->mergeCells('B8:'.$letra_Excel.'8');
+	 $spreadsheet->getActiveSheet()->mergeCells('B9:'.$letra_Excel.'9');
+
+	 $spreadsheet->getActiveSheet()->getStyle('B6:'.$letra_Excel.'6')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 $spreadsheet->getActiveSheet()->getStyle('B7:'.$letra_Excel.'7')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 $spreadsheet->getActiveSheet()->getStyle('B8:'.$letra_Excel.'8')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 $spreadsheet->getActiveSheet()->getStyle('B9:'.$letra_Excel.'9')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+	 $spreadsheet->getActiveSheet()->getStyle('C8:C3000')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+	 $spreadsheet->getActiveSheet()->getStyle('D8:D3000')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+	 $spreadsheet->getActiveSheet()->getStyle('E8:E3000')->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+
+	  foreach(range('A',$letra_Excel) as $columnID) {
+
+		    $activeSheet->getColumnDimension($columnID)->setAutoSize(true);
+
+	  }
+
+	  $spreadsheet->getActiveSheet()->getStyle('A1:'.$letra_Excel.($cont+10))->applyFromArray($styleArray);
+
+	
+      $activeSheet->setCellValue('C'.($cont+10),'')->getStyle('C'.($cont+10))->getFont()->setBold(true);
+
+   
+      $spreadsheet->getActiveSheet()->getStyle('B'.($cont+10).':'.$letra_Excel.($cont+10).'')
+      ->getFont()->getColor()->setARGB('ffffff');
+
+      $spreadsheet->getActiveSheet()
+		    ->getStyle('E11:'.$letra_Excel.($cont+10))
+		    ->getNumberFormat()
+		    ->setFormatCode(PhpOffice\PhpSpreadsheet\Style\NumberFormat::FORMAT_CURRENCY_USD_SIMPLE);
+
 	  	//****************************************************************************************************************
 
-	  	$activeSheet->getStyle('B10:E10')->getFill()
+	    $activeSheet->getStyle('B10:'.$letra_Excel.'10')->getFill()
 	    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
 	    ->getStartColor()->setARGB('1f497d');
 	    
-	    $spreadsheet->getActiveSheet()->getStyle('B10:E10')
+		 $spreadsheet->getActiveSheet()->getStyle('B10:'.$letra_Excel.'10')
         ->getFont()->getColor()->setARGB('ffffff');
-
-
+	  
 		$drawing = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
@@ -499,84 +804,18 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
         $drawing2 = new \PhpOffice\PhpSpreadsheet\Worksheet\Drawing();
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
-		$drawing2->setCoordinates('E1');
+		$drawing2->setCoordinates($letra_Excel.'1');
 		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
        	
-       	$ids_corporativo =  explode('_', $ids_corporativo);
-		$ids_corporativo = array_filter($ids_corporativo, "strlen");
+       	
   	    $ids_cliente =  explode('_', $ids_cliente);
   	    $ids_cliente = array_filter($ids_cliente, "strlen");
 
-  	    $activeSheet->setCellValue('B6','Servicios 24 hrs')->getStyle('B6')->getFont()->setBold(true)->setSize(25);
+  	    $activeSheet->setCellValue('B6','Ventas corporativas')->getStyle('B6')->getFont()->setBold(true)->setSize(25);
         
-        if($tipo_funcion == "aut"){
-        	
-        		 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
-
-        		 $rango_fechas = explode("_", $rango_fechas);
-
-        		 $fecha1 = $rango_fechas[0];
-        		 $fecha2 = $rango_fechas[1];
-
-        	   	 //$activeSheet->setCellValue('F4',$fecha1.' - '.$fecha2)->getStyle('F4')->getFont()->setSize(14);
-
-		        if(count($ids_corporativo) > 0 ){
-
-		              $sub = "";
-
-		              if(count($ids_corporativo) > 1){
-
-		              	    $sub = $sub . $fecha1 . ' - ' . $fecha2;
-
-		              }else{
-
-		              	foreach ($ids_corporativo as $clave => $valor) {  //obtiene clientes asignados
-
-		                 	$sub = $sub . $valor .' '. $fecha1 . ' - ' . $fecha2;
-
-		              	}
-
-		              }
-
-	            }
-	            
-	            else if(count($ids_cliente) > 0){
-	            	$title = "";
-	            	$rango_fecha =  $fecha1 . ' - ' . $fecha2;
-	            	$sub = "";
-	                
-	                $rz = $this->Mod_reportes_ventas_corporativas->get_razon_social_id_in($ids_cliente);  //optiene razon social
-	                
-	                if(count($rz) > 1){
-
-	                	  $title = "Clientes Villatours";
-	                	  
-	                }else{
-
-	                	foreach ($rz as $clave => $valor) {  //obtiene clientes asignados
-
-		                   $sub = $sub . $valor->nombre_cliente;
-
-		            	}
-	                }
-	                
-	            }else{
-
-	            	$title = "Clientes Villatours";
-	            	$rango_fecha =  $fecha1 . ' - ' . $fecha2;
-	            	$sub = "";
-
-	            }
-				
-				$activeSheet->setCellValue('B7', utf8_encode($title) )->getStyle('B7')->getFont()->setBold(true)->setSize(14);
-				$activeSheet->setCellValue('B8', utf8_encode($sub) )->getStyle('B8')->getFont()->setBold(true)->setSize(14);
-				$activeSheet->setCellValue('B9', utf8_encode($rango_fecha) )->getStyle('B8')->getFont()->setBold(true)->setSize(14);
-
-		}else{
-
 			if(count($ids_corporativo) > 0 ){
 
 	            $title = "";
@@ -632,27 +871,37 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 			$activeSheet->setCellValue('B8', utf8_encode($sub) )->getStyle('B8')->getFont()->setBold(true)->setSize(14);
 			$activeSheet->setCellValue('B9', utf8_encode($rango_fecha) )->getStyle('B8')->getFont()->setBold(true)->setSize(14);
 
-		}
-            
+			
+			$mes1 = $fecha1;
+		    $mes2 = $fecha2;
 
-		 if($tipo_funcion == "aut"){
-        
-			$str_fecha = $fecha1.'_A_'.$fecha2;
-	       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Serv_24hrs_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
-	       	echo json_encode(1); //cuando es uno si tiene informacion
+		    $hoy = getdate();
+		    $dia_actual = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
+		    $mes_actual = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
 
-	     }else{
-	     	
-	     	$fecha1 = explode('/', $fecha1);
-	        $dia1 = $fecha1[0];
+		    $year_actual = $hoy['year'];
+		    
+
+		    $fecha_actual = $year_actual.'-'.$mes1.'-'.$dia_actual;   //fecha actual con mes seleccionado
+		    $fecha_actual2 = $year_actual.'-'.$mes2.'-'.$dia_actual;   //fecha actual con mes seleccionado
+
+		    $fecha1 = strtotime ( '-1 year' , strtotime ( $fecha_actual ) ) ;
+		    $fecha1 = date("Y-m-d", $fecha1);
+
+		    $fecha_actual2 = strtotime ( $fecha_actual2 );
+		    $fecha2 = date("Y-m-d", $fecha_actual2);
+
+
+	     	$fecha1 = explode('-', $fecha1);
+	        $ano1 = $fecha1[0];
 	        $mes1 = $fecha1[1];
-	        $ano1 = $fecha1[2];
+	        $dia1 = $fecha1[2];
 	        $fecha1 = $ano1.'_'.$mes1.'_'.$dia1;
 
-	        $fecha2 = explode('/', $fecha2);
-	        $dia2 = $fecha2[0];
+	        $fecha2 = explode('-', $fecha2);
+	        $ano2 = $fecha2[0];
 	        $mes2 = $fecha2[1];
-	        $ano2 = $fecha2[2];
+	        $dia2 = $fecha2[2];
 	        $fecha2 = $ano2.'_'.$mes2.'_'.$dia2;
 
 			ob_start();
@@ -667,10 +916,9 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 			     );
 
 	    	echo json_encode($opResult);
-			
-	     }
+		
 
-	 }//fin count
+	  }//fin count
 	  else{
 
 	    if($tipo_funcion != "aut"){

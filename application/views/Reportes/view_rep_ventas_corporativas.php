@@ -40,7 +40,7 @@ canvas {
   $("#div_select_multiple_id_serie").show();
   $("#div_select_multiple_id_cliente").show();
   $("#div_select_id_corporativo").show();
-  //$("#div_rango_fechas").show();
+  $("#div_meses").show();
   $("#div_btn_guardar").show();
   $("#div_select_multiple_id_servicio").show();
   //$("#div_select_id_servicio").show();
@@ -120,8 +120,8 @@ canvas {
             
             });
 
-            var fecha1 = $("#datapicker_fecha1").val();
-            var fecha2 = $("#datapicker_fecha2").val();
+            var fecha1 = $("#calendar_month1").val();
+            var fecha2 = $("#calendar_month2").val();
                         
             var parametros = string_ids_suc+','+string_ids_serie+','+string_ids_cliente+','+string_ids_servicio+','+string_ids_provedor+','+string_ids_corporativo+','+fecha1+','+fecha2;
             
@@ -153,14 +153,16 @@ canvas {
                         $("#div_datagrid_html").empty();
                         
                         var arr_grafica =  data['grafica'];
+                        var arr_provedores_servicio =  data['provedores_servicio']['rows'];
+                        var meses_cliente =  data['provedores_servicio']['meses_cliente'];
 
-                        if(arr_grafica.length > 0){
+                        if(arr_grafica.length > 0 || arr_provedores_servicio.length > 0){
 
                               $.ajax({
                                 
                                 url: "<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_ventas_corporativas/get_grafica_pasajero_html",
                                 type: 'POST',
-                                data: {parametros:parametros,rows_grafica:data['grafica'],rows_provedores_servicio:JSON.stringify(data['provedores_servicio']),id_servicio:id_servicio},
+                                data: {parametros:parametros,rows_grafica:arr_grafica,rows_provedores_servicio:JSON.stringify(arr_provedores_servicio),meses_cliente:meses_cliente,id_servicio:id_servicio},
                                 complete: function () {
                                     
                                      $.unblockUI();
@@ -260,12 +262,11 @@ function btn_exportar_excel_vent_corp(){
             
             });
 
-            var fecha1 = $("#datapicker_fecha1").val();
-            var fecha2 = $("#datapicker_fecha2").val();
+            var fecha1 = $("#calendar_month1").val();
+            var fecha2 = $("#calendar_month2").val();
                         
             var parametros = string_ids_suc+','+string_ids_serie+','+string_ids_cliente+','+string_ids_servicio+','+string_ids_provedor+','+string_ids_corporativo+','+fecha1+','+fecha2;
             var tipo_funcion = 'man';
-            
 
             $.ajax({
                     url: "<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_ventas_corporativas/get_grafica_pasajero",
@@ -287,8 +288,14 @@ function btn_exportar_excel_vent_corp(){
 
                     },
                     success: function (data) {
+                        
+                        console.log(data);
 
                         data = JSON.parse(data);
+
+                        var arr_grafica =  data['grafica'];
+                        var arr_provedores_servicio =  data['provedores_servicio']['rows'];
+                        var meses_cliente =  data['provedores_servicio']['meses_cliente'];
 
                         $("#div_datagrid_html").empty();
 
@@ -298,7 +305,7 @@ function btn_exportar_excel_vent_corp(){
                               dataType:"html",//html
                               contentType:"application/x-www-form-urlencoded",//application/x-www-form-urlencoded
                               url:"<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_ventas_corporativas/exportar_excel_ae",
-                              data:{tipo_funcion:tipo_funcion,parametros:parametros,id_servicio:id_servicio},
+                              data:{parametros:parametros,rows_grafica:arr_grafica,rows_provedores_servicio:JSON.stringify(arr_provedores_servicio),meses_cliente:meses_cliente},
                               complete: function () {
                                   
                                    $.unblockUI();

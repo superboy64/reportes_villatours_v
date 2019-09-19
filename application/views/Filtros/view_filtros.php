@@ -537,6 +537,45 @@
                 </select>
   </div>
 
+  <div class="form-group" id="div_meses">
+              
+              <label>Mes:&nbsp;</label><br>
+              <select class="form-control" style="width: 172px;" id="calendar_month1" name='calendar_month1'>
+                  <!--<option value="0">seleccione</option>-->
+                  <option value="1">Enero</option>
+                  <option value="2">Febrero</option>
+                  <option value="3">Marzo</option>
+                  <option value="4">Abril</option>
+                  <option value="5">Mayo</option>
+                  <option value="6">Junio</option>
+                  <option value="7">Julio</option>
+                  <option value="8">Agosto</option>
+                  <option value="9">Seeptiembre</option>
+                  <option value="10">Octubre</option>
+                  <option value="11">Noviembre</option>
+                  <option value="12">Diciembre</option>
+                 
+              </select>
+              <label>a</label>
+              <select class="form-control" style="width: 172px;" id="calendar_month2" name='calendar_month2'>
+                  <!--<option value="0">seleccione</option>-->
+                  <option value="1">Enero</option>
+                  <option value="2">Febrero</option>
+                  <option value="3">Marzo</option>
+                  <option value="4">Abril</option>
+                  <option value="5">Mayo</option>
+                  <option value="6">Junio</option>
+                  <option value="7">Julio</option>
+                  <option value="8">Agosto</option>
+                  <option value="9">Seeptiembre</option>
+                  <option value="10">Octubre</option>
+                  <option value="11">Noviembre</option>
+                  <option value="12">Diciembre</option>
+                 
+              </select>
+
+  </div>
+
   <div class="form-group" id="div_btn_guardar">
      
     <button class="btn btn-default" style="margin-left: 0px; margin-top: 22px;" id="btn_buscar" onclick="buscar();"><i class="fa fa-search">&nbsp;Buscar</i></button>
@@ -674,6 +713,7 @@ $('.selectpicker').selectpicker({
     $("#div_select_multiple_id_provedor_local").hide();
     $("#div_select_multiple_id_metodo_pago").hide();
     $("#div_plantilla").hide();
+    $("#div_meses").hide();
 
   }
 
