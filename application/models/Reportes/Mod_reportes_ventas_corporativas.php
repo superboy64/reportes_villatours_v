@@ -13,7 +13,7 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
    
    public function get_SPID(){
 
-      $rest_SPID = $this->db->query("SELECT @@SPID SPID");
+      $rest_SPID = $this->db->query("SELECT connection_property( 'number' ) as SPID");
 
       $result_spid = $rest_SPID->result();
 
