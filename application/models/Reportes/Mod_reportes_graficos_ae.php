@@ -273,7 +273,7 @@ class Mod_reportes_graficos_ae extends CI_Model {
     PROV_TPO_SERV.ID_SERVICIO = TIPO_SERVICIO.ID_TIPO_SERVICIO and
     not DBA.DATOS_FACTURA.ID_SERIE = any(select ID_SERIE from DBA.GDS_CXS where EN_OTRA_SERIE = 'A') 
   
-    and DATOS_FACTURA.FECHA BETWEEN '".$fecha1."' AND '".$fecha2."' and DETALLE_FACTURA.contra <> 'S' and DETALLE_FACTURA.EMD <> 'S'  ";
+    and DATOS_FACTURA.FECHA BETWEEN '".$fecha1."' AND '".$fecha2."' and DETALLE_FACTURA.contra <> 'S' and DETALLE_FACTURA.EMD <> 'S'  "; //los contra son los revisados
 
       if($all_dks == 0){
 

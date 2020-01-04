@@ -31,4 +31,23 @@ class Mod_general extends CI_Model {
       
    }
 
+    public function get_SPID(){
+
+      $rest_SPID = $this->db->query("SELECT connection_property( 'number' ) as SPID");
+
+      $result_spid = $rest_SPID->result();
+
+      $SPID = $result_spid[0]->SPID;
+
+      $db_prueba = $this->load->database('conmysql', TRUE);
+      
+      $id_us = $this->session->userdata('session_id');
+      $ipvisitante = $_SERVER["REMOTE_ADDR"];
+
+      $db_prueba->query("INSERT INTO rpv_spid(ip_usuario, SPID, fecha_alta, status_proceso)
+                        VALUES('$ipvisitante',$SPID,now(),1)");
+
+
+   }
+
 }

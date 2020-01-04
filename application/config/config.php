@@ -2,7 +2,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 
-$config['base_url'] = 'http://10.77.55.215:8080/reportes_villatours';
+$config['base_url'] = 'http://10.77.62.155:8080/reportes_villatours_v';
 
 
 $config['index_page'] = '';

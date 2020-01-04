@@ -150,6 +150,44 @@ class Cnt_clientes extends CI_Controller {
 
 	}
 
+	public function get_analisis_cliente_dk_not_in(){
+
+
+		$ids_selec = $this->input->post('ids_selec');
+		
+		if($ids_selec != ''){
+
+			$ids_selec = explode(",", $ids_selec);
+			$ids_selec = array_filter($ids_selec, "strlen");
+		    $ids_selec = implode(",", $ids_selec);
+		   
+		
+			$rest = $this->Mod_clientes->get_analisis_cliente_dk_not_in($ids_selec);
+
+			$array1 = array();
+			
+		    foreach ($rest as $clave => $valor) {
+			   		
+			   		$valor->id = utf8_encode($valor->id);
+			    	$valor->nombre = utf8_encode($valor->nombre);
+			    	
+			    	array_push($array1, $valor);
+			   		
+			}
+
+			echo json_encode($array1);
+		
+		}else{
+
+			$this->get_catalogo_analisis_clientes();
+
+
+		}
+
+
+
+	}
+
 	public function get_clientes_dk_not_in_usuario(){
 
 		$ids_selec = $this->input->post('ids_selec');
@@ -196,6 +234,15 @@ class Cnt_clientes extends CI_Controller {
 		$rest = $this->Mod_clientes->get_catalogo_dks_usuario_actualizacion($id_usuario);
 
 		echo json_encode($rest);
+
+	}
+
+	public function get_catalogo_analisis_clientes(){
+
+		$rest = $this->Mod_clientes->get_analisis_clientes();
+
+		echo json_encode($rest);
+
 
 	}
 

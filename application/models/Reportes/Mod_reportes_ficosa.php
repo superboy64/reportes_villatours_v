@@ -16,12 +16,8 @@ class Mod_reportes_ficosa extends CI_Model {
    public function get_columnas($id_plantilla,$id_reporte){
 
       $db_prueba = $this->load->database('conmysql', TRUE);
-
-     
-
+      
       $query = $db_prueba->query('SELECT * FROM reportes_villa_tours.rpv_reporte_columnas where id_rep = '.$id_reporte);
-
-    
 
       return $query->result();
 
@@ -32,7 +28,7 @@ class Mod_reportes_ficosa extends CI_Model {
 
       $db_prueba = $this->load->database('conmysql', TRUE);
 
-     
+      
       $query = $db_prueba->query('select * from rpv_reporte_columnas
                                       where id not in(
                                       select id_col from rpv_reporte_plantilla_columnas 
@@ -564,21 +560,48 @@ class Mod_reportes_ficosa extends CI_Model {
 
    }
 
-   public function get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2){
+   public function get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$record_localizador,$consecutivo,$fecha1,$fecha2){
+      
+      if($tipo_funcion == "aut"){
+
+                 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+
+                 $rango_fechas = explode("_", $rango_fechas);
+
+                 $fecha1 = $rango_fechas[0];
+                 $fecha2 = $rango_fechas[1];
+
+
+       }
+       
       /*$query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
                                  INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
                                  where gds_hoteles.consecutivo = '$consecutivo' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");*/
 
+
       $query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
                                  INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
                                  where GDS_GENERAL.record_localizador = '$record_localizador' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");
+
       
       $res = $query->result_array(); 
       return $res;
 
    }
 
-   public function get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie){
+   public function get_hoteles_iris($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$fac_numero,$fecha1,$fecha2,$id_serie){
+
+      if($tipo_funcion == "aut"){
+
+                 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+
+                 $rango_fechas = explode("_", $rango_fechas);
+
+                 $fecha1 = $rango_fechas[0];
+                 $fecha2 = $rango_fechas[1];
+
+
+      }
 
       $db_prueba = $this->load->database('coniris', TRUE);
       $res = $db_prueba->query("SELECT 
@@ -586,7 +609,7 @@ class Mod_reportes_ficosa extends CI_Model {
                                 FROM iris_reserv_serv 
                                 inner join iris_cupones on iris_cupones.num_factura = iris_reserv_serv.fac_numero and iris_cupones.id_serie_fac = iris_reserv_serv.id_serie
                                 WHERE iris_reserv_serv.FAC_NUMERO = $fac_numero and iris_reserv_serv.id_clave <> 'CXS' and cast(iris_cupones.fecha_cupon as date) between '$fecha1' and '$fecha2' and iris_reserv_serv.id_serie='$id_serie'");
-     
+      
       $res = $res->result_array();
       return $res;
 

@@ -13,12 +13,14 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 	{
 	      parent::__construct();
 	      $this->load->model('Reportes/Mod_reportes_gastos_ae');
+	      $this->load->model('Mod_general');
 	      $this->load->model('Mod_catalogos_filtros');
 	      $this->load->model('Mod_correos');
 	      $this->load->model('Mod_usuario');
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->Mod_general->get_SPID();
 
 	     
 	}
@@ -200,8 +202,7 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 		}
 
 		$parametros["proceso"] = 1;
-      	
-      
+
 		$rest_grafica = $this->Mod_reportes_gastos_ae->get_grafica_pasajero($parametros);
 		
 		$array_grafica = [];
@@ -229,7 +230,7 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 
 		$id_us = $this->session->userdata('session_id');
 		// requires php5
-		define('UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/');
+		define('UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/');
 		$img = $img_grafica;
 		$img = str_replace('data:image/png;base64,', '', $img);
 		$img = str_replace(' ', '+', $img);
@@ -525,7 +526,7 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('B10');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/rep_gastos_ae_'.$id_us.'.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/rep_gastos_ae_'.$id_us.'.png');
 		$drawing->setHeight(280);
 		//$drawing->setWidth(600);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -534,7 +535,7 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -543,7 +544,7 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('E1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
@@ -682,7 +683,7 @@ class Cnt_reportes_gastos_ae extends CI_Controller {
 		if($tipo_funcion == "aut"){
 			
 			$str_fecha = $fecha1.'_A_'.$fecha2;
-	       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Gastos_ae_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+	       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Gastos_ae_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
 	       	echo json_encode(1); //cuando es uno si tiene informacion
 
 	     }else{

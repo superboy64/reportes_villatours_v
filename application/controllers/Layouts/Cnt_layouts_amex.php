@@ -26,6 +26,9 @@ class Cnt_layouts_amex extends CI_Controller {
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->load->library('lib_ega_booking_type');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 	     
 	}
     
@@ -128,8 +131,11 @@ class Cnt_layouts_amex extends CI_Controller {
 
 				$codigo_bsp = $rest[0]->codigo_bsp;
 				$cambio_prov = $rest[0]->cambio_prov;
-						
-				if($cambio_prov != "" && $cambio_prov != 'CS'){
+			    
+			    
+			    $cambio_prov = $this->lib_ega_booking_type->booking_type($cambio_prov);
+
+				if($cambio_prov != "" && $cambio_prov != '9'){
 
 					$value["AMEX_ID_PROVEEDOR"] =  '9K'/*$value["AMEX_ID_PROVEEDOR"]*/;
 
@@ -297,7 +303,7 @@ class Cnt_layouts_amex extends CI_Controller {
               			$array_fecha2 = explode('/', $fecha2);
               			$fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0]; //week
 
-						$writer->openToFile($_SERVER['DOCUMENT_ROOT']."/reportes_villatours/referencias/archivos/Layout_amex_".$fecha1."_A_".$fecha2.".xlsx"); // 
+						$writer->openToFile($_SERVER['DOCUMENT_ROOT']."/reportes_villatours_v/referencias/archivos/Layout_amex_".$fecha1."_A_".$fecha2.".xlsx"); // 
 
 						$titulo = [];
 						$row_vacio = [];
@@ -330,7 +336,7 @@ class Cnt_layouts_amex extends CI_Controller {
 
 						$writer->close();
 
-					    $rut = $_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Layout_amex_'.$fecha1.'_A_'.$fecha2.'.xlsx';
+					    $rut = $_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Layout_amex_'.$fecha1.'_A_'.$fecha2.'.xlsx';
 
 						header ('Content-Disposition: attachment; filename=Layout_amex_'.$fecha1.'_A_'.$fecha2.'.xlsx');
 						header ("Content-Type: application/vnd.ms-excel");
@@ -352,7 +358,7 @@ class Cnt_layouts_amex extends CI_Controller {
 		$allrows = $this->input->post("allrows");
 		$allrows = json_decode($allrows);
 		
-		$archivo = fopen($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/archivos_amex/MEX_EBTA_TPP_PI6VIL.txt', "w+");
+		$archivo = fopen($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/archivos_amex/MEX_EBTA_TPP_PI6VIL.txt', "w+");
 		
 		//-----header----//
 		
@@ -611,7 +617,7 @@ class Cnt_layouts_amex extends CI_Controller {
 	    header('Expires: 0');
 	 
 	    set_time_limit(0); 
-	    readfile($_SERVER['DOCUMENT_ROOT'].'\reportes_villatours\referencias\archivos\archivos_amex\MEX_EBTA_TPP_PI6VIL.txt');
+	    readfile($_SERVER['DOCUMENT_ROOT'].'\reportes_villatours_v\referencias\archivos\archivos_amex\MEX_EBTA_TPP_PI6VIL.txt');
 
 	}
 

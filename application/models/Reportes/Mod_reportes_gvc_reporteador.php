@@ -1051,7 +1051,6 @@ class Mod_reportes_gvc_reporteador extends CI_Model {
 
                   }
                   
-                  //print_r($select);
 
                   $query_rows = $this->db->query($select);
 

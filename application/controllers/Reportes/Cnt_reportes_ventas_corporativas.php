@@ -13,12 +13,15 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 	{
 	      parent::__construct();
 	      $this->load->model('Reportes/Mod_reportes_ventas_corporativas');
+	      $this->load->model('Mod_general');
 	      $this->load->model('Mod_catalogos_filtros');
 	      $this->load->model('Mod_correos');
 	      $this->load->model('Mod_usuario');
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 
 	     
 	}
@@ -136,7 +139,7 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 
 
 		$this->load->view('Reportes/formatos/view_formato_html_ventas_corporativas',$array2);
-
+		
 		
 
 	}
@@ -209,8 +212,7 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 
 		$parametros["proceso"] = 1;
 
-		$rest_SPID = $this->Mod_reportes_ventas_corporativas->get_SPID();
-		
+		$rest_SPID = $this->Mod_general->get_SPID();
 		$rest_grafica = $this->Mod_reportes_ventas_corporativas->get_grafica_pasajero($parametros);
 		$rest_provedores_servicio = $this->Mod_reportes_ventas_corporativas->get_provedores_servicio($parametros);
 		
@@ -224,27 +226,29 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 
 		$array2["grafica"] = $rest_grafica;
 
-		foreach ($rest_provedores_servicio['rows'] as $key => $value) {
+		foreach ($rest_provedores_servicio as $key => $value) {
 			
 			if(isset($value->GVC_NOM_CLI)){
 				
-				$value->GVC_NOM_CLI =  utf8_encode($value->GVC_NOM_CLI);
+				$value['GVC_NOM_CLI'] =  utf8_encode($value['GVC_NOM_CLI'] );
 
 			}
 
 			if(isset($value->GVC_ID_CORPORATIVO)){
 					
-				$value->GVC_ID_CORPORATIVO =  utf8_encode($value->GVC_ID_CORPORATIVO);
+				
+				$value['GVC_ID_CORPORATIVO'] =  utf8_encode($value['GVC_ID_CORPORATIVO']);
+
 
 			}
 
 		}
-
-		$array2["provedores_servicio"] = $rest_provedores_servicio;
-		$array2["meses_cliente"] = $rest_provedores_servicio['meses_cliente'];
-
 		
+		$array2["provedores_servicio"] = $rest_provedores_servicio;
+
+
 	    echo json_encode( $array2, JSON_NUMERIC_CHECK );
+	    
 
 	}
 
@@ -796,7 +800,7 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -805,7 +809,7 @@ class Cnt_reportes_ventas_corporativas extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates($letra_Excel.'1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());

@@ -268,6 +268,14 @@
 
 
 						                }
+						                if(tipo_archivo == 4){
+
+
+						                	archivos_pipes(parametros,parametros_correo,reportes_array,tipo_archivo,id_reporte,id_correo_automatico,id_servicio,id_intervalo,fecha_ini_proceso);
+
+
+						                }
+
 									    
 
 			                 			
@@ -345,6 +353,104 @@ function enviar_correo(parametros_correo,id_reporte,status,id_correo_automatico)
 				    });
 
 }
+
+function archivos_pipes(parametros,parametros_correo,reportes_array,tipo_archivo,id_reporte,id_correo_automatico,id_servicio,id_intervalo,fecha_ini_proceso){
+
+	//reportes_array = reportes_array.unique();
+
+	parametros_correo['reportes']= reportes_array;
+  	parametros_correo['tipo_archivo']= tipo_archivo;
+  	parametros_correo['id_reporte']= id_reporte;
+  	parametros_correo['id_intervalo']= id_intervalo;
+  	parametros_correo['fecha_ini_proceso']= fecha_ini_proceso;
+
+
+  	if(id_reporte == 4){
+
+		var clientes = parametros.split(",");
+		clientes = clientes[1];
+
+		clientes = clientes.split('_');
+
+		clientes = clientes.filter(Boolean); 
+
+			$.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador/excel_usuario_masivo_pipes", {parametros:parametros,tipo_funcion:"aut"}, function(data){
+					
+					
+		   			cont++;
+		   			parametros_correo['reportes'][id_reporte] = parametros_correo['reportes'][id_reporte] + '**' + data;
+		            if(total_rep == cont){
+		            
+		            //*****************envio de correo************************
+		        	  	enviar_correo(parametros_correo,id_reporte,status,id_correo_automatico);
+		        	//*******************************************************
+
+		        	  
+		        	}
+										                   	 
+			 }).fail(function(error) { 
+
+			 		$.post("<?php echo base_url(); ?>index.php/Cnt_correos/guardar_log_envio", {id_reporte:id_reporte,detalle:'Error excel reporte 4',status:0,id_correo_automatico}, function(data){
+
+			                 			$.post("<?php echo base_url(); ?>index.php/Cnt_correos/update_status_proceso", {status:0}, function(data){  //cambia status para continuar con los demas correos
+							
+			 							});
+								
+								});
+
+
+			  });
+
+
+
+		}else if(id_reporte == 34){
+
+
+			var clientes = parametros.split(",");
+			clientes = clientes[1];
+
+			clientes = clientes.split('_');
+
+			clientes = clientes.filter(Boolean); // [foo, blue, 5]
+
+			//if(clientes.length == 0){
+
+				$.post("<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador_net/excel_usuario_masivo_pipes", {parametros:parametros,tipo_funcion:"aut"}, function(data){
+						
+						
+
+			   			cont++;
+			   			parametros_correo['reportes'][id_reporte] = parametros_correo['reportes'][id_reporte] + '**' + data;
+			            if(total_rep == cont){
+			            
+			            //*****************envio de correo************************
+			        	  	enviar_correo(parametros_correo,id_reporte,status,id_correo_automatico);
+			        	//*******************************************************
+
+			        	  
+			        	}
+											                   	 
+				 }).fail(function(error) { 
+
+				 		$.post("<?php echo base_url(); ?>index.php/Cnt_correos/guardar_log_envio", {id_reporte:id_reporte,detalle:'Error excel reporte 4',status:0,id_correo_automatico}, function(data){
+
+				                 			$.post("<?php echo base_url(); ?>index.php/Cnt_correos/update_status_proceso", {status:0}, function(data){  //cambia status para continuar con los demas correos
+								
+				 							});
+									
+									});
+
+				                 	//alert(error.responseJSON);
+
+				  });
+
+
+
+		}
+
+
+}
+
 
 function archivos_excel(parametros,parametros_correo,reportes_array,tipo_archivo,id_reporte,id_correo_automatico,id_servicio,id_intervalo,fecha_ini_proceso){
 

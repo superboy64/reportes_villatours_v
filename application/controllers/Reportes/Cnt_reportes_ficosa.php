@@ -13,12 +13,14 @@ class Cnt_reportes_ficosa extends CI_Controller {
 	{
 	      parent::__construct();
 	      $this->load->model('Reportes/Mod_reportes_ficosa');
+	      $this->load->model('Mod_general');
 	      $this->load->model('Mod_catalogos_filtros');
 	      $this->load->model('Mod_usuario');
 	      $this->load->model('Mod_correos');
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->Mod_general->get_SPID();
 	     
 	}
 
@@ -111,7 +113,6 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		}
 
      
-
 		$rest = $this->Mod_reportes_ficosa->get_reportes_ficosa($parametros);
 		  
 		  $array1 = array();
@@ -206,599 +207,71 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 					}else{
 
-					//***********total_Itinerary1
-					if(array_key_exists(0, $segmentos) && $valor->typo_of_ticket == 'I') {
+							for($x=0;$x<10;$x++){
 
-							$tarifa_segmento = $segmentos[0]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
 
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary1'] = $scf;
+								if(array_key_exists($x, $segmentos) && $valor->typo_of_ticket == 'I') {
 
+										$tarifa_segmento = $segmentos[$x]['tarifa_segmento'];
+										$combustible = $valor->combustible;
+										$tpo_cambio = $valor->tpo_cambio;
+										$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
+										$dat['total_Itinerary'.($x+1)] = $scf;
 
 
-					}else if(array_key_exists(0, $segmentos) && $valor->typo_of_ticket == 'N'){
 
-							$tarifa_segmento = $segmentos[0]['tarifa_segmento'];
-							$combustible = $valor->combustible;
+								}else if(array_key_exists($x, $segmentos) && $valor->typo_of_ticket == 'N'){
 
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary1'] = $scf;
+										$tarifa_segmento = $segmentos[$x]['tarifa_segmento'];
+										$combustible = $valor->combustible;
+										$scf = (int)$tarifa_segmento + (int)$combustible;
+										$dat['total_Itinerary'.($x+1)] = $scf;
 
-					}else{
+								}else{
 
-						   $dat['total_Itinerary1'] = $valor->total_Itinerary1;
+									   $total_Itinerary = 'total_Itinerary'.($x+1);
+									   $dat['total_Itinerary'.($x+1)] = $valor->$total_Itinerary;
 
-					}
+								}
 
+								//*******origin1
+								if(array_key_exists($x, $segmentos)) {
 
-					
-					//*******origin1
-					if(array_key_exists(0, $segmentos)) {
+										$id_ciudad_salida = $segmentos[$x]['id_ciudad_salida'];
+										$dat['origin'.($x+1)] = $id_ciudad_salida;
 
-							$id_ciudad_salida = $segmentos[0]['id_ciudad_salida'];
-						
-							$dat['origin1'] = $id_ciudad_salida;
 
+								}else{
 
-					}else{
+									    $origin = 'origin'.($x+1);
+									    $dat['origin'.($x+1)] = $valor->$origin;
+									
+								}
 
-						    $dat['origin1'] = $valor->origin1;
-						
-					}
+								//******destina1
+								if(array_key_exists($x, $segmentos)) {
 
-					
-					//******destina1
-					if(array_key_exists(0, $segmentos)) {
+										$id_ciudad_destino = $segmentos[$x]['id_ciudad_destino'];
+										$dat['destina'.($x+1)] = $id_ciudad_destino;
 
-							$id_ciudad_destino = $segmentos[0]['id_ciudad_destino'];
-						
-							$dat['destina1'] = $id_ciudad_destino;
+								}else{
 
+									    $destina = 'destina'.($x+1);
+										$dat['destina'.($x+1)] =$valor->$destina;
+									
+								}
 
+							}
+		
 
-					}else{
-
-							$dat['destina1'] =$valor->destina1;
-						
-					}
-				
-					//***********total_Itinerary2
-
-					if(array_key_exists(1, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[1]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary2'] = $scf;
-
-
-
-
-					}else if(array_key_exists(1, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[1]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary2'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary2'] = $valor->total_Itinerary2;
-
-					}
-					
-					//*******origin2
-					if(array_key_exists(1, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[1]['id_ciudad_salida'];
-						
-							$dat['origin2'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin2'] = $valor->origin2;
-						
-					}
-					
-					//******destina2
-					if(array_key_exists(1, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[1]['id_ciudad_destino'];
-						
-							$dat['destina2'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina2'] =$valor->destina2;
-							
-					}
-					//***********total_Itinerary3
-
-					if(array_key_exists(2, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[2]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary3'] = $scf;
-
-
-
-
-					}else if(array_key_exists(2, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[2]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary3'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary3'] = $valor->total_Itinerary3;
-
-					}
-
-					//*******origin3
-					if(array_key_exists(2, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[2]['id_ciudad_salida'];
-						
-							$dat['origin3'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin3'] = $valor->origin3;
-						
-					}
-					
-					//******destina3
-					if(array_key_exists(2, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[2]['id_ciudad_destino'];
-						
-							$dat['destina3'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina3'] =$valor->destina3;
-							
-					}
-
-					//***********total_Itinerary4
-
-					if(array_key_exists(3, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[3]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary4'] = $scf;
-
-
-
-
-					}else if(array_key_exists(3, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[3]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary4'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary4'] = $valor->total_Itinerary4;
-
-					}
-					//*******origin4
-					if(array_key_exists(3, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[3]['id_ciudad_salida'];
-						
-							$dat['origin4'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin4'] = $valor->origin4;
-						
-					}
-					//******destina4
-					if(array_key_exists(3, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[3]['id_ciudad_destino'];
-						
-							$dat['destina4'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina4'] =$valor->destina4;
-							
-					}
-
-					//***********total_Itinerary5
-
-					if(array_key_exists(4, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[4]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary5'] = $scf;
-
-
-
-
-					}else if(array_key_exists(4, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[4]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary5'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary5'] = $valor->total_Itinerary5;
-
-					}
-					//*******origin5
-					if(array_key_exists(4, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[4]['id_ciudad_salida'];
-						
-							$dat['origin5'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin5'] = $valor->origin5;
-						
-					}
-					//******destina5
-					if(array_key_exists(4, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[4]['id_ciudad_destino'];
-						
-							$dat['destina5'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina5'] =$valor->destina5;
-							
-					}
-					//***********total_Itinerary6
-
-					if(array_key_exists(5, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[5]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary6'] = $scf;
-
-
-
-
-					}else if(array_key_exists(5, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[5]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary6'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary6'] = $valor->total_Itinerary6;
-
-					}
-					//*******origin6
-					if(array_key_exists(5, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[5]['id_ciudad_salida'];
-						
-							$dat['origin6'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin6'] = $valor->origin6;
-						
-					}
-					//******destina6
-					if(array_key_exists(5, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[5]['id_ciudad_destino'];
-						
-							$dat['destina6'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina6'] =$valor->destina6;
-							
-					}
-
-					//***********total_Itinerary7
-
-					if(array_key_exists(6, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[6]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary7'] = $scf;
-
-
-
-
-					}else if(array_key_exists(6, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[6]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary7'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary7'] = $valor->total_Itinerary7;
-
-					}
-					//*******origin7
-					if(array_key_exists(6, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[6]['id_ciudad_salida'];
-						
-							$dat['origin7'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin7'] = $valor->origin7;
-						
-					}
-					//******destina7
-					if(array_key_exists(6, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[6]['id_ciudad_destino'];
-						
-							$dat['destina7'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina7'] =$valor->destina7;
-							
-					}
-
-					//***********total_Itinerary8
-
-					if(array_key_exists(7, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[7]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary8'] = $scf;
-
-
-
-
-					}else if(array_key_exists(7, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[7]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary8'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary8'] = $valor->total_Itinerary8;
-
-					}
-
-					//*******origin8
-					if(array_key_exists(7, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[7]['id_ciudad_salida'];
-						
-							$dat['origin8'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin8'] = $valor->origin8;
-						
-					}
-					
-					//******destina8
-					if(array_key_exists(7, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[7]['id_ciudad_destino'];
-						
-							$dat['destina8'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina8'] =$valor->destina8;
-							
-					}
-
-					//***********total_Itinerary9
-
-					if(array_key_exists(8, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[8]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary9'] = $scf;
-
-
-
-
-					}else if(array_key_exists(8, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[8]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary9'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary9'] = $valor->total_Itinerary9;
-
-					}
-					//*******origin9
-					if(array_key_exists(8, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[8]['id_ciudad_salida'];
-						
-							$dat['origin9'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin9'] = $valor->origin9;
-						
-					}
-					//******destina9
-					if(array_key_exists(8, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[8]['id_ciudad_destino'];
-						
-							$dat['destina9'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina9'] =$valor->destina9;
-							
-					}
-					//***********total_Itinerary10
-					if(array_key_exists(9, $segmentos) && $valor->typo_of_ticket == 'I') {
-
-							$tarifa_segmento = $segmentos[9]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-							$tpo_cambio = $valor->tpo_cambio;
-
-							$scf = ((int)$tarifa_segmento + (int)$combustible) * (int)$tpo_cambio;
-							
-							$dat['total_Itinerary10'] = $scf;
-
-
-
-
-					}else if(array_key_exists(9, $segmentos) && $valor->typo_of_ticket == 'N'){
-
-							$tarifa_segmento = $segmentos[9]['tarifa_segmento'];
-							$combustible = $valor->combustible;
-
-							$scf = (int)$tarifa_segmento + (int)$combustible;
-							
-							$dat['total_Itinerary10'] = $scf;
-
-					}else{
-
-						   $dat['total_Itinerary10'] = $valor->total_Itinerary10;
-
-					}
-
-					//*******origin10
-					if(array_key_exists(9, $segmentos)) {
-
-							$id_ciudad_salida = $segmentos[9]['id_ciudad_salida'];
-						
-							$dat['origin10'] = $id_ciudad_salida;
-
-
-
-					}else{
-
-						    $dat['origin10'] = $valor->origin10;
-						
-					}
-					//******destina10
-					if(array_key_exists(9, $segmentos)) {
-
-							$id_ciudad_destino = $segmentos[9]['id_ciudad_destino'];
-						
-							$dat['destina10'] = $id_ciudad_destino;
-
-							
-
-					}else{
-
-							$dat['destina10'] =$valor->destina10;
-							
-					}
-
-
-					}
+					} //fin else
 				
 					return $dat;
 				} //FIN FUNCION DATA GENERAL
 
 		
 		   foreach ($rest as $clave => $valor) {
+
 			    $consecutivo = utf8_encode($valor->consecutivo);
 			    $record_localizador = utf8_encode($valor->record_localizador);
 
@@ -808,7 +281,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 						if( !in_array($consecutivo, $array_consecutivo) && $valor->type_of_service == 'HOTNAC' || $valor->type_of_service == 'HOTINT'){
 
-							$dat = data_general($valor,[]);
+							$ticket = utf8_encode($valor->ticket_number);
+							$segmentos = $this->Mod_reportes_ficosa->get_segmentos_ticket_number($ticket,$consecutivo);
+							$dat = data_general($valor,$segmentos);
 
 							$dat['type_of_service'] = 'HOTEL';
 							$dat['codigo_producto'] = 'HOTEL';
@@ -835,7 +310,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 						    $fac_numero = utf8_encode($valor->documento);
 						    $id_serie = utf8_encode($valor->id_serie);
-					        $hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie);
+
+
+							$hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris('man',$fecha_ini_proceso = '',$id_intervalo = 0,$fac_numero,$fecha1,$fecha2,$id_serie);
 
 
 							$cont3=0;
@@ -853,7 +330,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 						    	 $dat['buy_in_advance'] = utf8_encode($valor_hot_ir['buy_in_advance']);
 						    	 $dat['fecha_emi'] = $valor_hot_ir['fecha_fac2'];
 						    
-						    	array_push($array1, $valor);
+						    	array_push($array1, $dat);
 
 							}
 
@@ -869,7 +346,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 								$dat['Nr_days'] = utf8_encode($valor_aut['dias']);
 								$dat['Place_delivery'] = utf8_encode($valor_aut['id_ciudad_entrega']);
 								$dat['Place_delivery_back'] = utf8_encode($valor_aut['id_ciudad_recoge']);
-								$dat['Departure_date'] = utf8_encode($valor_aut['fecha_entrega']);
+								$dat['Departure_date'] = utf8_encode($valor_aut['fecha_entrega']); //// es fecha recoge
 
 								array_push($array1, $dat);
 
@@ -879,7 +356,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 						}else if( !in_array($consecutivo, $array_consecutivo) && $valor->type_of_service == 'HOTNAC_RES'){
 
-								$dat = data_general($valor,[]);
+								$ticket = utf8_encode($valor->ticket_number);
+								$segmentos = $this->Mod_reportes_ficosa->get_segmentos_ticket_number($ticket,$consecutivo);
+								$dat = data_general($valor,$segmentos);
 
 								$dat['type_of_service'] = 'HOTEL';
 								$dat['codigo_producto'] = 'HOTEL';
@@ -904,7 +383,8 @@ class Cnt_reportes_ficosa extends CI_Controller {
 										         
 										      }
 
-					    		$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
+								$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol('man',$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
 
 								$cont=0;
 							    foreach ($hoteles_arr as $clave_hot => $valor_hot) { //agrega hoteles
@@ -921,7 +401,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 							    	
 							    	$dat['buy_in_advance'] = $valor_hot['buy_in_advance'];
 
-							    	array_push($array1, $valor);
+							    	array_push($array1, $dat);
 
 							   }
 
@@ -978,7 +458,8 @@ class Cnt_reportes_ficosa extends CI_Controller {
 									         
 									      }
 
-						    		    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
+									    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol('man',$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
 
 
 							    		foreach ($hoteles_arr as $clave_hot => $valor_hot) { //agrega hoteles
@@ -1013,7 +494,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 											$dat['id_ciudad_recoge'] = utf8_encode($valor_aut['id_ciudad_recoge']);
 											$dat['fecha_entrega'] = utf8_encode($valor_aut['fecha_entrega']);
 
-											array_push($array1, $valor);
+											array_push($array1, $dat);
 
 									    }
 
@@ -1028,7 +509,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 						if(!in_array($consecutivo, $array_consecutivo) ){
 
-									$dat = data_general($valor,[]);
+									$ticket = utf8_encode($valor->ticket_number);
+									$segmentos = $this->Mod_reportes_ficosa->get_segmentos_ticket_number($ticket,$consecutivo);
+									$dat = data_general($valor,$segmentos);
 									
 									$dat['type_of_service'] = 'HOTEL';
 								    $dat['codigo_producto'] = 'HOTEL';
@@ -1053,7 +536,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 											         
 											      }
 
-						             $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
+									$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol('man',$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
 
 									
 									$cont=0;
@@ -1106,6 +589,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 					}// FIN DE else VADICION TYPE OF SERVICES
 	    
 				    array_push($array_consecutivo, $valor->consecutivo);
+
 					array_push($array_ticket_number, $valor->ticket_number);
 			        
 			   }  //fin del for principal
@@ -1190,7 +674,6 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		}
 
         
-
 	$rep = $this->Mod_reportes_ficosa->get_reportes_ficosa($parametros);
 		
 	if(count($rep) > 0){
@@ -1346,9 +829,9 @@ class Cnt_reportes_ficosa extends CI_Controller {
 			$consecutivo = utf8_encode($valor->consecutivo);
 			$record_localizador = utf8_encode($valor->record_localizador);
 
-			
 		if(utf8_encode($valor->type_of_service) == 'BD' || utf8_encode($valor->type_of_service) == 'BI' || utf8_encode($valor->type_of_service) == 'HOTNAC' || utf8_encode($valor->type_of_service) == 'HOTINT'){
 			
+
 			$cont++;
 
 				$activeSheet->setCellValue('A5','consecutivo' )->getStyle('A5')->getFont()->setBold(true)->setSize(11);
@@ -1870,7 +1353,16 @@ class Cnt_reportes_ficosa extends CI_Controller {
 
 							    	$fac_numero = utf8_encode($valor->documento);
 								    $id_serie = utf8_encode($valor->id_serie);
-							        $hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie);
+
+								    if($tipo_funcion == "aut"){
+
+								    	$hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$fac_numero,$fecha1,$fecha2,$id_serie);
+								    
+								    }else{
+
+								    	$hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($tipo_funcion,$fecha_ini_proceso = '',$id_intervalo = 0,$fac_numero,$fecha1,$fecha2,$id_serie);
+								    }
+
 						       
 						    if (!in_array($consecutivo, $array_consecutivo)) {
 						    	$cont_ir = 0;
@@ -1987,7 +1479,16 @@ class Cnt_reportes_ficosa extends CI_Controller {
 									
 							    	$fac_numero = utf8_encode($valor->documento);
 								    $id_serie = utf8_encode($valor->id_serie);
-							        $hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie);
+
+								    if($tipo_funcion == "aut"){
+
+								    	$hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$fac_numero,$fecha1,$fecha2,$id_serie);
+								    
+								    }else{
+
+								    	$hoteles_iris_arr = $this->Mod_reportes_ficosa->get_hoteles_iris($tipo_funcion,$fecha_ini_proceso = '',$id_intervalo = 0,$fac_numero,$fecha1,$fecha2,$id_serie);
+								    }
+
 								
 						    if (!in_array($consecutivo, $array_consecutivo)) {
 						    	$cont_ir = 0;
@@ -2074,214 +1575,229 @@ class Cnt_reportes_ficosa extends CI_Controller {
 								}
 							}//fin if consecutivo hotint
 						
+					}else{
+
+
+						$fecha1 = $parametros["fecha1"];
+						$fecha2 = $parametros["fecha2"];
+							
+						if($fecha1 == ""){
+						          $hoy = getdate();
+						          $dia = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
+						          $mes = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
+						          $year = $hoy['year'];
+						          $fecha1 = $year.'-'.$mes.'-'.$dia;
+						          $fecha2 = $year.'-'.$mes.'-'.$dia;
+						        
+						      }else{
+						          
+						          $array_fecha1 = explode('/', $fecha1);
+						          $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0];
+						          $array_fecha2 = explode('/', $fecha2);
+						          $fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0];
+						         
+						      }
+
+						if($tipo_funcion == "aut"){
+
+					    	$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+					    }else{
+
+					   		$hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+					    }
+
+					    if (!in_array($consecutivo, $array_consecutivo)) {
+					    			    	
+								$cont_hot = 0;			
+					    		foreach ($hoteles_arr as $clave_hot => $valor_hot) {    //recorre hoteles
+					    			$cont_hot++;
+					    			
+					    			if($cont_hot > 0){
+												$cont++;
+											}
+										
+								    $activeSheet->setCellValue('A'.$cont ,$valor->consecutivo )->getStyle('A'.$cont)->getFont()->setBold(false);
+								    $activeSheet->setCellValue('B'.$cont ,$valor->name )->getStyle('B'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('C'.$cont ,$valor->nexp )->getStyle('C'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('D'.$cont ,'' )->getStyle('D'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('E'.$cont ,'' )->getStyle('E'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('F'.$cont ,$valor->documento )->getStyle('F'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('G'.$cont ,$valor->solicitor )->getStyle('G'.$cont)->getFont()->setBold(false);
+									
+									$activeSheet->setCellValue('BK'.$cont ,$valor_hot['buy_in_advance'])->getStyle('BK'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
+									$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
+
+									if($valor->typo_of_ticket == 'N' ){
+
+										$activeSheet->setCellValue('H'.$cont ,'HOTEL' )->getStyle('H'.$cont)->getFont()->setBold(false);   //ecomod
+
+									}else if($valor->typo_of_ticket == 'I' ){
+
+
+										$activeSheet->setCellValue('H'.$cont ,'HOTEL' )->getStyle('H'.$cont)->getFont()->setBold(false);   //ecomod
+									
+									}
+
+									
+									
+
+									$activeSheet->setCellValue('I'.$cont ,'' )->getStyle('I'.$cont)->getFont()->setBold(false);
+
+									if(utf8_encode($valor->city) != '_____campo_vacio_____'){
+
+										$activeSheet->setCellValue('J'.$cont ,'HOTEL' )->getStyle('J'.$cont)->getFont()->setBold(false);
+									
+									}else{
+
+										$activeSheet->setCellValue('J'.$cont ,'HOTEL' )->getStyle('J'.$cont)->getFont()->setBold(false);
+
+									}
+									
+									$activeSheet->setCellValue('K'.$cont ,$valor->final_user )->getStyle('K'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('L'.$cont ,$valor->ticket_number )->getStyle('L'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('M'.$cont ,$valor->typo_of_ticket )->getStyle('M'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('N'.$cont ,$valor->fecha_emi)->getStyle('N'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('O'.$cont ,'' )->getStyle('O'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('P'.$cont ,'' )->getStyle('P'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('Q'.$cont ,'' )->getStyle('Q'.$cont)->getFont()->setBold(false);
+									//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
+
+									$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('S'.$cont ,'' )->getStyle('S'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('T'.$cont ,'' )->getStyle('T'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('U'.$cont ,'')->getStyle('U'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('V'.$cont ,'')->getStyle('V'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('W'.$cont ,'')->getStyle('W'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('X'.$cont ,'')->getStyle('X'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('Y'.$cont ,'' )->getStyle('Y'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('Z'.$cont ,'' )->getStyle('Z'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AA'.$cont ,'' )->getStyle('AA'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AB'.$cont ,'' )->getStyle('AB'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AC'.$cont ,'' )->getStyle('AC'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AD'.$cont ,'' )->getStyle('AD'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AE'.$cont ,'' )->getStyle('AE'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AF'.$cont ,'' )->getStyle('AF'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AG'.$cont ,'' )->getStyle('AG'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AH'.$cont ,'' )->getStyle('AH'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AI'.$cont ,'' )->getStyle('AI'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AJ'.$cont ,'' )->getStyle('AJ'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AK'.$cont ,'' )->getStyle('AK'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AL'.$cont ,'' )->getStyle('AL'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AM'.$cont ,'' )->getStyle('AM'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AN'.$cont ,'' )->getStyle('AN'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AO'.$cont ,'' )->getStyle('AO'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AP'.$cont ,'' )->getStyle('AP'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AQ'.$cont ,'' )->getStyle('AQ'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AR'.$cont ,'' )->getStyle('AR'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AS'.$cont ,'' )->getStyle('AS'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AT'.$cont ,'' )->getStyle('AT'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AU'.$cont ,'' )->getStyle('AU'.$cont)->getFont()->setBold(false);
+
+
+									$activeSheet->setCellValue('AV'.$cont ,$valor_hot['nombre_hotel'] )->getStyle('AV'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('AW'.$cont ,$valor_hot['fecha_entrada'] )->getStyle('AW'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('AX'.$cont ,$valor_hot['fecha_salida'] )->getStyle('AX'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('AY'.$cont ,$valor_hot['noches'] )->getStyle('AY'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('AZ'.$cont ,'' )->getStyle('AZ'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BA'.$cont ,$valor_hot['numero_hab'] )->getStyle('BA'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BB'.$cont ,$valor_hot['id_habitacion'] )->getStyle('BB'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BC'.$cont ,$valor_hot['id_ciudad'] )->getStyle('BC'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BD'.$cont ,'' )->getStyle('BD'.$cont)->getFont()->setBold(false);
+
+							    	
+					    		}
+
+
+
+					 }
+
+
+					  $autos_arr = $this->Mod_reportes_ficosa->get_autos_num_bol($consecutivo);
+					  if (!in_array($consecutivo, $array_consecutivo)) {
+					  	$cont_aut = 0;			
+					    foreach ($autos_arr as $clave_aut => $valor_aut) {    //recorre hoteles
+					    		$cont_aut++;	
+
+					    			if($cont_aut > 0){
+												$cont++;
+											}
+
+								    $activeSheet->setCellValue('A'.$cont ,$valor->consecutivo )->getStyle('A'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('B'.$cont ,$valor->name )->getStyle('B'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('C'.$cont ,$valor->nexp )->getStyle('C'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('D'.$cont ,'' )->getStyle('D'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('E'.$cont ,'' )->getStyle('E'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('F'.$cont ,$valor->documento )->getStyle('F'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('G'.$cont ,$valor->solicitor )->getStyle('G'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('H'.$cont ,'' )->getStyle('H'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('I'.$cont ,'' )->getStyle('I'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('J'.$cont ,'CAR' )->getStyle('J'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('K'.$cont ,$valor->final_user )->getStyle('K'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('L'.$cont ,$valor->ticket_number )->getStyle('L'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('M'.$cont ,$valor->typo_of_ticket )->getStyle('M'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('N'.$cont ,$valor->fecha_emi )->getStyle('N'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('O'.$cont ,'' )->getStyle('O'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('P'.$cont ,'' )->getStyle('P'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('Q'.$cont ,'' )->getStyle('Q'.$cont)->getFont()->setBold(false);
+
+									$activeSheet->setCellValue('BK'.$cont ,$valor->buy_in_advance)->getStyle('BK'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
+									$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
+
+									//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
+
+									$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('S'.$cont ,'' )->getStyle('S'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('T'.$cont ,'' )->getStyle('T'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('U'.$cont ,'')->getStyle('U'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('V'.$cont ,'')->getStyle('V'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('W'.$cont ,'')->getStyle('W'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('X'.$cont ,'')->getStyle('X'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('Y'.$cont ,'' )->getStyle('Y'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('Z'.$cont ,'' )->getStyle('Z'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AA'.$cont ,'' )->getStyle('AA'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AB'.$cont ,'' )->getStyle('AB'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AC'.$cont ,'' )->getStyle('AC'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AD'.$cont ,'' )->getStyle('AD'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AE'.$cont ,'' )->getStyle('AE'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AF'.$cont ,'' )->getStyle('AF'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AG'.$cont ,'' )->getStyle('AG'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AH'.$cont ,'' )->getStyle('AH'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AI'.$cont ,'' )->getStyle('AI'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AJ'.$cont ,'' )->getStyle('AJ'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AK'.$cont ,'' )->getStyle('AK'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AL'.$cont ,'' )->getStyle('AL'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AM'.$cont ,'' )->getStyle('AM'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AN'.$cont ,'' )->getStyle('AN'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AO'.$cont ,'' )->getStyle('AO'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AP'.$cont ,'' )->getStyle('AP'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AQ'.$cont ,'' )->getStyle('AQ'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AR'.$cont ,'' )->getStyle('AR'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AS'.$cont ,'' )->getStyle('AS'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AT'.$cont ,'' )->getStyle('AT'.$cont)->getFont()->setBold(false);
+									$activeSheet->setCellValue('AU'.$cont ,'' )->getStyle('AU'.$cont)->getFont()->setBold(false);
+
+									$activeSheet->setCellValue('BE'.$cont ,$valor_aut['tipo_auto'] )->getStyle('BE'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BF'.$cont ,$valor_aut['fecha_entrega'] )->getStyle('BF'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BG'.$cont ,$valor_aut['dias'] )->getStyle('BG'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BH'.$cont ,$valor_aut['id_ciudad_entrega'] )->getStyle('BH'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BI'.$cont ,$valor_aut['id_ciudad_recoge'] )->getStyle('BI'.$cont)->getFont()->setBold(false);
+							    	$activeSheet->setCellValue('BJ'.$cont ,$valor_aut['fecha_entrega'] )->getStyle('BJ'.$cont)->getFont()->setBold(false);
+							    	
+
+					    }
+
+
+
 					}
 
 					
-			    				$fecha1 = $parametros["fecha1"];
-		      					$fecha2 = $parametros["fecha2"];
-		      					
-								if($fecha1 == ""){
-								          $hoy = getdate();
-								          $dia = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
-								          $mes = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
-								          $year = $hoy['year'];
-								          $fecha1 = $year.'-'.$mes.'-'.$dia;
-								          $fecha2 = $year.'-'.$mes.'-'.$dia;
-								        
-								      }else{
-								          
-								          $array_fecha1 = explode('/', $fecha1);
-								          $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0];
-								          $array_fecha2 = explode('/', $fecha2);
-								          $fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0];
-								         
-								      }
-
-			    $hoteles_arr = $this->Mod_reportes_ficosa->get_hoteles_num_bol($record_localizador,$consecutivo,$fecha1,$fecha2);
-
-			    if (!in_array($consecutivo, $array_consecutivo)) {
-			    			    	
-						$cont_hot = 0;			
-			    		foreach ($hoteles_arr as $clave_hot => $valor_hot) {    //recorre hoteles
-			    			$cont_hot++;
-			    			
-			    			if($cont_hot > 0){
-										$cont++;
-									}
-								
-						    $activeSheet->setCellValue('A'.$cont ,$valor->consecutivo )->getStyle('A'.$cont)->getFont()->setBold(false);
-						    $activeSheet->setCellValue('B'.$cont ,$valor->name )->getStyle('B'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('C'.$cont ,$valor->nexp )->getStyle('C'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('D'.$cont ,'' )->getStyle('D'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('E'.$cont ,'' )->getStyle('E'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('F'.$cont ,$valor->documento )->getStyle('F'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('G'.$cont ,$valor->solicitor )->getStyle('G'.$cont)->getFont()->setBold(false);
-							
-							$activeSheet->setCellValue('BK'.$cont ,$valor_hot['buy_in_advance'])->getStyle('BK'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
-							$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
-
-							if($valor->typo_of_ticket == 'N' ){
-
-								$activeSheet->setCellValue('H'.$cont ,'HOTEL' )->getStyle('H'.$cont)->getFont()->setBold(false);   //ecomod
-
-							}else if($valor->typo_of_ticket == 'I' ){
-
-
-								$activeSheet->setCellValue('H'.$cont ,'HOTEL' )->getStyle('H'.$cont)->getFont()->setBold(false);   //ecomod
-							
-							}
-
-							
-							
-
-							$activeSheet->setCellValue('I'.$cont ,'' )->getStyle('I'.$cont)->getFont()->setBold(false);
-
-							if(utf8_encode($valor->city) != '_____campo_vacio_____'){
-
-								$activeSheet->setCellValue('J'.$cont ,'HOTEL' )->getStyle('J'.$cont)->getFont()->setBold(false);
-							
-							}else{
-
-								$activeSheet->setCellValue('J'.$cont ,'HOTEL' )->getStyle('J'.$cont)->getFont()->setBold(false);
-
-							}
-							
-							$activeSheet->setCellValue('K'.$cont ,$valor->final_user )->getStyle('K'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('L'.$cont ,$valor->ticket_number )->getStyle('L'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('M'.$cont ,$valor->typo_of_ticket )->getStyle('M'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('N'.$cont ,$valor->fecha_emi)->getStyle('N'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('O'.$cont ,'' )->getStyle('O'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('P'.$cont ,'' )->getStyle('P'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('Q'.$cont ,'' )->getStyle('Q'.$cont)->getFont()->setBold(false);
-							//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
-
-							$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('S'.$cont ,'' )->getStyle('S'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('T'.$cont ,'' )->getStyle('T'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('U'.$cont ,'')->getStyle('U'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('V'.$cont ,'')->getStyle('V'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('W'.$cont ,'')->getStyle('W'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('X'.$cont ,'')->getStyle('X'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('Y'.$cont ,'' )->getStyle('Y'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('Z'.$cont ,'' )->getStyle('Z'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AA'.$cont ,'' )->getStyle('AA'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AB'.$cont ,'' )->getStyle('AB'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AC'.$cont ,'' )->getStyle('AC'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AD'.$cont ,'' )->getStyle('AD'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AE'.$cont ,'' )->getStyle('AE'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AF'.$cont ,'' )->getStyle('AF'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AG'.$cont ,'' )->getStyle('AG'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AH'.$cont ,'' )->getStyle('AH'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AI'.$cont ,'' )->getStyle('AI'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AJ'.$cont ,'' )->getStyle('AJ'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AK'.$cont ,'' )->getStyle('AK'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AL'.$cont ,'' )->getStyle('AL'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AM'.$cont ,'' )->getStyle('AM'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AN'.$cont ,'' )->getStyle('AN'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AO'.$cont ,'' )->getStyle('AO'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AP'.$cont ,'' )->getStyle('AP'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AQ'.$cont ,'' )->getStyle('AQ'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AR'.$cont ,'' )->getStyle('AR'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AS'.$cont ,'' )->getStyle('AS'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AT'.$cont ,'' )->getStyle('AT'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AU'.$cont ,'' )->getStyle('AU'.$cont)->getFont()->setBold(false);
-
-
-							$activeSheet->setCellValue('AV'.$cont ,$valor_hot['nombre_hotel'] )->getStyle('AV'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('AW'.$cont ,$valor_hot['fecha_entrada'] )->getStyle('AW'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('AX'.$cont ,$valor_hot['fecha_salida'] )->getStyle('AX'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('AY'.$cont ,$valor_hot['noches'] )->getStyle('AY'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('AZ'.$cont ,'' )->getStyle('AZ'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BA'.$cont ,$valor_hot['numero_hab'] )->getStyle('BA'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BB'.$cont ,$valor_hot['id_habitacion'] )->getStyle('BB'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BC'.$cont ,$valor_hot['id_ciudad'] )->getStyle('BC'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BD'.$cont ,'' )->getStyle('BD'.$cont)->getFont()->setBold(false);
-
-
-			    		}
-
-
-
-			 }
-
-
-			  $autos_arr = $this->Mod_reportes_ficosa->get_autos_num_bol($consecutivo);
-			  if (!in_array($consecutivo, $array_consecutivo)) {
-			  	$cont_aut = 0;			
-			    foreach ($autos_arr as $clave_aut => $valor_aut) {    //recorre hoteles
-			    			$cont_aut++;
-
-			    			if($cont_aut > 0){
-										$cont++;
-									}
-
-						    $activeSheet->setCellValue('A'.$cont ,$valor->consecutivo )->getStyle('A'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('B'.$cont ,$valor->name )->getStyle('B'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('C'.$cont ,$valor->nexp )->getStyle('C'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('D'.$cont ,'' )->getStyle('D'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('E'.$cont ,'' )->getStyle('E'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('F'.$cont ,$valor->documento )->getStyle('F'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('G'.$cont ,$valor->solicitor )->getStyle('G'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('H'.$cont ,'' )->getStyle('H'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('I'.$cont ,'' )->getStyle('I'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('J'.$cont ,'CAR' )->getStyle('J'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('K'.$cont ,$valor->final_user )->getStyle('K'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('L'.$cont ,$valor->ticket_number )->getStyle('L'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('M'.$cont ,$valor->typo_of_ticket )->getStyle('M'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('N'.$cont ,$valor->fecha_emi )->getStyle('N'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('O'.$cont ,'' )->getStyle('O'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('P'.$cont ,'' )->getStyle('P'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('Q'.$cont ,'' )->getStyle('Q'.$cont)->getFont()->setBold(false);
-
-							$activeSheet->setCellValue('BK'.$cont ,$valor->buy_in_advance)->getStyle('BK'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('BL'.$cont ,$valor->record_localizador)->getStyle('BL'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('BM'.$cont ,$valor->GVC_ID_CENTRO_COSTO)->getStyle('BM'.$cont)->getFont()->setBold(false); 
-							$activeSheet->setCellValue('BN'.$cont ,$valor->analisis14_cliente)->getStyle('BN'.$cont)->getFont()->setBold(false);
-
-							//$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
-
-							$activeSheet->setCellValue('R'.$cont ,'' )->getStyle('R'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('S'.$cont ,'' )->getStyle('S'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('T'.$cont ,'' )->getStyle('T'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('U'.$cont ,'')->getStyle('U'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('V'.$cont ,'')->getStyle('V'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('W'.$cont ,'')->getStyle('W'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('X'.$cont ,'')->getStyle('X'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('Y'.$cont ,'' )->getStyle('Y'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('Z'.$cont ,'' )->getStyle('Z'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AA'.$cont ,'' )->getStyle('AA'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AB'.$cont ,'' )->getStyle('AB'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AC'.$cont ,'' )->getStyle('AC'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AD'.$cont ,'' )->getStyle('AD'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AE'.$cont ,'' )->getStyle('AE'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AF'.$cont ,'' )->getStyle('AF'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AG'.$cont ,'' )->getStyle('AG'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AH'.$cont ,'' )->getStyle('AH'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AI'.$cont ,'' )->getStyle('AI'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AJ'.$cont ,'' )->getStyle('AJ'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AK'.$cont ,'' )->getStyle('AK'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AL'.$cont ,'' )->getStyle('AL'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AM'.$cont ,'' )->getStyle('AM'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AN'.$cont ,'' )->getStyle('AN'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AO'.$cont ,'' )->getStyle('AO'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AP'.$cont ,'' )->getStyle('AP'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AQ'.$cont ,'' )->getStyle('AQ'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AR'.$cont ,'' )->getStyle('AR'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AS'.$cont ,'' )->getStyle('AS'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AT'.$cont ,'' )->getStyle('AT'.$cont)->getFont()->setBold(false);
-							$activeSheet->setCellValue('AU'.$cont ,'' )->getStyle('AU'.$cont)->getFont()->setBold(false);
-
-							$activeSheet->setCellValue('BE'.$cont ,$valor_aut['tipo_auto'] )->getStyle('BE'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BF'.$cont ,$valor_aut['fecha_entrega'] )->getStyle('BF'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BG'.$cont ,$valor_aut['dias'] )->getStyle('BG'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BH'.$cont ,$valor_aut['id_ciudad_entrega'] )->getStyle('BH'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BI'.$cont ,$valor_aut['id_ciudad_recoge'] )->getStyle('BI'.$cont)->getFont()->setBold(false);
-					    	$activeSheet->setCellValue('BJ'.$cont ,$valor_aut['fecha_entrega'] )->getStyle('BJ'.$cont)->getFont()->setBold(false);
-					    	
-
-			    }
+				
 
 			    
 
@@ -2289,7 +1805,11 @@ class Cnt_reportes_ficosa extends CI_Controller {
 			    
 			  }
 			    
+			    //print_r($valor->consecutivo.'/');
+
 			    array_push($array_consecutivo, $valor->consecutivo);
+			   
+
 		}			   
 
 
@@ -2320,7 +1840,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -2329,7 +1849,7 @@ class Cnt_reportes_ficosa extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('N1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
@@ -2420,16 +1940,18 @@ class Cnt_reportes_ficosa extends CI_Controller {
        if($tipo_funcion == "aut"){
        	
        	$str_fecha = $fecha1.'_A_'.$fecha2;
-       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_ficosa_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_ficosa_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
        	echo json_encode(1); //cuando es uno si tiene informacion
 
        }else{
 
+		
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="Reporte_ficosa_'.$fecha1.'_A_'.$fecha2.'.xlsx"'); 
 		header('Cache-Control: max-age=0');
 		
 		$Excel_writer->save('php://output', 'xlsx');
+		
 
        }
 

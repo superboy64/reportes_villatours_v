@@ -27,6 +27,8 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 	      $this->load->model('Mod_usuario');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 	      
 	}
     
@@ -170,17 +172,17 @@ class Cnt_layouts_venta_diaria_amex extends CI_Controller {
 		      $value["ID_FORMA_PAGO"] = $this->sanear_string(utf8_encode($value["ID_FORMA_PAGO"]));
 
 
-			 $value["c_FormaPago"] = $this->sanear_string(utf8_encode($value["c_FormaPago"]));
-			 $value["GVC_RUTA"] = $this->sanear_string(utf8_encode($value["GVC_RUTA"]));
-			 $value["GVC_ID_PROVEEDOR"] = $this->sanear_string(utf8_encode($value["GVC_ID_PROVEEDOR"]));
-			 $value["GVC_NOMBRE_PROVEEDOR"] = $this->sanear_string(utf8_encode($value["GVC_NOMBRE_PROVEEDOR"]));
+			  $value["c_FormaPago"] = $this->sanear_string(utf8_encode($value["c_FormaPago"]));
+			  $value["GVC_RUTA"] = $this->sanear_string(utf8_encode($value["GVC_RUTA"]));
+			  $value["GVC_ID_PROVEEDOR"] = $this->sanear_string(utf8_encode($value["GVC_ID_PROVEEDOR"]));
+			  $value["GVC_NOMBRE_PROVEEDOR"] = $this->sanear_string(utf8_encode($value["GVC_NOMBRE_PROVEEDOR"]));
   
 
-			 $value["GVC_TARIFA"] = $this->sanear_string(utf8_encode($value["GVC_TARIFA"]));
-			 $value["GVC_IVA"] = $this->sanear_string(utf8_encode($value["GVC_IVA"]));
-			 $value["GVC_TUA"] = $this->sanear_string(utf8_encode($value["GVC_TUA"]));
-			 $value["GVC_OTROS_IMPUESTOS"] = $this->sanear_string(utf8_encode($value["GVC_OTROS_IMPUESTOS"]));
-			 $value["GVC_NOM_VEN_TIT"] = $this->sanear_string(utf8_encode($value["GVC_NOM_VEN_TIT"]));
+			  $value["GVC_TARIFA"] = $this->sanear_string(utf8_encode($value["GVC_TARIFA"]));
+			  $value["GVC_IVA"] = $this->sanear_string(utf8_encode($value["GVC_IVA"]));
+			  $value["GVC_TUA"] = $this->sanear_string(utf8_encode($value["GVC_TUA"]));
+			  $value["GVC_OTROS_IMPUESTOS"] = $this->sanear_string(utf8_encode($value["GVC_OTROS_IMPUESTOS"]));
+			  $value["GVC_NOM_VEN_TIT"] = $this->sanear_string(utf8_encode($value["GVC_NOM_VEN_TIT"]));
 
 
 		      $value["NUMERO_CUENTA"] = $this->sanear_string(utf8_encode($value["NUMERO_CUENTA"]));

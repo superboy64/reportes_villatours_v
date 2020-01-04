@@ -5,6 +5,9 @@ class Lib_intervalos_fechas {
    function rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2)
    {
 
+        $fecha1 = str_replace("-", "/",  $fecha1);
+        $fecha2 = str_replace("-", "/",  $fecha2);
+        
         $date1 = new DateTime(date('Y-m-d'));
         $date2 = new DateTime($fecha_ini_proceso);
           

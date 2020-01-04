@@ -27,6 +27,8 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
 	      $this->load->library('lib_letras_excel');  //al llamar una libreria se hace referencia en minusculas
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 	     
 	}
     
@@ -605,7 +607,7 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -614,7 +616,7 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('N1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
@@ -729,21 +731,20 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
             	
 
             }
-
+   
 
        if($tipo_funcion == "aut"){
 
+       	$fecha1 = substr($fecha1, 0, 10);
+       	$fecha2 = substr($fecha2, 0, 10);
+
        	$str_fecha = $fecha1.'_A_'.$fecha2;
 
-       	if($id_plantilla != 0 ){
+       	//print_r($str_fecha);
 
-       		$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Detalle_consumos_p_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Detalle_consumos_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
 
-       	}else{
-
-       		$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Detalle_consumos_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
-
-       	}
+       	
 
        	
        	echo json_encode(1); //cuando es uno si tiene informacion
@@ -783,5 +784,363 @@ class Cnt_reportes_gvc_reporteador_net extends CI_Controller {
 	  }
 	  
 	}
+
+
+	public function excel_usuario_masivo_pipes(){
+
+		$parametros = $_REQUEST['parametros'];
+		$tipo_funcion = $_REQUEST['tipo_funcion'];
+        
+        $parametros = explode(",", $parametros);
+        
+        $ids_suc = $parametros[0];
+        $ids_serie = $parametros[1];
+        $ids_cliente = $parametros[2];
+        $ids_servicio = $parametros[3];
+        $ids_provedor = $parametros[4];
+        $ids_corporativo = $parametros[5];
+        $id_plantilla = $parametros[6];
+        $fecha1 = $parametros[7];
+        $fecha2 = $parametros[8];
+
+        if($tipo_funcion == "aut"){
+        	
+        	$id_correo_automatico = $parametros[9];
+            $id_reporte = $parametros[10];
+            $id_usuario = $parametros[11];
+            $id_intervalo = $parametros[12];
+            $fecha_ini_proceso = $parametros[13];
+			
+		}
+        
+        $parametros = [];
+
+		$parametros["ids_suc"] = $ids_suc;
+        $parametros["ids_serie"] = $ids_serie;
+        $parametros["ids_cliente"] = $ids_cliente;
+        $parametros["ids_servicio"] = $ids_servicio;
+        $parametros["ids_provedor"] = $ids_provedor;
+        $parametros["ids_corporativo"] = $ids_corporativo;
+        $parametros["fecha1"] = $fecha1;
+        $parametros["fecha2"] = $fecha2;
+
+        if($tipo_funcion == "aut"){
+        	
+        	$parametros["id_usuario"] = $id_usuario;
+        	$parametros["id_intervalo"] = $id_intervalo;
+        	$parametros["fecha_ini_proceso"] = $fecha_ini_proceso;
+			
+		}else{
+
+			$parametros["id_usuario"] = $this->session->userdata('session_id');
+	        $parametros["id_intervalo"] = '0';
+	        $parametros["fecha_ini_proceso"] = '';
+
+		}
+
+	    $parametros["id_plantilla"] = $id_plantilla;
+        $parametros["proceso"] = 2;
+
+		$rest = $this->Mod_reportes_gvc_reporteador_net->get_reportes_gvc_reporteador_net($parametros);
+
+		$rep = [];
+		foreach($rest as $clave => $value) {
+    		
+			if(isset($value['GVC_TARIFA_MON_BASE'])){
+
+				$value['GVC_TARIFA_MON_BASE'] = $value['GVC_TARIFA_MON_BASE'];
+								
+			}
+    		
+			if(isset($value['GVC_TARIFA_MON_EXT'])){
+
+				$value['GVC_TARIFA_MON_EXT'] = $value['GVC_TARIFA_MON_EXT'];
+				
+			}
+
+			if(isset($value['GVC_DESCUENTO'])){
+
+				$value['GVC_DESCUENTO'] = $value['GVC_DESCUENTO'];
+				
+			}
+			
+			if(isset($value['GVC_IVA_DESCUENTO'])){
+
+				$value['GVC_IVA_DESCUENTO'] = $value['GVC_IVA_DESCUENTO'];
+				
+			}
+			
+			if(isset($value['GVC_COM_AGE'])){
+
+				$value['GVC_COM_AGE'] = $value['GVC_COM_AGE'];
+				
+			}
+			
+			if(isset($value['GVC_COM_TIT'])){
+
+				$value['GVC_COM_TIT'] = $value['GVC_COM_TIT'];
+				
+			}
+			
+			if(isset($value['GVC_COM_AUX'])){
+
+				$value['GVC_COM_AUX'] = $value['GVC_COM_AUX'];
+				
+			}
+			
+			if(isset($value['GVC_POR_IVA_COM'])){
+
+				$value['GVC_POR_IVA_COM'] = $value['GVC_POR_IVA_COM'];
+				
+			}
+			
+			if(isset($value['GVC_IVA'])){
+
+				$value['GVC_IVA'] = $value['GVC_IVA'];
+				
+			}
+			
+			if(isset($value['GVC_TUA'])){
+
+				$value['GVC_TUA'] = $value['GVC_TUA'];
+				
+			}
+			
+			if(isset($value['GVC_OTROS_IMPUESTOS'])){
+
+				$value['GVC_OTROS_IMPUESTOS'] = $value['GVC_OTROS_IMPUESTOS'];
+				
+			}
+			
+			if(isset($value['GVC_TOTAL'])){
+
+				$value['GVC_TOTAL'] = $value['GVC_TOTAL'];
+				
+			}
+			
+			if(isset($value['GVC_SUMA_IMPUESTOS'])){
+
+				$value['GVC_SUMA_IMPUESTOS'] = $value['GVC_SUMA_IMPUESTOS'];
+				
+			}
+			
+			if(isset($value['GVC_IVA_EXT'])){
+
+				$value['GVC_IVA_EXT'] = $value['GVC_IVA_EXT'];
+				
+			}
+			
+			if(isset($value['GVC_TUA_EXT'])){
+
+				$value['GVC_TUA_EXT'] = $value['GVC_TUA_EXT'];
+				
+			}
+			
+			if(isset($value['GVC_OTR_EXT'])){
+
+				$value['GVC_OTR_EXT'] = $value['GVC_OTR_EXT'];
+				
+			}
+			
+			if(isset($value['GVC_TARIFA_COMPARATIVA_BOLETO'])){
+
+				$value['GVC_TARIFA_COMPARATIVA_BOLETO'] = $value['GVC_TARIFA_COMPARATIVA_BOLETO'];
+				
+			}
+			
+			if(isset($value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'])){
+
+				$value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'] = $value['GVC_TARIFA_COMPARATIVA_BOLETO_EXT'];
+				
+			}
+
+
+    		$cast_utf8 = array_map("utf8_encode", $value );
+    		array_push($rep, $cast_utf8);
+		    
+
+		}
+
+	  if(count($rep) > 0){
+
+	  					$array_fecha1 = explode('/', $fecha1);
+						$fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0]; //week
+
+						$array_fecha2 = explode('/', $fecha2);
+						$fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0]; //week
+
+						if($tipo_funcion == "aut"){
+
+
+							//*****************************************************************************************
+
+						       $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+
+					    	   $rango_fechas = explode("_", $rango_fechas);
+
+					    	   $fecha1 = $rango_fechas[0];
+					    	   
+					    	   $fecha2 = $rango_fechas[1];
+
+						       //*****************************************************************************************
+
+	       
+							$fecha1 = substr($fecha1, 0, 10);
+					       	$fecha2 = substr($fecha2, 0, 10);
+
+					       	$str_fecha = $fecha1.'_A_'.$fecha2;
+
+					       	$archivo = fopen($_SERVER['DOCUMENT_ROOT']."/reportes_villatours_v/referencias/archivos/Reporte_GVC_Reporteador_".$fecha1."_A_".$fecha2.'_'.$id_correo_automatico.'_'.$id_reporte.".txt", "w+");
+							
+						
+						}else{
+
+							if($id_plantilla != 0 ){
+
+					       		$archivo = fopen($_SERVER['DOCUMENT_ROOT']."/reportes_villatours_v/referencias/archivos/Detalle_consumos_p_".$fecha1."_A_".$fecha2.".TXT", "w+");
+
+					       	}else{
+
+					       		$archivo = fopen($_SERVER['DOCUMENT_ROOT']."/reportes_villatours_v/referencias/archivos/Detalle_consumos_".$fecha1."_A_".$fecha2.".TXT", "w+");
+
+					       	}	
+
+						}
+
+	  					
+
+	  				    $col = $this->Mod_reportes_gvc_reporteador_net->get_columnas($id_plantilla,4);
+
+						$array_header = [];
+					    foreach ($col as $clave1 => $valor) {  
+					        	
+					        	$nombre_columna_vista = $valor->nombre_columna_vista;
+
+					        	if($nombre_columna_vista == 'CC'){
+
+					        		$nombre_columna_vista = 'Folio GV';
+
+					        	}
+
+								array_push($array_header, ltrim(rtrim($nombre_columna_vista)) );
+
+					      }
+
+					    $header = $array_header;
+
+					    $str_body = '';
+						foreach ($header as $key => $value) {
+							
+									$str_body = $str_body . $value."|";
+
+								}
+
+					    fwrite($archivo, $str_body);
+
+						$titulo = [];
+						$row_vacio = [];
+
+						$suma_total = 0;
+						$cont=0;
+					    foreach($rep as $key => $value) {
+					    $cont++;
+
+					    	$suma_total = $suma_total + $value['GVC_TOTAL'];
+					    	fwrite($archivo,"\r\n");
+
+					    	$fecha = $value['GVC_FECHA'];
+
+					    	if($fecha != ''){
+
+					    		$value['GVC_FECHA'] = str_replace("-", "/", $value['GVC_FECHA']);
+
+					    	}
+					    	
+					    	$str_body = '';
+					    	foreach($value as $value2) {
+
+
+					    		$str_body = $str_body . $value2."|";
+
+					    	}
+
+					    	fwrite($archivo, $str_body);
+						}
+
+						fwrite($archivo,"\r\n");
+						fwrite($archivo,'CC|'.$suma_total.'|'.$cont);
+
+						fclose($archivo);
+
+						if($tipo_funcion == "aut"){
+
+							echo json_encode(1); //cuando es uno si tiene informacion
+
+						}
+					
+
+      }// fin validacion count
+	  else{ 
+
+	  	if($tipo_funcion != "aut"){
+
+       	  print_r("<label>No existe informacion para exportar</label>");
+
+        }else{
+
+        	echo json_encode(0); //cuando es uno si tiene informacion
+
+        }
+	 	
+
+	  }
+
+	}
+
+	public function exportar_excel_usuario_masivo_pipes(){
+
+		$parametros = $_REQUEST['parametros'];
+		$parametros = explode(",", $parametros);
+		   
+		$fecha1 = $parametros[7];
+        $fecha2 = $parametros[8];
+        $id_plantilla = $parametros[6];
+        
+			$array_fecha1 = explode('/', $fecha1);
+			$fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0]; //week
+
+			$array_fecha2 = explode('/', $fecha2);
+			$fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0]; //week
+
+		    if($id_plantilla != 0 ){
+
+		    	header("Content-type: .TXT");
+			    header("Content-Disposition: attachment;filename=Detalle_consumos_p_".$fecha1."_A_".$fecha2.".TXT");
+			    header("Content-Transfer-Encoding: binary"); 
+			    header('Pragma: no-cache'); 
+			    header('Expires: 0');
+
+		    	set_time_limit(0); 
+
+				readfile($_SERVER['DOCUMENT_ROOT'].'\reportes_villatours_v\referencias\archivos\Detalle_consumos_p_'.$fecha1.'_A_'.$fecha2.'.TXT');
+		    
+		    }else{
+		    	
+		    	header("Content-type: .TXT");
+			    header("Content-Disposition: attachment;filename=Detalle_consumos_".$fecha1."_A_".$fecha2.".TXT");
+			    header("Content-Transfer-Encoding: binary"); 
+			    header('Pragma: no-cache'); 
+			    header('Expires: 0');
+
+		    	set_time_limit(0); 
+
+		    	readfile($_SERVER['DOCUMENT_ROOT'].'\reportes_villatours_v\referencias\archivos\Detalle_consumos_'.$fecha1.'_A_'.$fecha2.'.TXT');
+
+		    }
+
+	   
+
+	}
+
 	
 }

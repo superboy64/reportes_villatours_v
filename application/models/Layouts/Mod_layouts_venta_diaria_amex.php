@@ -398,7 +398,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
          }
          if($cont_metodo_pago > 0){
 
-              $select1 = $select1 . " and DATOS_FACTURA.c_MetodoPago in (".$str_met_pag.") "; //ya
+              $select1 = $select1 . " and for_pgo_fac.id_forma_pago in (".$str_met_pag.") "; //ya
 
          }
 
@@ -448,7 +448,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
          }
          if($cont_metodo_pago > 0){
 
-              $select1 = $select1 . " and DATOS_FACTURA.c_MetodoPago in (".$str_met_pag.") "; //ya
+              $select1 = $select1 . " and for_pgo_fac.id_forma_pago in (".$str_met_pag.") "; //ya
 
          }
          
@@ -578,7 +578,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
          }
          if($cont_metodo_pago > 0){
 
-              $select2 = $select2 . " and NOTAS_CREDITO.c_MetodoPago in (".$str_met_pag.") "; //ya
+              $select2 = $select2 . " and NOTAS_CREDITO.id_forma_pago in (".$str_met_pag.") "; //ya
 
          }
 
@@ -627,7 +627,7 @@ class Mod_layouts_venta_diaria_amex extends CI_Model {
          }
          if($cont_metodo_pago > 0){
 
-              $select2 = $select2 . " and NOTAS_CREDITO.c_MetodoPago in (".$str_met_pag.") "; //ya
+              $select2 = $select2 . " and NOTAS_CREDITO.id_forma_pago in (".$str_met_pag.") "; //ya
 
          }
 

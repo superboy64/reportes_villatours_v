@@ -35,7 +35,9 @@
   $("#div_select_multiple_sucursal").show();
   $("#div_select_multiple_id_cliente").show();
   $("#div_select_multiple_id_servicio").show();
-  $("#div_select_multiple_id_metodo_pago").show();
+
+  //$("#div_select_multiple_id_metodo_pago").show();     no cuadra la informacion  --validar poniendo solo metodo de pago dentro del filtro ya que actualmente se pone la forma de pago
+  
   $("#div_rango_fechas").show();
   $("#div_btn_guardar").show();
   

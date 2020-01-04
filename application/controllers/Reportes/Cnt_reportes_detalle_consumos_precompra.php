@@ -15,12 +15,14 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 	{
 	      parent::__construct();
 	      $this->load->model('Reportes/Mod_reportes_detalle_consumo_precompra');
+	      $this->load->model('Mod_general');
 	      $this->load->model('Mod_catalogos_filtros');
 	      $this->load->model('Mod_correos');
 	      $this->load->model('Mod_usuario');
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->Mod_general->get_SPID();
 	     
 	}
 
@@ -126,15 +128,11 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 
 		echo json_encode($param_final);
 		
-		//$col = $this->Mod_reportes_detalle_consumo_precompra->get_columnas($id_plantilla,3);
-
-		//echo json_encode($rep);
-
 
 	}
 
 	public function rep_detalle_consumo_precompra($parametros){
-		
+		  
 		  $rest = $this->Mod_reportes_detalle_consumo_precompra->get_detalle_consumo_precompra($parametros);
 		  
 		    $array1 = array();
@@ -242,7 +240,6 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 
         $parametros["proceso"] = 2;
 
-		//$reportes = $this->Mod_reportes_detalle_consumo_precompra->get_detalle_consumo_precompra($parametros);
 
 		$reportes = $this->rep_detalle_consumo_precompra($parametros);
 		
@@ -468,7 +465,7 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -477,7 +474,7 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('N1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
@@ -621,7 +618,7 @@ class Cnt_reportes_detalle_consumos_precompra extends CI_Controller {
 
 			$str_fecha = $fecha1.'_A_'.$fecha2;																	
 			
-       		$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Detalle_consumos_precompra_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+       		$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Detalle_consumos_precompra_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
 
        		echo json_encode(1); //cuando es uno si tiene informacion
 

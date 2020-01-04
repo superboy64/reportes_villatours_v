@@ -9,24 +9,6 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
       parent::__construct();
       $this->load->database('default');
       $this->load->library('lib_intervalos_fechas');
-   }
-   
-   public function get_SPID(){
-
-      $rest_SPID = $this->db->query("SELECT connection_property( 'number' ) as SPID");
-
-      $result_spid = $rest_SPID->result();
-
-
-      $SPID = $result_spid[0]->SPID;
-
-      $db_prueba = $this->load->database('conmysql', TRUE);
-    
-      $db_prueba->query("INSERT INTO rpv_spid(SPID)
-                        VALUES($SPID)");
-
-
-      //return $result_spid;
 
    }
 
@@ -759,6 +741,7 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
 
       $fecha_actual2 = strtotime ( $fecha_actual2 );
       $fecha2 = date("Y-m-d", $fecha_actual2);
+
     
     $this->db->query("create table #TEMPFAC(
      GVC_DOC_NUMERO varchar(500) null, 
@@ -1102,170 +1085,95 @@ class Mod_reportes_ventas_corporativas extends CI_Model {
 
     }
 
-
     $this->db->query($select1);
 
     $this->db->query($select2);
 
-    if($cont_corporativo > 0){
-
-      $select3 =   "select 
-                    /*substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7 )  as MES,*/
-                    GVC_ID_CLIENTE = FAC.gvc_id_cliente, 
-                    GVC_NOM_CLI = FAC.GVC_NOM_CLI,
-                    GVC_ID_CORPORATIVO,
-                    TOTAL_MES1='',
-                    TOTAL_MES2='',
-                    TOTAL_MES3='',
-                    TOTAL_MES4='',
-                    TOTAL_MES5='',
-                    TOTAL_MES6='',
-                    TOTAL_MES7='',
-                    TOTAL_MES8='',
-                    TOTAL_MES9='',
-                    TOTAL_MES10='',
-                    TOTAL_MES11='',
-                    TOTAL_MES12=''
-                    from #TEMPFAC as FAC where not FAC.GVC_DOC_NUMERO = any(select distinct GVC_FAC_NUMERO from #TEMPNC) and TOTAL is not null
-                    group by FAC.GVC_NOM_CLI,FAC.GVC_ID_CORPORATIVO,GVC_ID_CLIENTE ";
+    $array_fechas = [];
 
 
-    }else{
+    for($i=$fecha1;$i<=$fecha2;$i = date("Y-m-d", strtotime($i ."+ 1 days"))){
 
+        $explode_fecha = explode('-', $i);
 
-      $select3 =   "select DISTINCT
-                    GVC_ID_CLIENTE = FAC.gvc_id_cliente, 
-                    GVC_NOM_CLI = FAC.GVC_NOM_CLI,
-                    GVC_ID_CORPORATIVO = 'XCLIENTE',
-                    TOTAL_MES1='',
-                    TOTAL_MES2='',
-                    TOTAL_MES3='',
-                    TOTAL_MES4='',
-                    TOTAL_MES5='',
-                    TOTAL_MES6='',
-                    TOTAL_MES7='',
-                    TOTAL_MES8='',
-                    TOTAL_MES9='',
-                    TOTAL_MES10='',
-                    TOTAL_MES11='',
-                    TOTAL_MES12=''
-                    FROM   #tempfac AS FAC WHERE not FAC.GVC_DOC_NUMERO = ANY (SELECT DISTINCT gvc_fac_numero FROM   #tempnc) AND TOTAL IS NOT NULL 
-                    GROUP BY FAC.GVC_NOM_CLI,GVC_ID_CLIENTE";
+        $rango_fecha = $explode_fecha[0].'-'.$explode_fecha[1];
 
+        $array_fechas[$rango_fecha]=$rango_fecha;
 
-
-    }
-
-   
-
-    $query_rows = $this->db->query($select3);
-
-    if($proceso == '1'){
-      
-      $result = $query_rows->result();
-
-    }else if($proceso == '2'){
-
-      $result = $query_rows->result_array();
-      
-    }
-
-    //obtiene meses por cliente
-
-     $query_cont_meses_cliente = $this->db->query("   
-
-            select DISTINCT 
-            substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7 )  as MES
-
-            FROM   #tempfac AS FAC 
-            WHERE  NOT FAC.gvc_doc_numero = ANY (SELECT DISTINCT gvc_fac_numero 
-                                                 FROM   #tempnc) 
-            AND TOTAL IS NOT NULL 
-
-            GROUP BY FAC.GVC_FECHA 
-            ORDER BY MES ASC" 
-
-        );
-
-
-     $query_rows_meses_cliente = $this->db->query("   
-
-            select DISTINCT 
-            substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7 )  as MES,
-            GVC_ID_CORPORATIVO,
-            GVC_ID_CLIENTE = FAC.gvc_id_cliente, 
-            TOTAL_MES=(SELECT Sum(CASE 
-                                WHEN( FAC1.gvc_tarifa_mon_base = '0.00' ) THEN 
-                                0 
-                                ELSE 
-                          CONVERT(NUMERIC, FAC1.gvc_tarifa_mon_base) 
-                              END) 
-                   FROM   #tempfac AS FAC1 
-                   WHERE  NOT FAC1.gvc_doc_numero = ANY 
-                              (SELECT DISTINCT gvc_fac_numero 
-                               FROM   #tempnc) 
-                          AND FAC1.gvc_id_cliente = 
-                  FAC.gvc_id_cliente AND  substring( CAST(FAC1.GVC_FECHA AS DATE) , 1, 7) = substring( CAST(FAC.GVC_FECHA AS DATE) , 1, 7)   )
-
-            FROM   #tempfac AS FAC 
-            WHERE  NOT FAC.gvc_doc_numero = ANY (SELECT DISTINCT gvc_fac_numero 
-                                                 FROM   #tempnc) 
-            AND TOTAL IS NOT NULL 
-
-            GROUP BY gvc_id_cliente,FAC.GVC_FECHA,GVC_ID_CORPORATIVO
-            ORDER BY MES ASC" 
-
-
-        );
-
-    $result_count_meses_cliente = $query_cont_meses_cliente->result_array();
-    $result_meses_cliente = $query_rows_meses_cliente->result_array();
-
-    foreach ($result as $key => $value) {
         
-        $GVC_ID_CLIENTE = $value->GVC_ID_CLIENTE;
 
-        $array_meses_clientes = [];
-        foreach ($result_meses_cliente as $key2 => $value2) {
+    }   //aqui me quede eco
 
-         
-          $GVC_ID_CLIENTE2 = $value2['GVC_ID_CLIENTE'];
-          $TOTAL_MES2 = $value2['TOTAL_MES'];
+    $array_fechas_meses_totales = [];
+    foreach ($array_fechas as $key => $value) {
 
-          if($GVC_ID_CLIENTE == $GVC_ID_CLIENTE2){
-
-            array_push($array_meses_clientes, $TOTAL_MES2);
-
-          }
-
-
-        }
-
-        $cont_meses = count($array_meses_clientes);
-
-        for($x=0;$x<$cont_meses;$x++){  //recorre meses
-
-            $cont = $x + 1;
-            $TOTAL_MES = 'TOTAL_MES'.$cont;
-
-            $value->$TOTAL_MES = $array_meses_clientes[$x];
+        $rango_fecha = $value;
+        
+        $select_TOTAL_FECHA = " select DISTINCT
+                                  FAC.gvc_id_cliente AS GVC_ID_CLIENTE, 
+                                  GVC_NOM_CLI = FAC.GVC_NOM_CLI,
+                                  GVC_ID_CORPORATIVO,
 
 
 
-        }
+                                  TOTAL_FECHA=(SELECT Sum(CASE 
+                                                      WHEN( FAC1.gvc_tarifa_mon_base = '0.00' ) THEN 
+                                                      0 
+                                                      ELSE 
+                                                CONVERT(NUMERIC, FAC1.gvc_tarifa_mon_base) 
+                                                    END) 
+                                         FROM   #tempfac AS FAC1 
+                                         WHERE  NOT FAC1.gvc_doc_numero = ANY 
+                                                    (SELECT DISTINCT gvc_fac_numero 
+                                                     FROM   #tempnc) 
+                                                AND FAC1.gvc_id_cliente = 
+                                        FAC.gvc_id_cliente AND  substring( CAST(FAC1.GVC_FECHA AS DATE) , 1, 7) = '".$rango_fecha."'   )
 
 
-    }
 
-    
+
+
+
+                                  FROM   #tempfac AS FAC 
+                                  WHERE  NOT FAC.gvc_doc_numero = ANY (SELECT DISTINCT gvc_fac_numero 
+                                                                       FROM   #tempnc) 
+                                  AND TOTAL IS NOT NULL 
+
+                                  GROUP BY gvc_id_cliente,FAC.GVC_FECHA,GVC_ID_CORPORATIVO
+
+                                  ";
+
+                             
+
+         $select_TOTAL_FECHA = $this->db->query($select_TOTAL_FECHA);
+
+         $TOTAL_FECHA = $select_TOTAL_FECHA->result();
+
+         foreach ($TOTAL_FECHA as $key => $value) {
+
+            $data = [];
+
+            $data['id_cliente'] = $value->GVC_ID_CLIENTE;
+            $data['GVC_NOM_CLI'] = $value->GVC_NOM_CLI;
+            $data['rango_fecha'] = $rango_fecha;
+            $data['total'] = $value->TOTAL_FECHA;
+            $data['GVC_ID_CORPORATIVO'] = $value->GVC_ID_CORPORATIVO;
+
+            $array_fechas_meses_totales[]= $data;
+
+         }
+
+
+    }   //aqui me quede eco
+
+
+
     $this->db->query("drop table #TEMPFAC");
     $this->db->query("drop table #TEMPNC");
     
-    $array_res = [];
-    $array_res['rows'] = $result;
-    $array_res['meses_cliente'] = $result_count_meses_cliente;
 
-    return $array_res;
+    return $array_fechas_meses_totales;
+    
 
    }
 

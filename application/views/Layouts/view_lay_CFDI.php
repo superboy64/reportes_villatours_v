@@ -153,6 +153,7 @@
                                 colNames:['rfc_emisor','razon_social_emisor','numero_iata','id_proveedor','nombre_proveedor','id_serie','fac_numero','numero_boleto','id_serie_cxs','fac_numero_cxs','fecha_compra','monto_compra','id_cliente','nombre_cliente','rfc','calle','exterior','interior','colonia','deleg_municipio','ciudad','estado','pais','cp','correo_electronico','comentarios','nombre_pasajero','ruta','seguro_pasajero','importe_seguro','id_gds','pseudocity_code','pnr','clave_vendedor','aereo','numero_viaje','revisado','bol_revisado','solicita_fac_la'],
                                 colModel:[
 
+                                          
                                           {name:'rfc_cliente',index:'rfc_cliente',sorttype:"int",width: 250, editable:true},
                                           {name:'razon_social',index:'razon_social',sorttype:"int",width: 250, editable:true},
                                           {name:'IATA',index:'IATA',sorttype:"int",width: 250, editable:true},
@@ -160,7 +161,7 @@
                                           {name:'GVC_NOMBRE_PROVEEDOR',index:'GVC_NOMBRE_PROVEEDOR',sorttype:"int",width: 250, editable:true},
                                           {name:'GVC_ID_SERIE',index:'GVC_ID_SERIE',sorttype:"int",width: 250, editable:true},
                                           {name:'GVC_DOC_NUMERO',index:'GVC_DOC_NUMERO',sorttype:"int",width: 250, editable:true},
-                                          {name:'BOLETO',index:'BOLETO',sorttype:"int",width: 250, editable:true},
+                                          {name:'GVC_BOLETO',index:'GVC_BOLETO',sorttype:"int",width: 250, editable:true},
                                           {name:'id_serie_cxs',index:'id_serie_cxs',sorttype:"int",width: 250, editable:true},
                                           {name:'fac_numero_cxs',index:'fac_numero_cxs',sorttype:"int",width: 250, editable:true},
                                           {name:'GVC_FECHA_EMISION_BOLETO',index:'GVC_FECHA_EMISION_BOLETO',sorttype:"int",width: 250, editable:true},

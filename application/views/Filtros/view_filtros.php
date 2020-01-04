@@ -278,6 +278,13 @@
     
   </div>
 
+  <div class="form-group" id="div_txt_consecutivo_ega">
+    <label>Consecutivo:&nbsp;</label><br>
+    
+    <input type="number" class="form-control" id="txt_consecutivo_ega">
+    
+  </div>
+
   <div class="form-group" id="div_select_multiple_id_cliente">
     <label>Cliente(DK):&nbsp;</label><br>
   
@@ -533,6 +540,7 @@
                   <option value="1">Excel</option>
                   <option value="2">Grafica</option>
                   <option value="3">Excel y Grafica</option>
+                  <option value="4">Pipes</option>
                  
                 </select>
   </div>
@@ -685,6 +693,7 @@ $('.selectpicker').selectpicker({
        
     $("#div_select_id_serie").hide();
     $("#div_txt_id_cliente").hide();
+    $("#div_txt_consecutivo_ega").hide();
     $("#div_select_id_corporativo").hide();
     $("#div_rango_fechas").hide();
     $("#div_btn_guardar").hide();

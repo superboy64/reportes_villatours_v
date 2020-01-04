@@ -19,6 +19,8 @@ class Cnt_reportes_tabulador_aereolineas extends CI_Controller {
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 	     
 	}
 
@@ -249,7 +251,7 @@ class Cnt_reportes_tabulador_aereolineas extends CI_Controller {
 
 		$id_us = $this->session->userdata('session_id');
 		// requires php5
-		define('UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/');
+		define('UPLOAD_DIR', $_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/');
 		$img = $img_grafica;
 		$img = str_replace('data:image/png;base64,', '', $img);
 		$img = str_replace(' ', '+', $img);
@@ -660,7 +662,7 @@ class Cnt_reportes_tabulador_aereolineas extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('B11');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/rep_ae_'.$id_us.'.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/rep_ae_'.$id_us.'.png');
 		$drawing->setHeight(280);
 
 		$colWidth = $spreadsheet->getActiveSheet()->getColumnDimension('K')->getWidth();
@@ -683,7 +685,7 @@ class Cnt_reportes_tabulador_aereolineas extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -692,7 +694,7 @@ class Cnt_reportes_tabulador_aereolineas extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('J1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());

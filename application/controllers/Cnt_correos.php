@@ -189,117 +189,117 @@ class Cnt_correos extends CI_Controller {
 	            if($rep == 3){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Gastos generales/';
-	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 	            
 	            }else if($rep == 4){
 	            	
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'GVC/';
-	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_GVC_Reporteador_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx'); 
+	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GVC_Reporteador_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx'); 
 
 	            }else if($rep == 5){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Segmentos/';
-	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Layout_Segmentado_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx'); 
+	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Layout_Segmentado_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx'); 
 
 	            }else if($rep == 6){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Ficosa/';
-	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_ficosa_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx'); 
+	                $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_ficosa_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx'); 
 
 	            }else if($rep == 8){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Aereolineas graficos aereos/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Graficos_ae_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Graficos_ae_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 12){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Pasajero grafico aereo/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Gastos_ae_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Gastos_ae_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 13){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Rutas grafico/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Graficos_rut_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Graficos_rut_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 14){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Detalle de consumos/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Detalle_consumo_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Detalle_consumo_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 15){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Aereolineas graficos aereos/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Graficos_ae_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Graficos_ae_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 16){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Pasajero grafico aereo/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Gastos_ae_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Gastos_ae_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 17){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Rutas grafico/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Graficos_rut_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Graficos_rut_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 18){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Gastos generales/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 19){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Detalle pasajero/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_detalle_pax_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_detalle_pax_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 22){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Detalle cc/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Detalle_cc_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Detalle_cc_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 23){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Ahorro/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_ahorro_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_ahorro_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 24){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Detalle de consumos precompra aerea/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Detalle_consumos_precompra_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Detalle_consumos_precompra_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 25){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Total precompra aerea/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_total_precompra_ae_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_total_precompra_ae_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 26){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Total pasajero servicio/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Total_Pasajero_servicio_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Total_Pasajero_servicio_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 34){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'GVC/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Detalle_consumos_p_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Detalle_consumos_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 35){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Servicio 24 hrs/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Serv_24hrs_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Serv_24hrs_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 36){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Servicio 24 hrs boletos/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Serv_24hrs_boleto_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Serv_24hrs_boleto_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 37){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Servicio 24 hrs (bol,cc,rev)/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Serv_24hrs_bol_cc_rev_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Serv_24hrs_bol_cc_rev_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }else if($rep == 38){
 
 	            	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Servicio 24 hrs CS/';
-					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Serv_24hrs_cs_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+					$mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Serv_24hrs_cs_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
 
 	            }
 
@@ -311,13 +311,13 @@ class Cnt_correos extends CI_Controller {
 	           if($rep == 3){
 
 	           	  $str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Grafica gastos generales/';
-	           	  $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/graficas_export/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf'); 
+	           	  $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/graficas_export/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf'); 
 	           	  
 	           }
 	           if($rep == 18){
 
 	           	  $str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Grafica gastos generales/';
-	           	  $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/graficas_export/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf'); 
+	           	  $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/graficas_export/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf'); 
 	           	  
 	           }
 	       }
@@ -326,16 +326,34 @@ class Cnt_correos extends CI_Controller {
 	          if($rep == 3){
 
 	          	 $str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Gastos generales/';
-	             $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
-	             $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/graficas_export/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf');
+	             $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+	             $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/graficas_export/Reporte_GG_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf');
 
 	             
 	          }else if($rep == 18){
 
 	          	 $str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'Gastos generales/';
-	          	 $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
-	             $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/graficas_export/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf');
+	          	 $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.xlsx');
+	             $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/graficas_export/Reporte_GG_net_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.pdf');
 
+
+	          }
+
+	       }
+	       if($tipo_archivo == 4 && $status == 1){
+
+	          if($rep == 4){
+
+
+	          	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'GVC/';
+	            $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GVC_Reporteador_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.TXT');
+
+
+	             
+	          }else if($rep == 34){
+
+	          	$str_nombre_reportes_enviados = $str_nombre_reportes_enviados . 'GVC/';
+			    $mail->addAttachment($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_GVC_Reporteador_'.ltrim(rtrim($str_fecha)).'_'.$id_correo_automatico.'_'.$rep.'.TXT');
 
 	          }
 

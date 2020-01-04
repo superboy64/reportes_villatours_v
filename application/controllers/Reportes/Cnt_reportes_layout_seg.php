@@ -21,6 +21,8 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 	      $this->load->library('lib_intervalos_fechas');
 	      $this->load->library('lib_letras_excel');  //al llamar una libreria se hace referencia en minusculas
 	      $this->load->library('lib_segmentos_millas');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 	     
 	}
 
@@ -2187,7 +2189,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 
 			  foreach ($rest as $clave => $valor) {
 			    $consecutivo = utf8_encode($valor->consecutivo);
-
+			    $record_localizador = utf8_encode($valor->record_localizador);
 			   
 			  	    if($valor->type_of_service == 'BD' || $valor->type_of_service == 'BI' || $valor->type_of_service == 'HOTNAC' || $valor->type_of_service == 'HOTINT' || $valor->type_of_service == 'HOTNAC_RES' /*|| $valor->type_of_service == 'HOTNAC_VARIOS'*/){
 						
@@ -2221,7 +2223,9 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 
 						    $fac_numero = $valor->documento;
 						    $id_serie = utf8_encode($valor->id_serie);
-					        $hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie);
+
+
+						    $hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris('man',$fecha_ini_proceso = '',$id_intervalo = 0,$fac_numero,$fecha1,$fecha2,$id_serie);
 
 
 							$cont3=0;
@@ -2267,7 +2271,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 								$valor->$Nr_days = utf8_encode($valor_aut['dias']);
 								$valor->$Place_delivery = utf8_encode($valor_aut['id_ciudad_entrega']);
 								$valor->$Place_delivery_back = utf8_encode($valor_aut['id_ciudad_recoge']);
-								$valor->$Departure_date = utf8_encode($valor_aut['fecha_entrega']);
+								$valor->$Departure_date = utf8_encode($valor_aut['fecha_entrega']);  // es fecha recoge
 
 						    }
 							
@@ -2284,6 +2288,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 				      			$fecha2 = $parametros["fecha2"];
 				      					
 										if($fecha1 == ""){
+										          
 										          $hoy = getdate();
 										          $dia = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
 										          $mes = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
@@ -2300,7 +2305,11 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 										         
 										      }
 
-					    		$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+							  
+
+							   	$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol('man',$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+							 
 					    		$autos_arr = $this->Mod_reportes_layout_seg->get_autos_num_bol($consecutivo);
 
 					    		if( count($hoteles_arr) > 0 || count($autos_arr) > 0 ){
@@ -2395,7 +2404,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 								         
 								      }
 
-					    		$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+								$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol('man',$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
 
 					    		if(!in_array($consecutivo, $array_consecutivo) ){
 
@@ -2480,7 +2489,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 											         
 											      }
 
-						             $hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+									$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol('man',$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
 
 									
 									$cont=0;
@@ -2965,6 +2974,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 		foreach ($rep as $clave => $valor) {
 
 			$consecutivo = $valor->consecutivo;
+			$record_localizador = utf8_encode($valor->record_localizador);
 			
 			$str_razon_social = $str_razon_social . $valor->GVC_NOM_CLI . '/';
 			$str_corporativo = $str_corporativo . $valor->GVC_ID_CORPORATIVO . '/';
@@ -5125,7 +5135,18 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 
 					    $fac_numero = $valor->documento;
 					    $id_serie = utf8_encode($valor->id_serie);
-				        $hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie);
+
+					    
+
+					    if($tipo_funcion == "aut"){
+
+					    	$hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$fac_numero,$fecha1,$fecha2,$id_serie);
+					    
+					    }else{
+
+					    	$hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris('man',$fecha_ini_proceso = '',$id_intervalo = 0,$fac_numero,$fecha1,$fecha2,$id_serie);
+					    }
+
 					    //**********************HOTEL 1
 
 
@@ -5908,9 +5929,38 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 					    $activeSheet->setCellValue('J'.$cont ,'HOTEL' )->getStyle('J'.$cont)->getFont()->setBold(false);
 					    $activeSheet->setCellValue('H'.$cont ,'HOTEL' )->getStyle('H'.$cont)->getFont()->setBold(false);
 						//*********************************************
+						$fecha1 = $parametros["fecha1"];
+      					$fecha2 = $parametros["fecha2"];
+
+						if($fecha1 == ""){
+						          $hoy = getdate();
+						          $dia = str_pad($hoy['mday'], 2, "0", STR_PAD_LEFT);
+						          $mes = str_pad($hoy['mon'], 2, "0", STR_PAD_LEFT);
+						          $year = $hoy['year'];
+						          $fecha1 = $year.'-'.$mes.'-'.$dia;
+						          $fecha2 = $year.'-'.$mes.'-'.$dia;
+						        
+						      }else{
+						          
+						          $array_fecha1 = explode('/', $fecha1);
+						          $fecha1 = $array_fecha1[2].'-'.$array_fecha1[1].'-'.$array_fecha1[0];
+						          $array_fecha2 = explode('/', $fecha2);
+						          $fecha2 = $array_fecha2[2].'-'.$array_fecha2[1].'-'.$array_fecha2[0];
+						         
+						      }
+						      
 					    $fac_numero = $valor->documento;
 					    $id_serie = utf8_encode($valor->id_serie);
-				        $hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie);
+
+					    if($tipo_funcion == "aut"){
+
+					    	$hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$fac_numero,$fecha1,$fecha2,$id_serie);
+					    
+					    }else{
+
+					    	$hoteles_iris_arr = $this->Mod_reportes_layout_seg->get_hoteles_iris('man',$fecha_ini_proceso = '',$id_intervalo = 0,$fac_numero,$fecha1,$fecha2,$id_serie);
+					    }
+
 					    //**********************HOTEL 1
 					    if(isset($hoteles_iris_arr[0]['servicio'])){
 					    	$activeSheet->setCellValue('DO'.$cont ,$hoteles_iris_arr[0]['servicio'] )->getStyle('AW'.$cont)->getFont()->setBold(false);
@@ -6711,7 +6761,16 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 								         
 								      }
 
-			    	   $hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+					   if($tipo_funcion == "aut"){
+
+					    	$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+					   }else{
+
+					   		$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+					   }
+
 
 					   $autos_arr = $this->Mod_reportes_layout_seg->get_autos_num_bol($consecutivo);
 
@@ -7536,9 +7595,15 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 								         
 								      }
 
-			            $hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($consecutivo,$fecha1,$fecha2);
+					    if($tipo_funcion == "aut"){
 
-					    //$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($consecutivo);
+					    	$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+					    }else{
+
+					   		$hoteles_arr = $this->Mod_reportes_layout_seg->get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso = '',$id_intervalo = 0,$record_localizador,$consecutivo,$fecha1,$fecha2);
+
+					    }
 
 
 					    //**********************HOTEL 1
@@ -8515,7 +8580,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -8524,7 +8589,7 @@ class Cnt_reportes_layout_seg extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('N1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
@@ -8611,8 +8676,8 @@ class Cnt_reportes_layout_seg extends CI_Controller {
        	
        	$str_fecha = $fecha1.'_A_'.$fecha2;
 
-       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Layout_Segmentado_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
-       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Layout_Segmentado_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+       	//$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Layout_Segmentado_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Layout_Segmentado_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
        	echo json_encode(1); //cuando es uno si tiene informacion
 
        }else{

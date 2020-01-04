@@ -978,6 +978,7 @@ class Mod_layouts_CFDI extends CI_Model {
     
     $this->db->query("create table #TEMPFAC(
     
+    GVC_BOLETO varchar(500) null,
     analisis39_cliente varchar(500) null,
     confirmacion_la varchar(500) null,
     GVC_DOC_NUMERO  varchar(500) null,
@@ -1033,6 +1034,7 @@ class Mod_layouts_CFDI extends CI_Model {
      $select1 = "  insert into #TEMPFAC
      select 
 
+      GVC_BOLETO=case when(PROV_TPO_SERV.ID_SERVICIO = 'CS') then convert(varchar,DETALLE_FACTURA.numero_bol_Cxs) else convert(varchar,DETALLE_FACTURA.NUMERO_BOL) end, 
       datos_factura.analisis39_cliente as analisis39_cliente,
       DETALLE_FACTURA.CLAVE_RESERVACION as confirmacion_la, 
       DATOS_FACTURA.FAC_NUMERO as GVC_DOC_NUMERO,
@@ -1589,6 +1591,7 @@ class Mod_layouts_CFDI extends CI_Model {
 
     $select3 = " select
 
+      GVC_BOLETO,
       GVC_DOC_NUMERO,   
       rfc_cliente,
       razon_social,

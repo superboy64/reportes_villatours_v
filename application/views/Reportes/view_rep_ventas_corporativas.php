@@ -150,6 +150,8 @@ canvas {
 
                         data = JSON.parse(data);
 
+                        var arr_provedores_servicio =  data['provedores_servicio']['rows'];
+
                         $("#div_datagrid_html").empty();
                         
                         var arr_grafica =  data['grafica'];

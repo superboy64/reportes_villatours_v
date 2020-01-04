@@ -20,6 +20,8 @@ class Cnt_reportes_serv_24hrs_cs extends CI_Controller {
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 
 	     
 	}
@@ -492,7 +494,7 @@ class Cnt_reportes_serv_24hrs_cs extends CI_Controller {
 		$drawing->setName('Logo');
 		$drawing->setDescription('Logo');
 		$drawing->setCoordinates('A1');
-		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/villatours.png');
+		$drawing->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/villatours.png');
 		$drawing->setHeight(250);
 		$drawing->setWidth(250);
         $drawing->setWorksheet($spreadsheet->getActiveSheet());
@@ -501,7 +503,7 @@ class Cnt_reportes_serv_24hrs_cs extends CI_Controller {
 		$drawing2->setName('Logo');
 		$drawing2->setDescription('Logo');
 		$drawing2->setCoordinates('E1');
-		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/img/91_4c.gif');
+		$drawing2->setPath($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/img/91_4c.gif');
 		$drawing2->setHeight(60);
 		$drawing2->setWidth(60);
         $drawing2->setWorksheet($spreadsheet->getActiveSheet());
@@ -639,7 +641,7 @@ class Cnt_reportes_serv_24hrs_cs extends CI_Controller {
 		 if($tipo_funcion == "aut"){
         
 			$str_fecha = $fecha1.'_A_'.$fecha2;
-	       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours/referencias/archivos/Reporte_Serv_24hrs_cs_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
+	       	$Excel_writer->save($_SERVER['DOCUMENT_ROOT'].'/reportes_villatours_v/referencias/archivos/Reporte_Serv_24hrs_cs_'.$str_fecha.'_'.$id_correo_automatico.'_'.$id_reporte.'.xlsx');
 	       	echo json_encode(1); //cuando es uno si tiene informacion
 
 	     }else{

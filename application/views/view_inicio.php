@@ -1,4 +1,3 @@
-
 <style>
     
     .ui-jqgrid tr.jqgrow td {
@@ -391,6 +390,36 @@
 
                                                            carga();
                                                            $.post("<?php echo base_url(); ?>index.php/Cnt_aereolineas_CFDI/get_html_aereolineas_CFDI", {title: title}, function(data){
+
+                                                                carga_completa(data);
+
+                                                               
+                                                            });
+
+                                                        }
+
+                                                      </script>
+                                                    <?php
+
+                                                  }
+
+                                                  if($value['id_submodulo'] == 31){
+                                                    $title = 'UDIDS';
+                                                    ?>
+                                                      <tr>
+                                                      
+                                                          <td>
+                                                              <a id="link_correos" href="javascript:void(0);" onclick="consulta_egencia_udids_ac('<?=$title?>');" style="margin-left: 27px;"><i class="fa fa-cubes" style="width: 28px;"></i>UDIDS&nbsp;</a>
+                                                          </td>
+                                                        
+                                                      </tr>
+                                                      
+                                                      <script type="text/javascript">
+
+                                                        function consulta_egencia_udids_ac(title){
+
+                                                           carga();
+                                                           $.post("<?php echo base_url(); ?>index.php/Cnt_egencia_udids_ac/get_html_egencia_udids", {title: title}, function(data){
 
                                                                 carga_completa(data);
 
@@ -920,7 +949,7 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 17){
+                                                  if($value['id_submodulo'] == 20){
                                                      $title = 'Reporte - Tabulador aerolineas';
                                                     ?>
                                                       <tr>
@@ -954,7 +983,7 @@
 
                                                   }
 
-                                                  if($value['id_submodulo'] == 17){
+                                                  if($value['id_submodulo'] == 19){
                                                      $title = 'Reporte - Detalle Pax';
                                                     ?>
                                                       <tr>
@@ -1418,7 +1447,10 @@
                                                     <tr>
                                       
                                                         <td>
-                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_EBTA('<?=$title?>');" style="margin-left: 27px;"><i class="fa fa-wpforms" style="width: 28px;"></i>EBTA&nbsp;</a> 
+                                                              <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_EBTA('<?=$title?>');" >EBTA&nbsp;</a>
                                                         </td>
                                                     
                                                     </tr>
@@ -1461,9 +1493,12 @@
                                                    $title = 'Layout - CFDI';
                                                   ?>
                                                     <tr>
-                                      
+
                                                         <td>
-                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_CFDI('<?=$title?>');" style="margin-left: 27px;"><i class="fa fa-wpforms" style="width: 28px;"></i>CFDI&nbsp;</a> 
+                                                              <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_CFDI('<?=$title?>');" >CFDI&nbsp;</a>
                                                         </td>
                                                     
                                                     </tr>
@@ -1507,8 +1542,12 @@
                                                   ?>
                                                     <tr>
                                       
+                                                        
                                                         <td>
-                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_venta_diaria_amex('<?=$title?>');" style="margin-left: 27px;"><i class="fa fa-wpforms" style="width: 28px;"></i>Venta diaria Amex&nbsp;</a> 
+                                                              <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_venta_diaria_amex('<?=$title?>');" >Venta diaria Amex&nbsp;</a>
                                                         </td>
                                                     
                                                     </tr>
@@ -1541,6 +1580,308 @@
                                           }
 
                                     ?>
+                                    <?php
+
+                                          foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - Egencia Data Import';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_data_import_sp_todos('<?=$title?>');" >Egencia Data Import&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_data_import_sp_todos(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_bookings_cadena/get_html_layouts_Egencia_Data_Import", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }
+
+
+                                    ?>
+                                    <?php
+
+                                          /*foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - Egencia Bookings';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_data_import_sp('<?=$title?>');" >Egencia Bookings&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_data_import_sp(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_bookings/get_html_layouts_egencia_bookings", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }*/
+
+
+                                    ?>
+
+                                    <?php
+
+                                          /*foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - Egencia Segments';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_segments('<?=$title?>');" >Egencia Segments&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_segments(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_segments/get_html_layouts_egencia_segments", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }*/
+
+                                    ?>
+
+                                    <?php
+
+                                          /*foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - Egencia Udids';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_udids('<?=$title?>');" >Egencia Udids&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_udids(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_udids/get_html_layouts_egencia_udids", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }*/
+
+                                    ?>
+                                    
+                                    <?php
+
+                                          foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - EGA Sample Summary Airline';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_sample_summary_airline('<?=$title?>');" >EGA Sample Summary Airline&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_sample_summary_airline(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_sample_summary_airline/get_html_layouts_egencia_sample_summary_airline", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }
+
+                                    ?>
+
+                                    <?php
+
+                                          foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - EGA Sample Summary Fee';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_summary_fee('<?=$title?>');" >EGA Sample Summary Fee&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_summary_fee(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_sample_summary_fee/get_html_layouts_egencia_sample_summary_fee", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }
+
+                                    ?>
+
+                                    <?php
+
+                                          foreach ($modulos_arr as $key => $value) {
+                                          
+                                              if($value['id'] == 5){
+                                                if($value['id_submodulo'] == 33){
+                                                   $title = 'Layout - EGA Sample Summary Transaction';
+                                                  ?>
+                                                    <tr>
+                                                        <td>
+                                                            <i class="glyphicon glyphicon-file" ></i>
+                                                        </td>
+                                                        <td colspan="4">
+                                                            <a id="link_adm_us" href="javascript:void(0);" onclick="li_btn_get_egencia_summary_transaction('<?=$title?>');" >EGA Sample Summary Transaction&nbsp;</a>
+                                                        </td>
+                                                    
+                                                    </tr>
+
+                                                    <script type="text/javascript">
+                                                       
+                                                      function li_btn_get_egencia_summary_transaction(title){
+          
+                                                          carga();
+                                                          $.post("<?php echo base_url(); ?>index.php/Layouts/Cnt_layouts_egencia_sample_summary_transaction/get_html_layouts_egencia_sample_summary_transaction", {title: title}, function(data){
+
+                                                              carga_completa(data);
+
+                                                          });
+
+                                                      }
+
+                                                    </script>
+
+                                                  <?php
+
+                                                }
+
+                                              }
+
+                                          }
+
+                                    ?>
+
        
                                   </table>
                               </div>

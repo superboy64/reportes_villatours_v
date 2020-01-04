@@ -56,6 +56,16 @@ class Mod_clientes extends CI_Model {
 
    }
 
+   public function get_analisis_cliente_dk_not_in($ids_selec){
+
+     $db_prueba = $this->load->database('conmysql', TRUE);
+
+     $query = $db_prueba->query("SELECT id,nombre FROM rpv_analisis_cliente where status = 1 and id NOT IN (".$ids_selec.")");
+
+     return $query->result();
+
+   }
+
    public function get_clientes_dk_not_in_usuario($ids_selec,$id_per){
      
      $db_prueba = $this->load->database('conmysql', TRUE);
@@ -85,6 +95,18 @@ class Mod_clientes extends CI_Model {
      $res = $db_prueba->query("SELECT id_cliente FROM rpv_usuarios_cliente where status = 1 and id_usuario=".$id_usuario);
    
      return $res->result_array();
+
+
+   }
+
+   public function get_analisis_clientes(){
+
+     $db_prueba = $this->load->database('conmysql', TRUE);
+
+     $res = $db_prueba->query("SELECT id,nombre FROM rpv_analisis_cliente where status = 1");
+   
+     return $res->result_array();
+
 
 
    }

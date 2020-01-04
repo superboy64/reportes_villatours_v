@@ -943,16 +943,48 @@ class Mod_reportes_layout_seg extends CI_Model {
 
    }
 
-   public function get_hoteles_num_bol($consecutivo,$fecha1,$fecha2){
-      $query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
+   public function get_hoteles_num_bol($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$record_localizador,$consecutivo,$fecha1,$fecha2){
+
+      if($tipo_funcion == "aut"){
+
+                 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+
+                 $rango_fechas = explode("_", $rango_fechas);
+
+                 $fecha1 = $rango_fechas[0];
+                 $fecha2 = $rango_fechas[1];
+
+
+       }
+
+      /*$query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
                                  INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
-                                 where gds_hoteles.consecutivo = '$consecutivo' and GDS_GENERAL.fecha_recepcion between '$fecha1' and '$fecha2' ");
+                                 where gds_hoteles.consecutivo = '$consecutivo' and GDS_GENERAL.fecha_recepcion between '$fecha1' and '$fecha2' ");*/
+
+        $query = $this->db->query("SELECT DISTINCT buy_in_advance=datediff(dd,GDS_GENERAL.fecha_recepcion,dba.gds_hoteles.fecha_entrada),gds_hoteles.* FROM gds_hoteles 
+                                 INNER JOIN GDS_GENERAL ON GDS_GENERAL.CONSECUTIVO =  gds_hoteles.CONSECUTIVO                 
+                                 where GDS_GENERAL.record_localizador = '$record_localizador' and cast(GDS_GENERAL.fecha_recepcion as date) between '$fecha1' and '$fecha2' ");
+
       $res = $query->result_array();
       return $res;
 
+
+
    }
 
-   public function get_hoteles_iris($fac_numero,$fecha1,$fecha2,$id_serie){
+   public function get_hoteles_iris($tipo_funcion,$fecha_ini_proceso,$id_intervalo,$fac_numero,$fecha1,$fecha2,$id_serie){
+
+      if($tipo_funcion == "aut"){
+
+                 $rango_fechas = $this->lib_intervalos_fechas->rengo_fecha($fecha_ini_proceso,$id_intervalo,$fecha1,$fecha2);
+
+                 $rango_fechas = explode("_", $rango_fechas);
+
+                 $fecha1 = $rango_fechas[0];
+                 $fecha2 = $rango_fechas[1];
+
+
+       }
 
       $db_prueba = $this->load->database('coniris', TRUE);
       $res = $db_prueba->query("SELECT 

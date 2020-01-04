@@ -26,6 +26,8 @@ class Cnt_layouts_CFDI extends CI_Controller {
 	      $this->load->model('Mod_clientes');
 	      $this->load->helper('file');
 	      $this->load->library('lib_intervalos_fechas');
+	      $this->load->model('Mod_general');
+		  $this->Mod_general->get_SPID();
 	      
 	}
     
@@ -369,12 +371,17 @@ class Cnt_layouts_CFDI extends CI_Controller {
 			$conf_cliente = $this->Mod_layouts_CFDI->get_config_cliente_CFDI($id_cliente);
 			$conf_aereolinea = $this->Mod_layouts_CFDI->get_config_aereolinea_CFDI($ID_PROVEEDOR);
 
+			$value["GVC_BOLETO"] = '139' . $value["GVC_BOLETO"];
+
 			if(count($conf_cliente) > 0 ){
 
 				$tpo_factura = $conf_cliente[0]->tpo_factura;
 					
 				if($tpo_factura == '2'){
 
+
+				  
+				  
 				  $value["rfc_emisor"] = 'VTO791024C79';
 				  $value["razon_social"] = 'VILLA TOURS, S.A. DE C.V.';
 				  $value["ID_PROVEEDOR"] = '139';
@@ -537,19 +544,18 @@ class Cnt_layouts_CFDI extends CI_Controller {
 		$activeSheet->setCellValue('G1' ,'CORREO ELECTRÓNICO');
 		
 
-
 		$rep = [];
 		foreach($allrows as $value) {
 
     		//$value = (array)$value;
-   			
-   			$campos["pnr"] = $value->pnr;
+
+   			$campos["pnr"] = $value->GVC_BOLETO;
    			$campos["rfc_emisor"] = $value->rfc_cliente;
 			$campos["razon_social"] = $value->razon_social;
 			$campos["codigo_postal"] = $value->codigo_postal;
-			$campos["referencia"] = '';
+			$campos["referencia"] = 'F';
 			$campos["nombre_archivo"] = '';
-			$campos["CORREO_ELECTRONICO"] = $value->CORREO_ELECTRONICO;
+			$campos["CORREO_ELECTRONICO"] = 'sramirez@villatours.com.mx';
 
 
     		array_push($rep, $campos);  
@@ -590,7 +596,7 @@ class Cnt_layouts_CFDI extends CI_Controller {
 	    header('Expires: 0');
 	 
 	    set_time_limit(0); 
-	    readfile($_SERVER['DOCUMENT_ROOT'].'\reportes_villatours\referencias\archivos\archivos_CFDI\MEX_EBTA_TPP_PI6VIL.txt');
+	    readfile($_SERVER['DOCUMENT_ROOT'].'\reportes_villatours_v\referencias\archivos\archivos_CFDI\MEX_EBTA_TPP_PI6VIL.txt');
 
 	}
 

@@ -1,7 +1,8 @@
 <div class="row">
 
       <div class="col-md-12">
-            <button type="button" class="btn btn-default" onclick="btn_exportar_excel_rep_gvc();"><span class="fa fa-file-excel" style="color:#2fb30e;"></span>&nbsp;Descargar</button>
+            <button type="button" class="btn btn-default" onclick="btn_exportar_rep_gvc(1);"><span class="fa fa-file-excel" style="color:#2fb30e;"></span>&nbsp;Excel</button>
+            <button type="button" class="btn btn-default" onclick="btn_exportar_rep_gvc(2);"><span class="glyphicon glyphicon-pause" style="color:#2fb30e;"></span>&nbsp;Pipes</button>
       </div>
       <div class="col-md-12">
 
@@ -104,7 +105,7 @@
 	          
             if(id_cliente.length == 0 && id_corporativo.length == 0){
 
-              btn_exportar_excel_rep_gvc();
+              btn_exportar_rep_gvc(1);
 
             }else{
 
@@ -301,7 +302,9 @@
 
 	    }
 
-      function btn_exportar_excel_rep_gvc(){
+
+
+      function btn_exportar_rep_gvc(formato){
 
             var id_suc = $("#slc_mult_id_suc").val();
 
@@ -374,17 +377,54 @@
             var tipo_funcion = 'rep';
             
             
-            //if(id_cliente.length == 0){
+            
+
+            if(formato == 1){
 
               window.open('<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador/exportar_excel_usuario_masivo?parametros='+parametros+'&tipo_funcion=rep');
 
-            //}else{
+            }else if(formato == 2){
 
-              //window.open('<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador/exportar_excel_usuario?parametros='+parametros+'&tipo_funcion=rep');
+              $.ajax({
+                url: '<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador/excel_usuario_masivo_pipes?parametros='+parametros+'&tipo_funcion=rep',
+                type: 'POST',
+                data: {parametros:parametros,tipo_funcion:'ex'},
+                 beforeSend : function() {
 
-            //}
+                   $.blockUI({ 
+                      message: '<h1> Obteniendo datos </h1>',
+                      css: { 
+                        border: 'none', 
+                        padding: '15px', 
+                        backgroundColor: '#000', 
+                        '-webkit-border-radius': '10px', 
+                        '-moz-border-radius': '10px', 
+                        opacity: .5, 
+                        color: '#fff' 
+                    } }); 
 
-            
+                },
+                complete: function () {
+                              
+                    $.unblockUI();
+
+                },
+                success: function (data) {
+       
+                    window.open('<?php echo base_url(); ?>index.php/Reportes/Cnt_reportes_gvc_reporteador/exportar_excel_usuario_masivo_pipes?parametros='+parametros);
+
+
+                  },
+                  error: function () {
+                      $.unblockUI();
+                      alert('Ocurrió un error interno, favor de reportarlo con el administrador del sistema');
+                  }
+                  
+              });
+              
+
+            }
+
 
       }
 
